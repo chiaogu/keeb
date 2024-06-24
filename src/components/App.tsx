@@ -1,21 +1,11 @@
-import useSynth from "@src/hooks/useSynth";
-import Keys from "./Keys";
-import SynthControl from "./SynthControl";
-import useKeySounds from "@src/hooks/useKeySounds";
+import { useState } from "react";
+import Main from "./Main";
+import Title from "./Title";
 
 function App() {
-  const downSynth = useSynth();
-  const upSynth = useSynth();
-
-  useKeySounds(downSynth, upSynth);
-
-  return (
-    <div className="flex h-screen w-screen flex-col items-center space-y-8">
-      <Keys />
-      <SynthControl synth={downSynth} />
-      <SynthControl synth={upSynth} />
-    </div>
-  );
+  const [started, setStarted] = useState(false);
+  
+  return started ? <Main /> : <Title onStart={() => setStarted(true)}/>;
 }
 
 export default App;
