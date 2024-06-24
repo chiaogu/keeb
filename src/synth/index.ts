@@ -1,7 +1,12 @@
 import * as Tone from "tone";
 
-const synth = new Tone.Synth().toDestination();
+const synth = new Tone.MetalSynth().toDestination();
+synth.set({ volume: -10 });
 
-export function makeNoise() {
-  synth.triggerAttackRelease("C4", "8n");
+export function triggerKeyDown() {
+  synth.triggerAttackRelease("C3", "64n");
+}
+
+export function triggerKeyUp() {
+  synth.triggerAttackRelease("C2", "64n");
 }
