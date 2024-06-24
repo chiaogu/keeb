@@ -15,5 +15,6 @@ module.exports = {
       { allowConstantExport: true },
     ],
     "semi": [2, "always"],
+    'max-len': ["warn", { "code": 80 }]
   },
 }

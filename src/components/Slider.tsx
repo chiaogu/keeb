@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback } from "react";
+import { ChangeEvent, useCallback, useMemo } from "react";
 
 type SliderProps = {
   label: string;
@@ -15,16 +15,17 @@ export default function Slider({ label, value, onChange }: SliderProps) {
   
   return (
     <div className="flex justify-between w-full">
-      <label className="w-1/3">{label}</label>
+      <label className="w-1/4">{label}</label>
       <input
-        className="w-2/3"
+        className="w-1/2"
         type="range"
         name="volume"
         min="0"
         max={RESOLUTION}
-        value={value}
+        value={value * RESOLUTION}
         onChange={handleChange}
       />
+      <div className="w-1/5 text-end">{value.toFixed(3)}</div>
     </div>
   );
 }
