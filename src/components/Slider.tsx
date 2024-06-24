@@ -25,7 +25,7 @@ export default function Slider({ label, value, onChange }: SliderProps) {
         value={value * RESOLUTION}
         onChange={handleChange}
       />
-      <div className="w-1/5 text-end">{value.toFixed(3)}</div>
+      <div className="w-1/5 text-end">{(value * 100).toFixed()}%</div>
     </div>
   );
 }

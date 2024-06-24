@@ -1,7 +1,7 @@
-import * as Tone from 'tone';
-import { SynthState } from './type';
-import { config } from './config';
-import { denormalizeState, normalizeState } from './normalizer';
+import * as Tone from "tone";
+import { config, SynthState } from "./config";
+import { denormalizeState, normalizeState } from "./normalizer";
+import { frequencyToHertz } from "@src/utils";
 
 const synth = new Tone.MetalSynth().toDestination();
 reset();
@@ -12,25 +12,53 @@ function reset() {
       Object.entries(config).map(([key, { defaultValue }]) => [
         key,
         defaultValue,
-      ])
-    )
+      ]),
+    ),
   );
 }
 
 export function setState(state: Partial<SynthState>) {
-  const { volume, harmonicity } = denormalizeState(state);
-  synth.set({ volume, harmonicity });
+  const {
+    volume,
+    harmonicity,
+    frequency,
+    modulationIndex,
+    octaves,
+    portamento,
+    resonance,
+  } = denormalizeState(state);
+  synth.set({
+    volume,
+    harmonicity,
+    modulationIndex,
+    octaves,
+    portamento,
+    resonance,
+  });
+
+  if (frequency) {
+    synth.frequency.value = frequency;
+  }
 }
 
 export function getState(): SynthState {
-  const { volume, harmonicity } = synth.get();
-  return normalizeState({ volume, harmonicity });
+  const { volume, harmonicity, modulationIndex, octaves, resonance } =
+    synth.get();
+
+  return normalizeState({
+    volume,
+    harmonicity,
+    modulationIndex,
+    frequency: frequencyToHertz(synth.frequency.value),
+    octaves,
+    resonance: frequencyToHertz(resonance),
+  });
 }
 
 export function triggerKeyDown() {
-  synth.triggerAttackRelease('C1', '64n');
+  synth.triggerAttackRelease(synth.frequency.value, "64n");
 }
 
 export function triggerKeyUp() {
-  synth.triggerAttackRelease('C2', '64n');
+  synth.triggerAttackRelease(synth.frequency.value, "64n");
 }

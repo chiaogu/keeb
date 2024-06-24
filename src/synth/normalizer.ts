@@ -1,5 +1,4 @@
-import { config } from './config';
-import { SynthState } from './type';
+import { config, SynthState } from './config';
 
 function normalize(key: keyof SynthState, value: number) {
   switch (config[key].type) {

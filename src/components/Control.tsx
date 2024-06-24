@@ -1,5 +1,4 @@
-import { config } from '@src/synth/config';
-import { SynthState } from '@src/synth/type';
+import { SynthState, config } from '@src/synth/config';
 import Slider from './Slider';
 
 type ControlProps<Key extends keyof SynthState> = {
@@ -17,7 +16,7 @@ export default function Control<Key extends keyof SynthState>({
     case 'range':
       return (
         <Slider
-          label={field}
+          label={field.replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase()}
           value={value}
           onChange={onChange}
         />
