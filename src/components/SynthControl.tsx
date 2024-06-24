@@ -1,29 +1,18 @@
-import { useCallback, useEffect, useState } from "react";
-import * as synth from "@src/synth";
+import { useEffect, useState } from "react";
 import Control from "./Control";
 import { SynthState } from "@src/synth/config";
-import { useKeyEvents } from "@src/hooks/useKeyEvents";
+import { Synth } from "@src/synth";
 
-function useKeySounds() {
-  const onKeydown = useCallback(() => {
-    synth.triggerKeyDown();
-  }, []);
-
-  const onKeyUp = useCallback(() => {
-    synth.triggerKeyUp();
-  }, []);
-
-  useKeyEvents(onKeydown, onKeyUp);
+type SynthControlProps = {
+  synth: Synth
 }
 
-export default function Synth() {
+export default function SynthControl({ synth }: SynthControlProps) {
   const [synthState, setSynthState] = useState(synth.getState());
 
   useEffect(() => {
     synth.setState(synthState);
-  }, [synthState]);
-
-  useKeySounds();
+  }, [synth, synthState]);
 
   return (
     <div className="flex w-[500px] flex-col items-center border-2 border-black p-8">
