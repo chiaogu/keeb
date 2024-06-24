@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useMemo } from "react";
+import { ChangeEvent, useCallback } from "react";
 
 type SliderProps = {
   label: string;

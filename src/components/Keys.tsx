@@ -1,23 +1,7 @@
-import { useCallback } from 'react';
-import { useKeyEvents, usePressedKeys } from '../hooks/useKeyEvents';
-import * as synth from '../synth';
-
-function useKeySounds() {
-  const onKeydown = useCallback(() => {
-    synth.triggerKeyDown();
-  }, []);
-  
-  const onKeyUp = useCallback(() => {
-    synth.triggerKeyUp();
-  }, []);
-  
-  useKeyEvents(onKeydown, onKeyUp);
-}
+import { usePressedKeys } from '../hooks/useKeyEvents';
 
 export default function Keys() {
   const pressedKeys = usePressedKeys();
-  
-  useKeySounds();
   
   return (
     <div className="h-40">

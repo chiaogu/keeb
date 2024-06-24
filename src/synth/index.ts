@@ -1,48 +1,36 @@
-import * as Tone from "tone";
-
-export type SynthState = {
-  volume: number;
-};
-
-const defaultState: SynthState = {
-  volume: 0.5,
-};
-
-const stateRange: Record<keyof SynthState, number[]> = {
-  volume: [-80, -5],
-};
+import * as Tone from 'tone';
+import { SynthState } from './type';
+import { config } from './config';
+import { denormalizeState, normalizeState } from './normalizer';
 
 const synth = new Tone.MetalSynth().toDestination();
-setState(defaultState);
+reset();
 
-function normalize(key: keyof SynthState, value: number) {
-  const [min, max] = stateRange[key];
-  return (value - min) / (max - min);
+function reset() {
+  setState(
+    Object.fromEntries(
+      Object.entries(config).map(([key, { defaultValue }]) => [
+        key,
+        defaultValue,
+      ])
+    )
+  );
 }
 
-function denormalize(key: keyof SynthState, value?: number) {
-  if (value === undefined) return undefined;
-  const [min, max] = stateRange[key];
-  return min + (max - min) * value;
-}
-
-export function setState({ volume }: Partial<SynthState>) {
-  synth.set({
-    volume: denormalize('volume', volume),
-  });
+export function setState(state: Partial<SynthState>) {
+  const { volume, harmonicity } = denormalizeState(state);
+  synth.set({ volume, harmonicity });
 }
 
 export function getState(): SynthState {
-  const { volume } = synth.get();
-  return {
-    volume: normalize('volume', volume),
-  };
+  const { volume, harmonicity } = synth.get();
+  return normalizeState({ volume, harmonicity });
 }
 
 export function triggerKeyDown() {
-  synth.triggerAttackRelease("C1", "64n");
+  synth.triggerAttackRelease('C1', '64n');
 }
 
 export function triggerKeyUp() {
-  synth.triggerAttackRelease("C2", "64n");
+  synth.triggerAttackRelease('C2', '64n');
 }
