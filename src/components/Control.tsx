@@ -1,29 +1,32 @@
-import { NodeControlConfig } from '@src/synth/config';
-import Slider from './Slider';
+import { NodeControlConfig } from "@src/synth/config";
+import Slider from "./Slider";
+import RadioGroup from "./RadioGroup";
 
 type ControlProps = {
-  type: NodeControlConfig['type'],
+  config: NodeControlConfig;
   name: string;
   value: unknown;
-  onChange: (v: number) => void;
+  onChange: (v: unknown) => void;
 };
 
 export default function Control({
-  type,
+  config,
   name,
   value,
   onChange,
 }: ControlProps) {
-  switch (type) {
-    case 'range':
-      return (
-        <Slider
-          label={name}
-          value={value as number}
-          onChange={onChange}
-        />
-      );
-    default:
-      return null;
+  if (config.type === "range") {
+    return <Slider label={name} value={value as number} onChange={onChange} />;
+  } else if (config.type === "select") {
+    return (
+      <RadioGroup
+        label={name}
+        value={value as string}
+        onChange={onChange}
+        options={config.options}
+      />
+    );
   }
+
+  return null;
 }

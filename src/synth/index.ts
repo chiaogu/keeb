@@ -28,6 +28,8 @@ export default function createSynth(initState: SynthState) {
     
     setToneNodeState(synth, newState.data);
     
+    console.log(synth);
+    
     state = { ...state, src: newState };
   }
 

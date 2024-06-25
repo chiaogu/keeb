@@ -11,6 +11,9 @@ function denormalize(config: NodeControlConfig, value?: unknown) {
       const [min, max] = config.range;
       return min + (max - min) * (value as number);
     }
+    case "select": {
+      return value as string;
+    }
   }
 }
 

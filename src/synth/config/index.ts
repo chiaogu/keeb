@@ -5,11 +5,16 @@ import { noiseSynthConfig } from "./noiseSynth";
 type RangeControlConfig = {
   type: "range";
   range: [number, number];
+  defaultValue: number;
 };
 
-export type NodeControlConfig = {
-  defaultValue: number;
-} & RangeControlConfig;
+type SelectControl = {
+  type: "select";
+  options: string[];
+  defaultValue: string;
+};
+
+export type NodeControlConfig = RangeControlConfig | SelectControl;
 
 export type SynthNodeControls = Record<string, NodeControlConfig>;
 
