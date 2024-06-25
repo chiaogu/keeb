@@ -26,7 +26,7 @@ export default function createSynth(initState: SynthState) {
       synth = createSynthNode(newState.type).toDestination();
     }
     
-    setToneNodeState(synth, state.src.data);
+    setToneNodeState(synth, newState.data);
     
     state = { ...state, src: newState };
   }

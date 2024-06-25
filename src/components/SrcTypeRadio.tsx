@@ -11,14 +11,16 @@ export default function SrcTypeRadio({ value, onChange }: SrcTypeRadioProps) {
   return (
     <div className="flex space-x-4">
       {srcTypeOptions.map((type) => (
-        <div key={type}>
+        <div className="flex space-x-1" key={type}>
           <input
             type="radio"
             value={type}
             checked={value === type}
-            onChange={(e) => onChange(e.target.value as SrcNodeType)}
+            onChange={() => onChange(type)}
           />
-          <label>{type}</label>
+          <label onClick={() => onChange(type)}>
+            {type}
+          </label>
         </div>
       ))}
     </div>

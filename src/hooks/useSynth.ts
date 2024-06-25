@@ -1,5 +1,5 @@
 import createSynth from "@src/synth";
-import { metalSynthConfig } from "@src/synth/config/metalSynth";
+import getDefaultNodeState from "@src/synth/getDefaultNodeState";
 import { useRef } from "react";
 
 export default function useSynth() {
@@ -7,12 +7,7 @@ export default function useSynth() {
     createSynth({
       src: {
         type: "metal",
-        data: Object.fromEntries(
-          Object.entries(metalSynthConfig).map(([key, { defaultValue }]) => [
-            key,
-            defaultValue,
-          ]),
-        ),
+        data: getDefaultNodeState('metal'),
       },
       fx: [],
     }),

@@ -7,7 +7,9 @@ export default function createSynthNode(type: SynthNodeType) {
   switch (type) {
     case 'metal':
       return new Tone.MetalSynth();
+    case 'noise':
+      return new Tone.NoiseSynth();
     default:
-      return new Tone.PolySynth();
+      throw new Error(`Unsupported type ${type}`);
   }
 }

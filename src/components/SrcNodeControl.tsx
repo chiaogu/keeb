@@ -1,18 +1,9 @@
 import { useEffect, useState } from "react";
 import Control from "./Control";
 import { Synth } from "@src/synth";
-import { SrcNodeType } from "@src/synth/config";
-import { metalSynthConfig } from "@src/synth/config/metalSynth";
+import { nodeConfig } from "@src/synth/config";
 import SrcTypeRadio from "./SrcTypeRadio";
-
-function getControls(type: SrcNodeType) {
-  switch (type) {
-    case "metal":
-      return metalSynthConfig;
-    default:
-      return {};
-  }
-}
+import getDefaultNodeState from "@src/synth/getDefaultNodeState";
 
 type SrcNodeControlProps = {
   synth: Synth;
@@ -29,9 +20,12 @@ export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
     <div className="flex w-full flex-col items-center">
       <SrcTypeRadio
         value={srcState.type}
-        onChange={(type) => setSrcState((state) => ({ ...state, type }))}
+        onChange={(type) => setSrcState({
+          type,
+          data: getDefaultNodeState(type),
+        })}
       />
-      {Object.entries(getControls(srcState.type)).map(([key, { type }]) => (
+      {Object.entries(nodeConfig[srcState.type]).map(([key, { type }]) => (
         <Control
           key={key}
           type={type}

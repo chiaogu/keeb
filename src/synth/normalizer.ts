@@ -19,7 +19,9 @@ export function denormalizeState(
   state: Record<string, unknown>,
 ) {
   return Object.fromEntries(
-    Object.entries(state).map(([key, value]) => [
+    Object.entries(state)
+    .filter(([key]) => !!config[key])
+    .map(([key, value]) => [
       key,
       denormalize(config[key], value),
     ]),
