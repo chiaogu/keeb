@@ -1,74 +1,44 @@
-import * as Tone from "tone";
-import { config, SynthState } from "./config";
-import { denormalizeState, normalizeState } from "./normalizer";
-import { frequencyToHertz } from "@src/utils";
+import { FxNodeType, SrcNodeType } from "./config";
+import createSynthNode, { SupportedToneNode } from "./createSynthNode";
+import setToneNodeState from "./setToneNodeState";
+import triggerToneNode from "./triggerToneNode";
+
+export type SynthState = {
+  src: { type: SrcNodeType, data: Record<string, unknown> },
+  fx: { type: FxNodeType, data: Record<string, unknown> }[],
+};
 
 export type Synth = {
-  setState: (state: Partial<SynthState>) => void,
+  setSrcState: (srcState: SynthState['src']) => void,
   getState: () => SynthState,
   trigger: () => void,
 };
 
-export default function createSynth() {
-  const synth = new Tone.MetalSynth().toDestination();
-  reset();
+export default function createSynth(initState: SynthState) {
+  let synth: SupportedToneNode | null = null;
+  let state: SynthState = initState;
+  
+  setSrcState(state.src);
 
-  function reset() {
-    setState(
-      Object.fromEntries(
-        Object.entries(config).map(([key, { defaultValue }]) => [
-          key,
-          defaultValue,
-        ]),
-      ),
-    );
-  }
-
-  function setState(state: Partial<SynthState>) {
-    const {
-      volume,
-      harmonicity,
-      frequency,
-      modulationIndex,
-      octaves,
-      portamento,
-      resonance,
-    } = denormalizeState(state);
-    synth.set({
-      volume,
-      harmonicity,
-      modulationIndex,
-      octaves,
-      portamento,
-      resonance,
-    });
-
-    if (frequency) {
-      synth.frequency.value = frequency;
+  function setSrcState(newState: SynthState['src']) {
+    if (synth === null || newState.type !== state.src.type) {
+      if (synth) synth.disconnect().dispose();  
+      synth = createSynthNode(newState.type).toDestination();
     }
-  }
-
-  function getState(): SynthState {
-    const { volume, harmonicity, modulationIndex, octaves, resonance } =
-      synth.get();
-
-    return normalizeState({
-      volume,
-      harmonicity,
-      modulationIndex,
-      frequency: frequencyToHertz(synth.frequency.value),
-      octaves,
-      resonance: frequencyToHertz(resonance),
-    });
+    
+    setToneNodeState(synth, state.src.data);
+    
+    state = { ...state, src: newState };
   }
 
   function trigger() {
-    synth.triggerAttackRelease(synth.frequency.value, "64n");
+    if (!synth) throw new Error('synth does not exist');
+    triggerToneNode(synth);
   }
   
   return {
-    setState,
-    getState,
+    setSrcState,
+    getState: () => state,
     trigger,
   };
 }

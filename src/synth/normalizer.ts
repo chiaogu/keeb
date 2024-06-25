@@ -1,38 +1,27 @@
-import { config, SynthState } from './config';
+import {
+  NodeControlConfig,
+  SynthNodeControls,
+} from "./config";
 
-function normalize(key: keyof SynthState, value: number) {
-  switch (config[key].type) {
-    case 'range': {
-      const [min, max] = config[key].range;
-      return (value - min) / (max - min);
-    }
-  }
-}
-
-function denormalize(key: keyof SynthState, value?: number) {
+function denormalize(config: NodeControlConfig, value?: unknown) {
   if (value === undefined) return undefined;
-  switch (config[key].type) {
-    case 'range': {
-      const [min, max] = config[key].range;
-      return min + (max - min) * value;
+
+  switch (config.type) {
+    case "range": {
+      const [min, max] = config.range;
+      return min + (max - min) * (value as number);
     }
   }
 }
 
-export function normalizeState(synthState: SynthState) {
+export function denormalizeState(
+  config: SynthNodeControls,
+  state: Record<string, unknown>,
+) {
   return Object.fromEntries(
-    Object.entries(synthState).map(([key, value]) => [
+    Object.entries(state).map(([key, value]) => [
       key,
-      normalize(key as keyof SynthState, value),
-    ])
-  ) as SynthState;
-}
-
-export function denormalizeState(synthState: Partial<SynthState>) {
-  return Object.fromEntries(
-    Object.entries(synthState).map(([key, value]) => [
-      key,
-      denormalize(key as keyof SynthState, value),
-    ])
+      denormalize(config[key], value),
+    ]),
   );
 }
