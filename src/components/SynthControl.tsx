@@ -1,6 +1,6 @@
 import { Synth } from "@src/synth";
 import SrcNodeControl from "./SrcNodeControl";
-import FxsControl from "./FxNodeControl";
+import FxsControl from "./FxsControl";
 
 type SynthControlProps = {
   synth: Synth

@@ -16,6 +16,7 @@ module.exports = {
       { allowConstantExport: true },
     ],
     "semi": [2, "always"],
-    'max-len': ["warn", { "code": 80, "ignoreStrings": true }]
+    'max-len': ["warn", { "code": 80, "ignoreStrings": true }],
+    "tailwindcss/no-custom-classname": ["off"]
   },
 }

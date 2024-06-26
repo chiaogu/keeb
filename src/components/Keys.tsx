@@ -4,7 +4,7 @@ export default function Keys() {
   const pressedKeys = usePressedKeys();
   
   return (
-    <div className="h-40">
+    <div className="min-h-32">
       <h1 className="text-[72px] font-bold">
         {pressedKeys.join(' ')}
       </h1>

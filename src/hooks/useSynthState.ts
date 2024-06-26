@@ -3,7 +3,7 @@ import { Synth, SynthState } from "@src/synth";
 
 export default function useSynthState(
   synth: Synth,
-): Pick<Synth, "setSrcState" | "setFxState" | "setFxs"> & {
+): Omit<Synth, "getState" | "trigger"> & {
   state: SynthState;
 } {
   const [state, setState] = useState(synth.getState());
@@ -23,6 +23,8 @@ export default function useSynthState(
       setSrcState: wrapSetState(synth.setSrcState),
       setFxs: wrapSetState(synth.setFxs),
       setFxState: wrapSetState(synth.setFxState),
+      removeFx: wrapSetState(synth.removeFx),
+      addFx: wrapSetState(synth.addFx),
     };
   }, [state, synth]);
 }

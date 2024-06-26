@@ -4,15 +4,20 @@ import { createSrcNode, SupportedSrcToneNode, createFxNode, SupportedFxToneNode 
 import setToneNodeState from "./setToneNodeState";
 import triggerToneNode from "./triggerToneNode";
 
+type SynthSrcNodeState = { type: SrcNodeType, data: Record<string, unknown> };
+type SynthFxNodeState = { type: FxNodeType, data: Record<string, unknown> };
+
 export type SynthState = {
-  src: { type: SrcNodeType, data: Record<string, unknown> },
-  fxs: { type: FxNodeType, data: Record<string, unknown> }[],
+  src: SynthSrcNodeState,
+  fxs: SynthFxNodeState[],
 };
 
 export type Synth = {
-  setSrcState: (srcState: SynthState['src']) => void,
-  setFxs: (fxs: SynthState['fxs']) => void,
-  setFxState: (index: number, fxState: SynthState['fxs'][number]) => void,
+  setSrcState: (srcState: SynthSrcNodeState) => void,
+  setFxs: (fxs: SynthFxNodeState[]) => void,
+  setFxState: (index: number, fxState: SynthFxNodeState) => void,
+  removeFx: (index: number) => void,
+  addFx: (index: number, fx: SynthFxNodeState) => void,
   getState: () => SynthState,
   trigger: () => void,
 };
@@ -59,6 +64,15 @@ export default function createSynth(initState: SynthState): Synth {
     setToneNodeState(fxNodes[index], fxState.data);
     state.fxs[index] = fxState;
   }
+  
+  function removeFx(index: number) {
+    state.fxs.splice(index, 1);
+    setFxs(state.fxs);
+  }
+  
+  function addFx() {
+    
+  }
 
   function trigger() {
     if (!srcNode) throw new Error('synth is not initialized yet');
@@ -69,6 +83,8 @@ export default function createSynth(initState: SynthState): Synth {
     setSrcState,
     setFxs,
     setFxState,
+    removeFx,
+    addFx,
     getState: () => state,
     trigger,
   };

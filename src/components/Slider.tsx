@@ -19,7 +19,7 @@ export default function Slider({ label, value, onChange }: SliderProps) {
   return (
     <div className="flex w-full">
       <label className="w-32 shrink-0">{label}</label>
-      <div className="flex flex-auto">
+      <div className="flex flex-auto items-center">
         <input
           className="w-full"
           type="range"
