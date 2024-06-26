@@ -1,10 +1,10 @@
-import Control from "./Control";
+import { Fragment } from "react/jsx-runtime";
 import { Synth } from "@src/synth";
 import { nodeConfig } from "@src/synth/config";
 import useSynthState from "@src/hooks/useSynthState";
-import { Fragment } from "react/jsx-runtime";
+import Button from "@src/components/shared/Button";
 import FxActions from "./FxActions";
-import Button from "./Button";
+import Control from "./Control";
 
 type SrcNodeControlProps = {
   synth: Synth;

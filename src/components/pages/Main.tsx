@@ -1,6 +1,6 @@
 import useSynth from "@src/hooks/useSynth";
-import Keys from "./Keys";
-import SynthControl from "./SynthControl";
+import Keys from "@src/components/synth/Keys";
+import SynthControl from "@src/components/synth/SynthControl";
 import useKeySounds from "@src/hooks/useKeySounds";
 
 function Main() {

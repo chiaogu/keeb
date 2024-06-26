@@ -2,7 +2,7 @@ import Control from "./Control";
 import { Synth } from "@src/synth";
 import { nodeConfig } from "@src/synth/config";
 import getDefaultNodeState from "@src/synth/getDefaultNodeState";
-import RadioGroup from "./RadioGroup";
+import RadioGroup from "@src/components//shared/RadioGroup";
 import useSynthState from "@src/hooks/useSynthState";
 
 type SrcNodeControlProps = {

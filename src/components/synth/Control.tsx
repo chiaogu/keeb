@@ -1,6 +1,6 @@
 import { NodeControlConfig } from "@src/synth/config";
-import Slider from "./Slider";
-import RadioGroup from "./RadioGroup";
+import Slider from "@src/components/shared/Slider";
+import RadioGroup from "@src/components/shared/RadioGroup";
 import { useMemo } from "react";
 
 type ControlProps = {

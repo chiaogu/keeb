@@ -1,4 +1,4 @@
-import Button from "./Button";
+import Button from "@src/components/shared/Button";
 
 type FxActionsProps = {
   onRemove: () => void;

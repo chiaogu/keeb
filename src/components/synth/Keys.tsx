@@ -1,4 +1,4 @@
-import { usePressedKeys } from '../hooks/useKeyEvents';
+import { usePressedKeys } from '@src/hooks/useKeyEvents';
 
 export default function Keys() {
   const pressedKeys = usePressedKeys();

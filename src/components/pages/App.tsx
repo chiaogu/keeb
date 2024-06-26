@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Main from "./Main";
-import Title from "./Title";
+import Main from "@src/components/pages/Main";
+import Title from "@src/components/pages/Title";
 
 function App() {
   const [started, setStarted] = useState(false);
