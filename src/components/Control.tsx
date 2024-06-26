@@ -1,6 +1,7 @@
 import { NodeControlConfig } from "@src/synth/config";
 import Slider from "./Slider";
 import RadioGroup from "./RadioGroup";
+import { useMemo } from "react";
 
 type ControlProps = {
   config: NodeControlConfig;
@@ -15,12 +16,14 @@ export default function Control({
   value,
   onChange,
 }: ControlProps) {
+  const label = useMemo(() => name.replace(/([a-z0-9])([A-Z])/g, "$1 $2").toLowerCase(), [name]);
+
   if (config.type === "range") {
-    return <Slider label={name} value={value as number} onChange={onChange} />;
+    return <Slider label={label} value={value as number} onChange={onChange} />;
   } else if (config.type === "select") {
     return (
       <RadioGroup
-        label={name}
+        label={label}
         value={value as string}
         onChange={onChange}
         options={config.options}
