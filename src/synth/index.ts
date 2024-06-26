@@ -1,3 +1,4 @@
+import * as Tone from 'tone';
 import { FxNodeType, SrcNodeType } from "./config";
 import { createSrcNode, SupportedSrcToneNode, createFxNode, SupportedFxToneNode } from "./createSynthNode";
 import setToneNodeState from "./setToneNodeState";
@@ -22,11 +23,21 @@ export default function createSynth(initState: SynthState): Synth {
   let fxNodes: SupportedFxToneNode[] = [];
   
   setSrcState(state.src);
+  setFxs(state.fxs);
+  
+  function rechain() {
+    if (!srcNode) throw new Error('synth is not initialized yet');
+    
+    srcNode.disconnect();
+    fxNodes.forEach((fxNode) => fxNode.disconnect());
+    srcNode.chain(...fxNodes, Tone.getDestination());
+  }
 
   function setSrcState(src: SynthState['src']) {
     if (srcNode === null || src.type !== state.src.type) {
       if (srcNode) srcNode.disconnect().dispose();  
-      srcNode = createSrcNode(src.type).toDestination();
+      srcNode = createSrcNode(src.type);
+      rechain();
     }
     
     setToneNodeState(srcNode, src.data);
@@ -39,13 +50,13 @@ export default function createSynth(initState: SynthState): Synth {
     
     fxNodes = fxs.map((fx) => createFxNode(fx.type));
     fxs.forEach((fx, index) => setFxState(index, fx));
+    rechain();
     
     state.fxs = fxs;
   }
   
   function setFxState(index: number, fxState: SynthState['fxs'][number]) {
-    setToneNodeState(fxNodes[index], fxState);
-    
+    setToneNodeState(fxNodes[index], fxState.data);
     state.fxs[index] = fxState;
   }
 

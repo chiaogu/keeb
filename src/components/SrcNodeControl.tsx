@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import Control from "./Control";
 import { Synth } from "@src/synth";
 import { nodeConfig } from "@src/synth/config";
