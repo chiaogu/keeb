@@ -1,4 +1,4 @@
-import Button from "@src/components/shared/Button";
+import IconButton from "@src/components/shared/IconButton";
 
 type FxActionsProps = {
   onRemove: () => void;
@@ -7,9 +7,9 @@ type FxActionsProps = {
 export default function FxActions({ onRemove }: FxActionsProps) {
   return (
     <div className="flex space-x-2">
-      {/* <Button icon="swap_vert" /> */}
-      <Button icon="remove" onClick={onRemove} />
-      <Button icon="add" />
+      {/* <IconButton icon="swap_vert" /> */}
+      <IconButton icon="remove" onClick={onRemove} />
+      <IconButton icon="add" />
     </div>
   );
 }
