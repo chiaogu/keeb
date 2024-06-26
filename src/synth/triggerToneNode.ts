@@ -1,4 +1,4 @@
-import * as Tone from 'tone';
+import * as Tone from '@src/tone';
 import { SupportedSrcToneNode } from "./createSynthNode";
 
 export default function triggerToneNode(node: SupportedSrcToneNode) {

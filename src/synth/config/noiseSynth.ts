@@ -1,4 +1,4 @@
-import * as Tone from "tone";
+import * as Tone from "@src/tone";
 import { SynthNodeControls } from ".";
 import { denormalizeState } from "../normalizer";
 

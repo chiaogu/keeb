@@ -1,4 +1,4 @@
-import * as Tone from 'tone';
+import * as Tone from "@src/tone";
 import { FxNodeType, SrcNodeType } from "./config";
 
 export type SupportedSrcToneNode = ReturnType<typeof createSrcNode>;

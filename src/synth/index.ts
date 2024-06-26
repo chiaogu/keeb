@@ -1,4 +1,4 @@
-import * as Tone from 'tone';
+import * as Tone from '@src/tone';
 import { FxNodeType, SrcNodeType } from "./config";
 import { createSrcNode, SupportedSrcToneNode, createFxNode, SupportedFxToneNode } from "./createSynthNode";
 import setToneNodeState from "./setToneNodeState";

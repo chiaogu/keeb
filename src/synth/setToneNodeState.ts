@@ -1,4 +1,4 @@
-import * as Tone from 'tone';
+import * as Tone from '@src/tone';
 import { SupportedSrcToneNode, SupportedFxToneNode } from "./createSynthNode";
 import { setMetalSynthState } from './config/metalSynth';
 import { setNoiseSynthState } from './config/noiseSynth';

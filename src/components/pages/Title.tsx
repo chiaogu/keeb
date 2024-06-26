@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import * as Tone from "tone";
+import * as Tone from "@src/tone";
 
 type TitleProps = {
   onStart: () => void;
@@ -14,16 +14,14 @@ export default function Title({ onStart }: TitleProps) {
   
   useEffect(() => {
     addEventListener('click', handleStart);
-    addEventListener('keydown', handleStart);
     return () => {
       removeEventListener('click', handleStart);
-      removeEventListener('keydown', handleStart);
     };
   }, [handleStart]);
   
   return (
     <div className="flex h-screen w-screen cursor-pointer items-center justify-center">
-      <div>Click anywhere or press any key to start</div>
+      <div>start</div>
     </div>
   );
 }
