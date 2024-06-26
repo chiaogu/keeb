@@ -1,7 +1,7 @@
 import * as Tone from 'tone';
-import { SupportedToneNode } from "./createSynthNode";
+import { SupportedSrcToneNode } from "./createSynthNode";
 
-export default function triggerToneNode(node: SupportedToneNode) {
+export default function triggerToneNode(node: SupportedSrcToneNode) {
   if (node instanceof Tone.MetalSynth) {
     node.triggerAttackRelease(node.frequency.value, "64n");
   } else if (node instanceof Tone.NoiseSynth) {

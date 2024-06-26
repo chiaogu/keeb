@@ -19,15 +19,13 @@ export function setNoiseSynthState(
   synth: Tone.NoiseSynth,
   state: Record<string, unknown>,
 ) {
-  if (synth instanceof Tone.NoiseSynth) {
-    const { volume, type } = denormalizeState(noiseSynthConfig, state);
+  const { volume, type } = denormalizeState(noiseSynthConfig, state);
 
-    synth.set({
-      volume,
-    });
+  synth.set({
+    volume: volume as number,
+  });
 
-    synth.noise.set({
-      type,
-    });
-  }
+  synth.noise.set({
+    type: type as Tone.NoiseType,
+  });
 }

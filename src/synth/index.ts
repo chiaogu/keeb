@@ -1,45 +1,63 @@
 import { FxNodeType, SrcNodeType } from "./config";
-import createSynthNode, { SupportedToneNode } from "./createSynthNode";
+import { createSrcNode, SupportedSrcToneNode, createFxNode, SupportedFxToneNode } from "./createSynthNode";
 import setToneNodeState from "./setToneNodeState";
 import triggerToneNode from "./triggerToneNode";
 
 export type SynthState = {
   src: { type: SrcNodeType, data: Record<string, unknown> },
-  fx: { type: FxNodeType, data: Record<string, unknown> }[],
+  fxs: { type: FxNodeType, data: Record<string, unknown> }[],
 };
 
 export type Synth = {
   setSrcState: (srcState: SynthState['src']) => void,
+  setFxs: (fxs: SynthState['fxs']) => void,
+  setFxState: (index: number, fxState: SynthState['fxs'][number]) => void,
   getState: () => SynthState,
   trigger: () => void,
 };
 
-export default function createSynth(initState: SynthState) {
-  let synth: SupportedToneNode | null = null;
-  let state: SynthState = initState;
+export default function createSynth(initState: SynthState): Synth {
+  const state: SynthState = initState;
+  let srcNode: SupportedSrcToneNode | null = null;
+  let fxNodes: SupportedFxToneNode[] = [];
   
   setSrcState(state.src);
 
-  function setSrcState(newState: SynthState['src']) {
-    if (synth === null || newState.type !== state.src.type) {
-      if (synth) synth.disconnect().dispose();  
-      synth = createSynthNode(newState.type).toDestination();
+  function setSrcState(src: SynthState['src']) {
+    if (srcNode === null || src.type !== state.src.type) {
+      if (srcNode) srcNode.disconnect().dispose();  
+      srcNode = createSrcNode(src.type).toDestination();
     }
     
-    setToneNodeState(synth, newState.data);
+    setToneNodeState(srcNode, src.data);
     
-    console.log(synth);
+    state.src = src;
+  }
+  
+  function setFxs(fxs: SynthState['fxs']) {
+    if (!srcNode) throw new Error('synth is not initialized yet');
     
-    state = { ...state, src: newState };
+    fxNodes = fxs.map((fx) => createFxNode(fx.type));
+    fxs.forEach((fx, index) => setFxState(index, fx));
+    
+    state.fxs = fxs;
+  }
+  
+  function setFxState(index: number, fxState: SynthState['fxs'][number]) {
+    setToneNodeState(fxNodes[index], fxState);
+    
+    state.fxs[index] = fxState;
   }
 
   function trigger() {
-    if (!synth) throw new Error('synth does not exist');
-    triggerToneNode(synth);
+    if (!srcNode) throw new Error('synth is not initialized yet');
+    triggerToneNode(srcNode);
   }
   
   return {
     setSrcState,
+    setFxs,
+    setFxState,
     getState: () => state,
     trigger,
   };

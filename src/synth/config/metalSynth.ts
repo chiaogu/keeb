@@ -39,28 +39,26 @@ export function setMetalSynthState(
   synth: Tone.MetalSynth,
   state: Record<string, unknown>,
 ) {
-  if (synth instanceof Tone.MetalSynth) {
-    const {
-      volume,
-      harmonicity,
-      frequency,
-      modulationIndex,
-      octaves,
-      portamento,
-      resonance,
-    } = denormalizeState(metalSynthConfig, state);
+  const {
+    volume,
+    harmonicity,
+    frequency,
+    modulationIndex,
+    octaves,
+    portamento,
+    resonance,
+  } = denormalizeState(metalSynthConfig, state);
 
-    synth.set({
-      volume,
-      harmonicity,
-      modulationIndex,
-      octaves,
-      portamento,
-      resonance,
-    });
+  synth.set({
+    volume: volume as number,
+    harmonicity: harmonicity as number,
+    modulationIndex: modulationIndex as number,
+    octaves: octaves as number,
+    portamento: portamento as number,
+    resonance: resonance as number,
+  });
 
-    if (frequency) {
-      synth.frequency.value = frequency;
-    }
+  if (frequency) {
+    synth.frequency.value = frequency as number;
   }
 }

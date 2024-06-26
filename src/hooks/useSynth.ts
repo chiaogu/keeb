@@ -9,7 +9,7 @@ export default function useSynth() {
         type: "metal",
         data: getDefaultNodeState('metal'),
       },
-      fx: [],
+      fxs: [],
     }),
   );
   return synthRef.current;
