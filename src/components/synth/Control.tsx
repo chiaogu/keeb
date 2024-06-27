@@ -16,10 +16,24 @@ export default function Control({
   value,
   onChange,
 }: ControlProps) {
-  const label = useMemo(() => name.replace(/([a-z0-9])([A-Z])/g, "$1 $2").toLowerCase(), [name]);
+  const label = useMemo(
+    () => name.replace(/([a-z0-9])([A-Z])/g, "$1 $2").toLowerCase(),
+    [name],
+  );
 
   if (config.type === "range") {
-    return <Slider label={label} value={value as number} onChange={onChange} />;
+    return (
+      <Slider
+        label={label}
+        value={value as number}
+        onChange={onChange}
+        step={
+          config.step
+            ? config.step / (config.range[1] - config.range[0])
+            : undefined
+        }
+      />
+    );
   } else if (config.type === "select") {
     return (
       <RadioGroup
