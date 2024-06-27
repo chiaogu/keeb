@@ -1,15 +1,16 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import IconButton from "../shared/IconButton";
 import NodeTypeSelect from "./NodeTypeSelect";
 import { SynthFxNodeState } from "@src/synth";
 
 type NewFxProps = {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onSelect: (nodeState: SynthFxNodeState) => void;
 }
 
-export default function NewFx({ onSelect }: NewFxProps) {
-  const [open, setOpen] = useState(false);
-  const toggleSelecting = useCallback(() => setOpen((v) => !v), []);
+export default function NewFx({ onSelect, open, setOpen }: NewFxProps) {
+  const toggleSelecting = useCallback(() => setOpen((v) => !v), [setOpen]);
 
   return (
     <div className="flex w-full flex-col">
