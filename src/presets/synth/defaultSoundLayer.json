@@ -1,0 +1,11 @@
+{
+  "id": "",
+  "src": {
+    "type": "noise",
+    "data": {
+      "volume": -15,
+      "type": "white"
+    }
+  },
+  "fxs": []
+}

@@ -1,11 +1,14 @@
 import createSynth, { Synth, SynthConfig } from "@src/synth";
+import defaultSoundLayer from "@src/presets/synth/defaultSoundLayer.json";
 
 import { useMemo, useState } from "react";
+import { v4 as uuid } from 'uuid';
 
 export type Sound = {
   synths: Synth[];
   trigger: () => void;
-  remove: (index: number) => void;
+  removeLayer: (index: number) => void;
+  addLayer: () => void;
 };
 
 export type SoundConfig = {
@@ -22,10 +25,19 @@ export default function useSound(config: SoundConfig): Sound {
       trigger() {
         synths.forEach(({ trigger }) => trigger());
       },
-      remove(index: number) {
+      removeLayer(index: number) {
         synths[index].dispose();
         setSynths((synths) => synths.filter((_, i) => i !== index));
-      }
+      },
+      addLayer() {
+        setSynths((synths) => [
+          ...synths,
+          createSynth({
+            ...defaultSoundLayer as SynthConfig,
+            id: uuid(),
+          }),
+        ]);
+      },
     }),
     [synths],
   );
