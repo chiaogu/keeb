@@ -1,16 +1,15 @@
 import Control from "./Control";
-import { Synth } from "@src/synth";
 import { nodeConfig } from "@src/synth/config";
 import getDefaultNodeState from "@src/synth/getDefaultNodeState";
 import RadioGroup from "@src/components//shared/RadioGroup";
-import useSynthState from "@src/hooks/useSynthState";
+import { SynthControlState } from "@src/hooks/useSynthState";
 
 type SrcNodeControlProps = {
-  synth: Synth;
+  synth: SynthControlState;
 };
 
 export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
-  const { state, setSrcState } = useSynthState(synth);
+  const { state, setSrcState } = synth;
 
   return (
     <div className="flex w-full flex-col items-center">

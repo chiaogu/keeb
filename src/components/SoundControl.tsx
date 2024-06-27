@@ -9,7 +9,13 @@ export default function SoundControl({ sound }: SoundControlProps) {
   return (
     <div className="flex w-full max-w-[500px] flex-col items-center space-y-8">
       {sound.synths.map((synth, index) => (
-        <SynthControl key={index} synth={synth} />
+        <SynthControl
+          key={synth.getState().id}
+          name={`layer ${index}`}
+          synth={synth}
+          onRemove={() => sound.remove(index)}
+          removable={sound.synths.length > 0}
+        />
       ))}
     </div>
   );

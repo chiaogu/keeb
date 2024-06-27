@@ -1,15 +1,14 @@
-import { Synth } from "@src/synth";
-import useSynthState from "@src/hooks/useSynthState";
+import { SynthControlState } from "@src/hooks/useSynthState";
 import FxControl from "./FxControl";
 import NewFx from "./NewFx";
 import { useState } from "react";
 
 type SrcNodeControlProps = {
-  synth: Synth;
+  synth: SynthControlState;
 };
 
 export default function FxsControl({ synth }: SrcNodeControlProps) {
-  const { state, setFxState, removeFx, addFx } = useSynthState(synth);
+  const { state, setFxState, removeFx, addFx } = synth;
   const [newFxOpen, setNewFxOpen] = useState(false);
 
   return (

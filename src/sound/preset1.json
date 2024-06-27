@@ -1,7 +1,8 @@
 {
-  "id": "1",
+  "id": "sound-1",
   "synths": [
     {
+      "id": "synth-1",
       "src": {
         "type": "metal",
         "data": {
@@ -25,6 +26,7 @@
       ]
     },
     {
+      "id": "synth-2",
       "src": {
         "type": "noise",
         "data": {

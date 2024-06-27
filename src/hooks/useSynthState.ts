@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
-import { Synth, SynthState } from "@src/synth";
+import { Synth, SynthConfig } from "@src/synth";
+
+export type SynthControlState = Omit<Synth, "getState" | "trigger"> & {
+  state: SynthConfig;
+};
 
 export default function useSynthState(
   synth: Synth,
-): Omit<Synth, "getState" | "trigger"> & {
-  state: SynthState;
-} {
+): SynthControlState {
   const [state, setState] = useState(synth.getState());
 
   return useMemo(() => {

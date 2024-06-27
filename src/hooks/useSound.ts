@@ -1,15 +1,16 @@
-import createSynth, { Synth, SynthState } from "@src/synth";
+import createSynth, { Synth, SynthConfig } from "@src/synth";
 
 import { useMemo, useState } from "react";
 
 export type Sound = {
   synths: Synth[];
   trigger: () => void;
+  remove: (index: number) => void;
 };
 
 export type SoundConfig = {
   id: string;
-  synths: SynthState[];
+  synths: SynthConfig[];
 };
 
 export default function useSound(config: SoundConfig): Sound {
@@ -21,6 +22,10 @@ export default function useSound(config: SoundConfig): Sound {
       trigger() {
         synths.forEach(({ trigger }) => trigger());
       },
+      remove(index: number) {
+        synths[index].dispose();
+        setSynths((synths) => synths.filter((_, i) => i !== index));
+      }
     }),
     [synths],
   );
