@@ -1,21 +1,15 @@
-import * as Tone from '@src/tone';
 import { SupportedSrcToneNode, SupportedFxToneNode } from "./createSynthNode";
-import { setMetalSynthState } from './config/metalSynth';
-import { setNoiseSynthState } from './config/noiseSynth';
-import { setReverbState } from './config/reverb';
-import { setBitCrusherState } from './config/bitCrusher';
+import { nodeConfig } from './config';
 
 export default function setToneNodeState(
   node: SupportedSrcToneNode | SupportedFxToneNode,
   state: Record<string, unknown>,
 ) {
-  if (node instanceof Tone.MetalSynth) {
-    setMetalSynthState(node, state);
-  } else if (node instanceof Tone.NoiseSynth) {
-    setNoiseSynthState(node, state);
-  } else if (node instanceof Tone.Reverb) {
-    setReverbState(node, state);
-  } else if (node instanceof Tone.BitCrusher) {
-    setBitCrusherState(node, state);
-  }
+  
+  Object.values(nodeConfig).some((config) => {
+    if (node instanceof config.ToneClass) {
+      config.setState(node as never, state);
+      return true;
+    }
+  });
 }

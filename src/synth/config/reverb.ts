@@ -1,7 +1,7 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 
-export const reverbConfig: SynthNodeConfig = {
+export const reverbConfig: SynthNodeConfig<Tone.Reverb> = {
   ToneClass: Tone.Reverb,
   controls: {
     wet: {
@@ -20,15 +20,13 @@ export const reverbConfig: SynthNodeConfig = {
       range: [0, 0.5],
     },
   },
+  setState(node, state) {
+    node.set({
+      wet: state.wet as number,
+      decay: state.decay as number,
+      preDelay: state.preDelay as number,
+    });
+  }
 };
 
-export function setReverbState(
-  node: Tone.Reverb,
-  { wet, decay, preDelay }: Record<string, unknown>,
-) {
-  node.set({
-    wet: wet as number,
-    decay: decay as number,
-    preDelay: preDelay as number,
-  });
-}
+export const setReverbState = reverbConfig.setState;

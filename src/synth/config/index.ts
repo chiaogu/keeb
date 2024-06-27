@@ -19,9 +19,10 @@ type SelectControl = {
 
 export type NodeControlConfig = RangeControlConfig | SelectControl;
 
-export type SynthNodeConfig = {
-  ToneClass: { new(): Tone.ToneAudioNode },
-  controls: Record<string, NodeControlConfig>,
+export type SynthNodeConfig<T extends Tone.ToneAudioNode> = {
+  ToneClass: { new (): T };
+  controls: Record<string, NodeControlConfig>;
+  setState: (node: T, state: Record<string, unknown>) => void;
 };
 
 export type SrcNodeType = "metal" | "noise";
@@ -34,7 +35,7 @@ export const srcNodeConfig = {
 };
 
 export const fxNodeConfig = {
-  reverb: reverbConfig,  
+  reverb: reverbConfig,
   bitCrusher: bitCrusherConfig,
 };
 

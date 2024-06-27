@@ -1,7 +1,7 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 
-export const metalSynthConfig: SynthNodeConfig = {
+export const metalSynthConfig: SynthNodeConfig<Tone.MetalSynth> = {
   ToneClass: Tone.MetalSynth,
   controls: {
     volume: {
@@ -35,30 +35,20 @@ export const metalSynthConfig: SynthNodeConfig = {
       range: [0, 7000],
     },
   },
+  setState(node, state) {
+    node.set({
+      volume: state.volume as number,
+      harmonicity: state.harmonicity as number,
+      modulationIndex: state.modulationIndex as number,
+      octaves: state.octaves as number,
+      portamento: state.portamento as number,
+      resonance: state.resonance as number,
+    });
+
+    if (state.frequency) {
+      node.frequency.value = state.frequency as number;
+    }
+  },
 };
 
-export function setMetalSynthState(
-  synth: Tone.MetalSynth,
-  {
-    volume,
-    harmonicity,
-    frequency,
-    modulationIndex,
-    octaves,
-    portamento,
-    resonance,
-  }: Record<string, unknown>,
-) {
-  synth.set({
-    volume: volume as number,
-    harmonicity: harmonicity as number,
-    modulationIndex: modulationIndex as number,
-    octaves: octaves as number,
-    portamento: portamento as number,
-    resonance: resonance as number,
-  });
-
-  if (frequency) {
-    synth.frequency.value = frequency as number;
-  }
-}
+export const setMetalSynthState = metalSynthConfig.setState;

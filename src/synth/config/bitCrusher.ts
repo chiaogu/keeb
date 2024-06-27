@@ -1,7 +1,7 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 
-export const bitCrusherConfig: SynthNodeConfig = {
+export const bitCrusherConfig: SynthNodeConfig<Tone.BitCrusher> = {
   ToneClass: Tone.BitCrusher,
   controls: {
     wet: {
@@ -14,15 +14,13 @@ export const bitCrusherConfig: SynthNodeConfig = {
       type: "range",
       range: [1, 16],
     }
+  },
+  setState(node, state) {
+    node.set({
+      wet: state.wet as number,
+      bits: state.bits as number,
+    });
   }
 };
 
-export function setBitCrusherState(
-  node: Tone.BitCrusher,
-  { wet, bits }: Record<string, unknown>,
-) {
-  node.set({
-    wet: wet as number,
-    bits: bits as number,
-  });
-}
+export const setBitCrusherState = bitCrusherConfig.setState;
