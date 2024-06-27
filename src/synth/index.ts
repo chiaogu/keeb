@@ -27,18 +27,7 @@ export type SynthConfig = {
   fxs: SynthFxNodeState[];
 };
 
-export type Synth = {
-  setSrcState: (srcState: SynthSrcNodeState) => void;
-  setFxs: (fxs: SynthFxNodeState[]) => void;
-  setFxState: (index: number, fxState: SynthFxNodeState) => void;
-  removeFx: (index: number) => void;
-  addFx: (index: number, fx: SynthFxNodeState) => void;
-  getState: () => SynthConfig;
-  trigger: () => void;
-  dispose: () => void;
-};
-
-export default function createSynth(initState: SynthConfig): Synth {
+export default function createSynth(initState: SynthConfig) {
   const state: SynthConfig = initState;
   let srcNode: SupportedSrcToneNode | null = null;
   let fxNodes: SupportedFxToneNode[] = [];
@@ -113,3 +102,5 @@ export default function createSynth(initState: SynthConfig): Synth {
     dispose,
   };
 }
+
+export type Synth = ReturnType<typeof createSynth>;

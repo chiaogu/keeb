@@ -2,7 +2,7 @@ import createSynth, { Synth, SynthConfig } from "@src/synth";
 import defaultSoundLayer from "@src/presets/synth/defaultSoundLayer.json";
 
 import { useMemo, useState } from "react";
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from "uuid";
 
 export type Sound = {
   synths: Synth[];
@@ -17,7 +17,11 @@ export type SoundConfig = {
 };
 
 export default function useSound(config: SoundConfig): Sound {
-  const [synths, setSynths] = useState<Synth[]>(config.synths.map(createSynth));
+  const initSynths = useMemo(
+    () => config.synths.map(createSynth),
+    [config.synths],
+  );
+  const [synths, setSynths] = useState<Synth[]>(initSynths);
 
   return useMemo(
     () => ({
@@ -33,7 +37,7 @@ export default function useSound(config: SoundConfig): Sound {
         setSynths((synths) => [
           ...synths,
           createSynth({
-            ...defaultSoundLayer as SynthConfig,
+            ...(defaultSoundLayer as SynthConfig),
             id: uuid(),
           }),
         ]);
