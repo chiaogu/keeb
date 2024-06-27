@@ -17,7 +17,7 @@ export default function FxControl({ fx, onRemove, onChange }: FxControlProps) {
         <label>{splitCamelCase(fx.type)}</label>
         <FxActions onRemove={onRemove} />
       </div>
-      {Object.entries(nodeConfig[fx.type]).map(([key, config]) => (
+      {Object.entries(nodeConfig[fx.type].controls).map(([key, config]) => (
         <Control
           key={key}
           config={config}

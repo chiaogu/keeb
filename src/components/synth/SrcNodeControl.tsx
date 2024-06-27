@@ -18,25 +18,29 @@ export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
         label="type"
         options={["metal", "noise"]}
         value={state.src.type}
-        onChange={(type) => setSrcState({
-          type,
-          data: getDefaultNodeState(type),
-        })}
+        onChange={(type) =>
+          setSrcState({
+            type,
+            data: getDefaultNodeState(type),
+          })
+        }
       />
-      {Object.entries(nodeConfig[state.src.type]).map(([key, config]) => (
-        <Control
-          key={key}
-          config={config}
-          name={key}
-          value={state.src.data[key]}
-          onChange={(value) =>
-            setSrcState({
-              ...state.src,
-              data: { ...state.src.data, [key]: value },
-            })
-          }
-        />
-      ))}
+      {Object.entries(nodeConfig[state.src.type].controls).map(
+        ([key, config]) => (
+          <Control
+            key={key}
+            config={config}
+            name={key}
+            value={state.src.data[key]}
+            onChange={(value) =>
+              setSrcState({
+                ...state.src,
+                data: { ...state.src.data, [key]: value },
+              })
+            }
+          />
+        ),
+      )}
     </div>
   );
 }

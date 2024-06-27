@@ -18,18 +18,20 @@ type SelectControl = {
 
 export type NodeControlConfig = RangeControlConfig | SelectControl;
 
-export type SynthNodeControls = Record<string, NodeControlConfig>;
+export type SynthNodeConfig = {
+  controls: Record<string, NodeControlConfig>,
+};
 
 export type SrcNodeType = "metal" | "noise";
 export type FxNodeType = "reverb" | "bitCrusher";
 export type SynthNodeType = SrcNodeType | FxNodeType;
 
-export const srcNodeConfig: Record<SrcNodeType, SynthNodeControls> = {
+export const srcNodeConfig: Record<SrcNodeType, SynthNodeConfig> = {
   metal: metalSynthConfig,
   noise: noiseSynthConfig,
 };
 
-export const fxNodeConfig: Record<FxNodeType, SynthNodeControls> = {
+export const fxNodeConfig: Record<FxNodeType, SynthNodeConfig> = {
   reverb: reverbConfig,  
   bitCrusher: bitCrusherConfig,
 };

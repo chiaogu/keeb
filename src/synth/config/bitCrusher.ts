@@ -1,16 +1,18 @@
 import * as Tone from "@src/tone";
-import { SynthNodeControls } from ".";
+import { SynthNodeConfig } from ".";
 
-export const bitCrusherConfig: SynthNodeControls = {
-  wet: {
-    defaultValue: 0.5,
-    type: "range",
-    range: [0, 1],
-  },
-  bits: {
-    defaultValue: 8,
-    type: "range",
-    range: [1, 16],
+export const bitCrusherConfig: SynthNodeConfig = {
+  controls: {
+    wet: {
+      defaultValue: 0.5,
+      type: "range",
+      range: [0, 1],
+    },
+    bits: {
+      defaultValue: 8,
+      type: "range",
+      range: [1, 16],
+    }
   }
 };
 

@@ -1,21 +1,23 @@
 import * as Tone from "@src/tone";
-import { SynthNodeControls } from ".";
+import { SynthNodeConfig } from ".";
 
-export const reverbConfig: SynthNodeControls = {
-  wet: {
-    defaultValue: 0.5,
-    type: "range",
-    range: [0, 1],
-  },
-  decay: {
-    defaultValue: 3,
-    type: "range",
-    range: [0.001, 5],
-  },
-  preDelay: {
-    defaultValue: 0.05,
-    type: "range",
-    range: [0, 0.5],
+export const reverbConfig: SynthNodeConfig = {
+  controls: {
+    wet: {
+      defaultValue: 0.5,
+      type: "range",
+      range: [0, 1],
+    },
+    decay: {
+      defaultValue: 3,
+      type: "range",
+      range: [0.001, 5],
+    },
+    preDelay: {
+      defaultValue: 0.05,
+      type: "range",
+      range: [0, 0.5],
+    },
   },
 };
 

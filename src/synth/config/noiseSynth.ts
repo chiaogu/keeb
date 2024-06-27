@@ -1,16 +1,18 @@
 import * as Tone from "@src/tone";
-import { SynthNodeControls } from ".";
+import { SynthNodeConfig } from ".";
 
-export const noiseSynthConfig: SynthNodeControls = {
-  volume: {
-    type: "range",
-    defaultValue: -15,
-    range: [-80, -15],
-  },
-  type: {
-    type: "select",
-    defaultValue: "brown",
-    options: ["brown", "white", "pink"],
+export const noiseSynthConfig: SynthNodeConfig = {
+  controls: {
+    volume: {
+      type: "range",
+      defaultValue: -15,
+      range: [-80, -15],
+    },
+    type: {
+      type: "select",
+      defaultValue: "brown",
+      options: ["brown", "white", "pink"],
+    },
   },
 };
 
