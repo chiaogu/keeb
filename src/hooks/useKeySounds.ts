@@ -1,15 +1,15 @@
 import { useCallback } from "react";
 import { useKeyEvents } from "./useKeyEvents";
-import { Synth } from "@src/synth";
+import { Sound } from "./useSound";
 
-export default function useKeySounds(downSynth: Synth, upSynth: Synth) {
+export default function useKeySounds(down: Sound, up: Sound) {
   const onKeydown = useCallback(() => {
-    downSynth.trigger();
-  }, [downSynth]);
+    down.trigger();
+  }, [down]);
 
   const onKeyUp = useCallback(() => {
-    upSynth.trigger();
-  }, [upSynth]);
+    up.trigger();
+  }, [up]);
 
   useKeyEvents(onKeydown, onKeyUp);
 }

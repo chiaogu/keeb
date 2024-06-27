@@ -1,19 +1,18 @@
-import useSynth from "@src/hooks/useSynth";
 import Keys from "@src/components/synth/Keys";
-import SynthControl from "@src/components/synth/SynthControl";
 import useKeySounds from "@src/hooks/useKeySounds";
+import useSound, { SoundConfig } from "@src/hooks/useSound";
+import soundPreset1 from "@src/sound/preset1.json";
+import SoundControl from "../SoundControl";
 
 function Main() {
-  const downSynth = useSynth();
-  const upSynth = useSynth();
+  const downSound = useSound(soundPreset1 as SoundConfig);
 
-  useKeySounds(downSynth, upSynth);
+  useKeySounds(downSound, downSound);
 
   return (
     <div className="flex h-screen w-screen flex-col items-center space-y-8">
       <Keys />
-      <SynthControl synth={downSynth} />
-      <SynthControl synth={upSynth} />
+      <SoundControl sound={downSound} />
     </div>
   );
 }
