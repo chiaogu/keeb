@@ -1,3 +1,4 @@
+import * as Tone from "@src/tone";
 import { reverbConfig } from "./reverb";
 import { metalSynthConfig } from "./metalSynth";
 import { noiseSynthConfig } from "./noiseSynth";
@@ -19,6 +20,7 @@ type SelectControl = {
 export type NodeControlConfig = RangeControlConfig | SelectControl;
 
 export type SynthNodeConfig = {
+  ToneClass: { new(): Tone.ToneAudioNode },
   controls: Record<string, NodeControlConfig>,
 };
 
@@ -26,12 +28,12 @@ export type SrcNodeType = "metal" | "noise";
 export type FxNodeType = "reverb" | "bitCrusher";
 export type SynthNodeType = SrcNodeType | FxNodeType;
 
-export const srcNodeConfig: Record<SrcNodeType, SynthNodeConfig> = {
+export const srcNodeConfig = {
   metal: metalSynthConfig,
   noise: noiseSynthConfig,
 };
 
-export const fxNodeConfig: Record<FxNodeType, SynthNodeConfig> = {
+export const fxNodeConfig = {
   reverb: reverbConfig,  
   bitCrusher: bitCrusherConfig,
 };

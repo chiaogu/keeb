@@ -2,6 +2,7 @@ import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 
 export const reverbConfig: SynthNodeConfig = {
+  ToneClass: Tone.Reverb,
   controls: {
     wet: {
       defaultValue: 0.5,

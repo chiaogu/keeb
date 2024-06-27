@@ -2,6 +2,7 @@ import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 
 export const bitCrusherConfig: SynthNodeConfig = {
+  ToneClass: Tone.BitCrusher,
   controls: {
     wet: {
       defaultValue: 0.5,

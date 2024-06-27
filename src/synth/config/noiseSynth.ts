@@ -2,6 +2,7 @@ import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 
 export const noiseSynthConfig: SynthNodeConfig = {
+  ToneClass: Tone.NoiseSynth,
   controls: {
     volume: {
       type: "range",

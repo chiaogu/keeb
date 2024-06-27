@@ -2,6 +2,7 @@ import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 
 export const metalSynthConfig: SynthNodeConfig = {
+  ToneClass: Tone.MetalSynth,
   controls: {
     volume: {
       defaultValue: -30,
