@@ -20,6 +20,8 @@ export function createFxNode(type: FxNodeType) {
   switch (type) {
     case 'reverb':
       return new Tone.Reverb();
+    case 'bitCrusher':
+      return new Tone.BitCrusher();
     default:
       throw new Error(`Unsupported type ${type}`);
   }

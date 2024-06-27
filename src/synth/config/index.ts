@@ -1,11 +1,13 @@
 import { reverbConfig } from "./reverb";
 import { metalSynthConfig } from "./metalSynth";
 import { noiseSynthConfig } from "./noiseSynth";
+import { bitCrusherConfig } from "./bitCrusher";
 
 type RangeControlConfig = {
   type: "range";
   range: [number, number];
   defaultValue: number;
+  step?: number;
 };
 
 type SelectControl = {
@@ -19,7 +21,7 @@ export type NodeControlConfig = RangeControlConfig | SelectControl;
 export type SynthNodeControls = Record<string, NodeControlConfig>;
 
 export type SrcNodeType = "metal" | "noise";
-export type FxNodeType = "reverb" | "dummy1" | "dummy2" | "dummy3" | "dummy4" | "dummy5";
+export type FxNodeType = "reverb" | "bitCrusher";
 export type SynthNodeType = SrcNodeType | FxNodeType;
 
 export const srcNodeConfig: Record<SrcNodeType, SynthNodeControls> = {
@@ -29,11 +31,7 @@ export const srcNodeConfig: Record<SrcNodeType, SynthNodeControls> = {
 
 export const fxNodeConfig: Record<FxNodeType, SynthNodeControls> = {
   reverb: reverbConfig,  
-  dummy1: {},
-  dummy2: {},
-  dummy3: {},
-  dummy4: {},
-  dummy5: {},
+  bitCrusher: bitCrusherConfig,
 };
 
 export const nodeConfig = {

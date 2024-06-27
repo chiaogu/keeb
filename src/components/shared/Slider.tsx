@@ -4,11 +4,12 @@ type SliderProps = {
   label: string;
   value: number;
   onChange: (v: number) => void;
+  step?: number;
 };
 
 const RESOLUTION = 100000;
 
-export default function Slider({ label, value, onChange }: SliderProps) {
+export default function Slider({ label, value, onChange, step }: SliderProps) {
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       onChange(parseInt(e.target.value) / RESOLUTION);
@@ -26,6 +27,7 @@ export default function Slider({ label, value, onChange }: SliderProps) {
           name="volume"
           min="0"
           max={RESOLUTION}
+          step={step ? step * RESOLUTION : undefined}
           value={value * RESOLUTION}
           onChange={handleChange}
         />

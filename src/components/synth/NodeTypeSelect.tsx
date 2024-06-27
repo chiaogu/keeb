@@ -6,6 +6,7 @@ import {
 } from "@src/synth/config";
 import { SynthNodeState } from "@src/synth";
 import getDefaultNodeState from "@src/synth/getDefaultNodeState";
+import { splitCamelCase } from "@src/utils";
 
 type NodeType = "src" | "fx";
 
@@ -29,7 +30,7 @@ export default function NodeTypeSelect({
       <div className="inline-block w-full">
         {options[type].map((option) => (
           <button
-            className="mr-4"
+            className="mr-8"
             key={option}
             onClick={() =>
               onSelect({
@@ -38,7 +39,7 @@ export default function NodeTypeSelect({
               })
             }
           >
-            {option}
+            {splitCamelCase(option)}
           </button>
         ))}
       </div>

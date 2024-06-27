@@ -2,6 +2,7 @@ import { NodeControlConfig } from "@src/synth/config";
 import Slider from "@src/components/shared/Slider";
 import RadioGroup from "@src/components/shared/RadioGroup";
 import { useMemo } from "react";
+import { splitCamelCase } from "@src/utils";
 
 type ControlProps = {
   config: NodeControlConfig;
@@ -16,10 +17,7 @@ export default function Control({
   value,
   onChange,
 }: ControlProps) {
-  const label = useMemo(
-    () => name.replace(/([a-z0-9])([A-Z])/g, "$1 $2").toLowerCase(),
-    [name],
-  );
+  const label = useMemo(() => splitCamelCase(name), [name]);
 
   if (config.type === "range") {
     return (
