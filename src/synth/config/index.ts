@@ -23,11 +23,8 @@ export type SynthNodeConfig<T extends Tone.ToneAudioNode> = {
   ToneClass: { new (): T };
   controls: Record<string, NodeControlConfig>;
   setState: (node: T, state: Record<string, unknown>) => void;
+  trigger?: (node: T) => void;
 };
-
-export type SrcNodeType = "metal" | "noise";
-export type FxNodeType = "reverb" | "bitCrusher";
-export type SynthNodeType = SrcNodeType | FxNodeType;
 
 export const srcNodeConfig = {
   metal: metalSynthConfig,
@@ -43,3 +40,7 @@ export const nodeConfig = {
   ...srcNodeConfig,
   ...fxNodeConfig,
 };
+
+export type SrcNodeType = keyof typeof srcNodeConfig;
+export type FxNodeType = keyof typeof fxNodeConfig;
+export type SynthNodeType = SrcNodeType | FxNodeType;

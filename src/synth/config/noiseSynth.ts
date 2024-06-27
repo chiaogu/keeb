@@ -23,6 +23,9 @@ export const noiseSynthConfig: SynthNodeConfig<Tone.NoiseSynth> = {
     node.noise.set({
       type: state.type as Tone.NoiseType,
     });
+  },
+  trigger(node) {
+    node.triggerAttackRelease("64n");
   }
 };
 

@@ -13,6 +13,7 @@ export type SynthSrcNodeState = {
   type: SrcNodeType;
   data: Record<string, unknown>;
 };
+
 export type SynthFxNodeState = {
   type: FxNodeType;
   data: Record<string, unknown>;

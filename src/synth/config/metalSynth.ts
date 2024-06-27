@@ -49,6 +49,9 @@ export const metalSynthConfig: SynthNodeConfig<Tone.MetalSynth> = {
       node.frequency.value = state.frequency as number;
     }
   },
+  trigger(node) {
+    node.triggerAttackRelease(node.frequency.value, "64n");
+  }
 };
 
 export const setMetalSynthState = metalSynthConfig.setState;
