@@ -1,21 +1,41 @@
-import { ChangeEvent, useCallback } from "react";
+import { ChangeEvent, useCallback, useMemo } from "react";
 
 type SliderProps = {
   label: string;
   value: number;
-  onChange: (v: number) => void;
+  max: number;
+  min: number;
   step?: number;
+  onChange: (v: number) => void;
 };
 
 const RESOLUTION = 100000;
 
-export default function Slider({ label, value, onChange, step }: SliderProps) {
+export default function Slider({
+  label,
+  value,
+  onChange,
+  step,
+  max,
+  min,
+}: SliderProps) {
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      onChange(parseInt(e.target.value) / RESOLUTION);
+      const newValue = parseInt(e.target.value) / RESOLUTION;
+      const denormalizedNewValue =  min + (max - min) * newValue;
+      onChange(denormalizedNewValue);
     },
-    [onChange],
+    [max, min, onChange],
   );
+  
+  const normalizedValue = useMemo(() => {
+    return (value - min) / (max - min);
+  },[max, min, value]);
+  
+  const normalizedStep = useMemo(() => {
+    if (step === undefined) return undefined;
+    return step / (max - min);
+  }, [max, min, step]);
 
   return (
     <div className="flex w-full">
@@ -24,14 +44,13 @@ export default function Slider({ label, value, onChange, step }: SliderProps) {
         <input
           className="w-full"
           type="range"
-          name="volume"
           min="0"
           max={RESOLUTION}
-          step={step ? step * RESOLUTION : undefined}
-          value={value * RESOLUTION}
+          step={normalizedStep ? normalizedStep * RESOLUTION : undefined}
+          value={normalizedValue * RESOLUTION}
           onChange={handleChange}
         />
-        <div className="w-1/5 text-end">{(value * 100).toFixed()}%</div>
+        <div className="w-1/5 text-end">{(normalizedValue * 100).toFixed()}%</div>
       </div>
     </div>
   );

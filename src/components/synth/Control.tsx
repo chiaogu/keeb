@@ -25,11 +25,9 @@ export default function Control({
         label={label}
         value={value as number}
         onChange={onChange}
-        step={
-          config.step
-            ? config.step / (config.range[1] - config.range[0])
-            : undefined
-        }
+        min={config.range[0]}
+        max={config.range[1]}
+        step={config.step}
       />
     );
   } else if (config.type === "select") {

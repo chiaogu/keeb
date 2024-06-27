@@ -1,12 +1,11 @@
 import * as Tone from "@src/tone";
 import { SynthNodeControls } from ".";
-import { denormalizeState } from "../normalizer";
 
 export const noiseSynthConfig: SynthNodeControls = {
   volume: {
     type: "range",
-    defaultValue: 0.74,
-    range: [-80, -5],
+    defaultValue: -15,
+    range: [-80, -15],
   },
   type: {
     type: "select",
@@ -17,10 +16,8 @@ export const noiseSynthConfig: SynthNodeControls = {
 
 export function setNoiseSynthState(
   synth: Tone.NoiseSynth,
-  state: Record<string, unknown>,
+  { volume, type }: Record<string, unknown>,
 ) {
-  const { volume, type } = denormalizeState(noiseSynthConfig, state);
-
   synth.set({
     volume: volume as number,
   });

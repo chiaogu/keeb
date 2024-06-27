@@ -1,35 +1,34 @@
 import * as Tone from "@src/tone";
 import { SynthNodeControls } from ".";
-import { denormalizeState } from "../normalizer";
 
 export const metalSynthConfig: SynthNodeControls = {
   volume: {
-    defaultValue: 0.74,
+    defaultValue: -30,
     type: "range",
-    range: [-80, -5],
+    range: [-80, -15],
   },
   harmonicity: {
-    defaultValue: 0.5,
+    defaultValue: 6,
     type: "range",
     range: [0.1, 10],
   },
   modulationIndex: {
-    defaultValue: 0.5,
+    defaultValue: 50,
     type: "range",
     range: [1, 100],
   },
   frequency: {
-    defaultValue: 0.225,
+    defaultValue: 1125,
     type: "range",
     range: [0, 5000],
   },
   octaves: {
-    defaultValue: 0.333,
+    defaultValue: -3,
     type: "range",
     range: [-10, 10],
   },
   resonance: {
-    defaultValue: 1,
+    defaultValue: 7000,
     type: "range",
     range: [0, 7000],
   },
@@ -37,9 +36,7 @@ export const metalSynthConfig: SynthNodeControls = {
 
 export function setMetalSynthState(
   synth: Tone.MetalSynth,
-  state: Record<string, unknown>,
-) {
-  const {
+  {
     volume,
     harmonicity,
     frequency,
@@ -47,8 +44,8 @@ export function setMetalSynthState(
     octaves,
     portamento,
     resonance,
-  } = denormalizeState(metalSynthConfig, state);
-
+  }: Record<string, unknown>,
+) {
   synth.set({
     volume: volume as number,
     harmonicity: harmonicity as number,
