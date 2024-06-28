@@ -26,6 +26,7 @@ export type SynthNodeConfig<T extends Tone.ToneAudioNode> = {
   createNode: () => T;
   setState: (node: T, state: Record<string, unknown>) => void;
   trigger?: (node: T, state: Record<string, unknown>) => void;
+  ready?: (node: T) => Promise<void>;
 };
 
 export const srcNodeConfig = {

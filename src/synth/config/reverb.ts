@@ -1,5 +1,6 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
+import { MAX_SOUND_DURATION } from "@src/utils/constants";
 
 export const reverbConfig: SynthNodeConfig<Tone.Reverb> = {
   controls: {
@@ -9,9 +10,9 @@ export const reverbConfig: SynthNodeConfig<Tone.Reverb> = {
       range: [0, 1],
     },
     decay: {
-      defaultValue: 3,
+      defaultValue: 1,
       type: "range",
-      range: [0.001, 5],
+      range: [0.001, MAX_SOUND_DURATION],
     },
     preDelay: {
       defaultValue: 0.05,
@@ -26,7 +27,8 @@ export const reverbConfig: SynthNodeConfig<Tone.Reverb> = {
       decay: state.decay as number,
       preDelay: state.preDelay as number,
     });
-  }
+  },
+  ready: (node) => node.ready,
 };
 
 export const setReverbState = reverbConfig.setState;

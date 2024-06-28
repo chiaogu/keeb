@@ -1,5 +1,5 @@
 import * as Tone from "@src/tone";
-import { FxNodeType, SrcNodeType } from "./config";
+import { FxNodeType, SrcNodeType, nodeConfig } from "./config";
 import {
   createSrcNode,
   SupportedSrcToneNode,
@@ -35,7 +35,7 @@ export default function createSynth(config: SynthConfig) {
 
   setSrcState(state.src);
   setFxs(state.fxs);
-  
+
   function rechain() {
     if (!srcNode) throw new Error("synth is not initialized yet");
 
@@ -95,9 +95,20 @@ export default function createSynth(config: SynthConfig) {
     fxNodes.forEach((fxNode) => fxNode.dispose());
     handleChange = null;
   }
-  
+
   function setOnChangeListener(listenr: () => void) {
     handleChange = listenr;
+  }
+
+  async function ready() {
+    if (!srcNode) throw new Error("synth is not initialized yet");
+
+    await nodeConfig[state.src.type].ready?.(srcNode as never);
+    await Promise.all(
+      state.fxs.map((fx, index) =>
+        nodeConfig[fx.type].ready?.(fxNodes[index] as never),
+      ),
+    );
   }
 
   return {
@@ -110,6 +121,7 @@ export default function createSynth(config: SynthConfig) {
     trigger,
     dispose,
     setOnChangeListener,
+    ready,
   };
 }
 
