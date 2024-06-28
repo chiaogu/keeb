@@ -3,6 +3,8 @@ import { reverbConfig } from "./reverb";
 import { metalSynthConfig } from "./metalSynth";
 import { noiseSynthConfig } from "./noiseSynth";
 import { bitCrusherConfig } from "./bitCrusher";
+import { membraneSynthConfig } from "./membraneSynth";
+import { SynthNodeState } from "..";
 
 type RangeControlConfig = {
   type: "range";
@@ -20,15 +22,16 @@ type SelectControl = {
 export type NodeControlConfig = RangeControlConfig | SelectControl;
 
 export type SynthNodeConfig<T extends Tone.ToneAudioNode> = {
-  ToneClass: { new (): T };
   controls: Record<string, NodeControlConfig>;
+  createNode: () => T;
   setState: (node: T, state: Record<string, unknown>) => void;
-  trigger?: (node: T) => void;
+  trigger?: (node: T, state: Record<string, unknown>) => void;
 };
 
 export const srcNodeConfig = {
   metal: metalSynthConfig,
   noise: noiseSynthConfig,
+  membrane: membraneSynthConfig,
 };
 
 export const fxNodeConfig = {

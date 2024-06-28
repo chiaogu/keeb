@@ -51,7 +51,7 @@ export default function createSynth(config: SynthConfig) {
       rechain();
     }
 
-    setToneNodeState(srcNode, src.data);
+    setToneNodeState(srcNode, src);
 
     state.src = src;
     handleChange?.();
@@ -69,7 +69,7 @@ export default function createSynth(config: SynthConfig) {
   }
 
   function setFxState(index: number, fxState: SynthConfig["fxs"][number]) {
-    setToneNodeState(fxNodes[index], fxState.data);
+    setToneNodeState(fxNodes[index], fxState);
     state.fxs[index] = fxState;
     handleChange?.();
   }
@@ -86,7 +86,7 @@ export default function createSynth(config: SynthConfig) {
 
   function trigger() {
     if (!srcNode) throw new Error("synth is not initialized yet");
-    triggerToneNode(srcNode);
+    triggerToneNode(srcNode, state.src);
   }
 
   function dispose() {

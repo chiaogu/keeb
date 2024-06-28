@@ -1,5 +1,5 @@
 import Control from "./Control";
-import { nodeConfig } from "@src/synth/config";
+import { SrcNodeType, nodeConfig, srcNodeConfig } from "@src/synth/config";
 import getDefaultNodeState from "@src/synth/getDefaultNodeState";
 import RadioGroup from "@src/components//shared/RadioGroup";
 import { SynthControlState } from "@src/hooks/useSynthState";
@@ -8,6 +8,8 @@ type SrcNodeControlProps = {
   synth: SynthControlState;
 };
 
+const srcTypeOptions = Object.keys(srcNodeConfig) as SrcNodeType[];
+
 export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
   const { state, setSrcState } = synth;
 
@@ -15,7 +17,7 @@ export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
     <div className="flex w-full flex-col items-center">
       <RadioGroup
         label="type"
-        options={["metal", "noise"]}
+        options={srcTypeOptions}
         value={state.src.type}
         onChange={(type) =>
           setSrcState({

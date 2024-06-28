@@ -2,37 +2,46 @@ import useSound from "@src/hooks/useSound";
 import defaultKeyboard from "@src/presets/keyboard/defaultKeyboard.json";
 import { KeyboardConfig, SoundConfig } from "@src/types";
 import * as storage from "@src/utils/localstorage";
-import { useCallback, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import useKeySounds from "./useKeySounds";
 
 function getKeyboardConfig() {
   return storage.getKeyboardConfig() ?? (defaultKeyboard as KeyboardConfig);
 }
 
+function createSoundChangeHandler(config: KeyboardConfig, event: "down" | "up") {
+  return (sound: SoundConfig) => {
+    storage.setKeyboardConfig({
+      ...config,
+      sound: {
+        ...config.sound,
+        [event]: sound,
+      }
+    });
+  };
+}
+
 export default function useKeyboardSound() {
   const config = useRef(getKeyboardConfig());
 
-  const handleSoundChange = useCallback(
-    (sound: SoundConfig, event: "down" | "up") => {
-      storage.setKeyboardConfig({
-        ...config.current,
-        sound: {
-          ...config.current.sound,
-          [event]: sound,
-        }
-      });
-    },
+  const handleUpSoundChange = useMemo(
+    () => createSoundChangeHandler(config.current, 'up'),
+    [],
+  );
+  
+  const handleDownSoundChange = useMemo(
+    () => createSoundChangeHandler(config.current, 'down'),
     [],
   );
 
   const down = useSound({
     config: config.current.sound.down,
-    onChange: (sound) => handleSoundChange(sound, 'down'),
+    onChange: handleDownSoundChange,
   });
 
   const up = useSound({
     config: config.current.sound.up,
-    onChange: (sound) => handleSoundChange(sound, 'up'),
+    onChange: handleUpSoundChange,
   });
 
   useKeySounds(down, up);

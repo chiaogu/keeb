@@ -1,11 +1,10 @@
 import { SupportedSrcToneNode } from "./createSynthNode";
-import { nodeConfig } from './config';
+import { nodeConfig } from "./config";
+import { SynthSrcNodeState } from ".";
 
-export default function triggerToneNode(node: SupportedSrcToneNode) {
-  Object.values(nodeConfig).some((config) => {
-    if (node instanceof config.ToneClass) {
-      config.trigger?.(node as never);
-      return true;
-    }
-  });
+export default function triggerToneNode(
+  node: SupportedSrcToneNode,
+  state: SynthSrcNodeState,
+) {
+  nodeConfig[state.type].trigger?.(node as never, state.data);
 }

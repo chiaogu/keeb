@@ -2,7 +2,6 @@ import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 
 export const noiseSynthConfig: SynthNodeConfig<Tone.NoiseSynth> = {
-  ToneClass: Tone.NoiseSynth,
   controls: {
     volume: {
       type: "range",
@@ -15,6 +14,7 @@ export const noiseSynthConfig: SynthNodeConfig<Tone.NoiseSynth> = {
       options: ["brown", "white", "pink"],
     },
   },
+  createNode: () => new Tone.NoiseSynth(),
   setState(node, state) {
     node.set({
       volume: state.volume as number,

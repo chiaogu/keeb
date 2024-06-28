@@ -1,14 +1,10 @@
 import { SupportedSrcToneNode, SupportedFxToneNode } from "./createSynthNode";
 import { nodeConfig } from './config';
+import { SynthNodeState } from ".";
 
 export default function setToneNodeState(
   node: SupportedSrcToneNode | SupportedFxToneNode,
-  state: Record<string, unknown>,
+  state: SynthNodeState
 ) {
-  Object.values(nodeConfig).some((config) => {
-    if (node instanceof config.ToneClass) {
-      config.setState(node as never, state);
-      return true;
-    }
-  });
+  nodeConfig[state.type].setState(node as never, state.data);
 }

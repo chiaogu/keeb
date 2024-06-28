@@ -2,7 +2,6 @@ import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 
 export const bitCrusherConfig: SynthNodeConfig<Tone.BitCrusher> = {
-  ToneClass: Tone.BitCrusher,
   controls: {
     wet: {
       defaultValue: 0.5,
@@ -15,6 +14,7 @@ export const bitCrusherConfig: SynthNodeConfig<Tone.BitCrusher> = {
       range: [1, 16],
     }
   },
+  createNode: () => new Tone.BitCrusher(),
   setState(node, state) {
     node.set({
       wet: state.wet as number,
