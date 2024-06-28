@@ -27,20 +27,15 @@ export type SynthConfig = {
   fxs: SynthFxNodeState[];
 };
 
-export default function createSynth(initState: SynthConfig) {
-  const state: SynthConfig = initState;
+export default function createSynth(config: SynthConfig) {
+  const state: SynthConfig = config;
   let srcNode: SupportedSrcToneNode | null = null;
   let fxNodes: SupportedFxToneNode[] = [];
+  let handleChange: (() => void) | null = null;
 
   setSrcState(state.src);
   setFxs(state.fxs);
   
-  function dispose() {
-    if (!srcNode) throw new Error("synth is not initialized yet");
-    srcNode.dispose();
-    fxNodes.forEach((fxNode) => fxNode.dispose());
-  }
-
   function rechain() {
     if (!srcNode) throw new Error("synth is not initialized yet");
 
@@ -59,6 +54,7 @@ export default function createSynth(initState: SynthConfig) {
     setToneNodeState(srcNode, src.data);
 
     state.src = src;
+    handleChange?.();
   }
 
   function setFxs(fxs: SynthConfig["fxs"]) {
@@ -69,11 +65,13 @@ export default function createSynth(initState: SynthConfig) {
     rechain();
 
     state.fxs = fxs;
+    handleChange?.();
   }
 
   function setFxState(index: number, fxState: SynthConfig["fxs"][number]) {
     setToneNodeState(fxNodes[index], fxState.data);
     state.fxs[index] = fxState;
+    handleChange?.();
   }
 
   function removeFx(index: number) {
@@ -91,6 +89,17 @@ export default function createSynth(initState: SynthConfig) {
     triggerToneNode(srcNode);
   }
 
+  function dispose() {
+    if (!srcNode) throw new Error("synth is not initialized yet");
+    srcNode.dispose();
+    fxNodes.forEach((fxNode) => fxNode.dispose());
+    handleChange = null;
+  }
+  
+  function setOnChangeListener(listenr: () => void) {
+    handleChange = listenr;
+  }
+
   return {
     setSrcState,
     setFxs,
@@ -100,6 +109,7 @@ export default function createSynth(initState: SynthConfig) {
     getState: () => state,
     trigger,
     dispose,
+    setOnChangeListener,
   };
 }
 

@@ -2,7 +2,7 @@ import { SynthFxNodeState } from "@src/synth";
 import FxActions from "./FxActions";
 import { nodeConfig } from "@src/synth/config";
 import Control from "./Control";
-import { splitCamelCase } from "@src/utils";
+import { splitCamelCase } from "@src/utils/utils";
 import { useState } from "react";
 import NewFx from "./NewFx";
 

@@ -2,7 +2,7 @@ import { NodeControlConfig } from "@src/synth/config";
 import Slider from "@src/components/shared/Slider";
 import RadioGroup from "@src/components/shared/RadioGroup";
 import { useMemo } from "react";
-import { splitCamelCase } from "@src/utils";
+import { splitCamelCase } from "@src/utils/utils";
 
 type ControlProps = {
   config: NodeControlConfig;

@@ -6,7 +6,7 @@ import {
 } from "@src/synth/config";
 import { SynthNodeState } from "@src/synth";
 import getDefaultNodeState from "@src/synth/getDefaultNodeState";
-import { splitCamelCase } from "@src/utils";
+import { splitCamelCase } from "@src/utils/utils";
 
 type NodeType = "src" | "fx";
 

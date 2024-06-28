@@ -1,0 +1,53 @@
+{
+  "sound": {
+    "down": {
+      "id": "sound-1",
+      "synths": [
+        {
+          "id": "synth-1",
+          "src": {
+            "type": "metal",
+            "data": {
+              "volume": -30,
+              "harmonicity": 6,
+              "modulationIndex": 50,
+              "frequency": 1125,
+              "octaves": -3,
+              "resonance": 7000
+            }
+          },
+          "fxs": [
+            {
+              "type": "reverb",
+              "data": {
+                "wet": 0.5,
+                "decay": 3,
+                "preDelay": 0.05
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "up": {
+      "id": "sound-2",
+      "synths": [
+        {
+          "id": "synth-3",
+          "src": {
+            "type": "metal",
+            "data": {
+              "volume": -30,
+              "harmonicity": 3,
+              "modulationIndex": 50,
+              "frequency": 1125,
+              "octaves": -3,
+              "resonance": 7000
+            }
+          },
+          "fxs": []
+        }
+      ]
+    }
+  }
+}

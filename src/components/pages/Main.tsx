@@ -1,17 +1,12 @@
 import Keys from "@src/components/synth/Keys";
-import useKeySounds from "@src/hooks/useKeySounds";
-import useSound, { SoundConfig } from "@src/hooks/useSound";
-import soundPreset1 from "@src/presets/sound/sound1.json";
 import SoundControl from "../SoundControl";
 import RadioGroup from "../shared/RadioGroup";
 import { useState } from "react";
+import useKeyboardSound from "@src/hooks/useKeyboardSound";
 
 function Main() {
   const [keyEvent, setKeyEvent] = useState('down');
-  const downSound = useSound(soundPreset1 as SoundConfig);
-  const upSound = useSound(soundPreset1 as SoundConfig);
-
-  useKeySounds(downSound, upSound);
+  const keyboard = useKeyboardSound();
 
   return (
     <div className="flex flex-col items-center space-y-5">
@@ -26,7 +21,7 @@ function Main() {
           />
         </div>
       </div>
-      <SoundControl sound={keyEvent === 'down' ? downSound : upSound} />
+      <SoundControl sound={keyEvent === 'down' ? keyboard.down : keyboard.up} />
     </div>
   );
 }

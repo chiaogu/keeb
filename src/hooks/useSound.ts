@@ -1,8 +1,9 @@
 import createSynth, { Synth, SynthConfig } from "@src/synth";
 import defaultSoundLayer from "@src/presets/synth/defaultSoundLayer.json";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { v4 as uuid } from "uuid";
+import { SoundConfig } from "@src/types";
 
 export type Sound = {
   synths: Synth[];
@@ -11,17 +12,29 @@ export type Sound = {
   addLayer: () => void;
 };
 
-export type SoundConfig = {
-  id: string;
-  synths: SynthConfig[];
-};
+export type UseSoundProps = {
+  config: SoundConfig;
+  onChange?: (sound: SoundConfig) => void;
+}
 
-export default function useSound(config: SoundConfig): Sound {
+export default function useSound({ config, onChange }: UseSoundProps): Sound {
   const initSynths = useMemo(
     () => config.synths.map(createSynth),
     [config.synths],
   );
   const [synths, setSynths] = useState<Synth[]>(initSynths);
+  
+  const handleChange = useCallback(() => {
+    onChange?.({
+      id: config.id,
+      synths: synths.map((synth) => synth.getState()),
+    });
+  }, [config.id, onChange, synths]);
+  
+  useEffect(() => {
+    synths.forEach((synth) => synth.setOnChangeListener(handleChange));
+    handleChange();
+  }, [handleChange, synths]);
 
   return useMemo(
     () => ({
