@@ -33,6 +33,7 @@ export default function createSynth(config: SynthConfig) {
   let fxNodes: SupportedFxToneNode[] = [];
   let handleChange: (() => void) | null = null;
 
+  // TODO: set default value when there are missing fields
   setSrcState(state.src);
   setFxs(state.fxs);
 

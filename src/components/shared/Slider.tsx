@@ -22,16 +22,16 @@ export default function Slider({
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const newValue = parseInt(e.target.value) / RESOLUTION;
-      const denormalizedNewValue =  min + (max - min) * newValue;
+      const denormalizedNewValue = min + (max - min) * newValue;
       onChange(denormalizedNewValue);
     },
     [max, min, onChange],
   );
-  
+
   const normalizedValue = useMemo(() => {
     return (value - min) / (max - min);
-  },[max, min, value]);
-  
+  }, [max, min, value]);
+
   const normalizedStep = useMemo(() => {
     if (step === undefined) return undefined;
     return step / (max - min);
@@ -39,7 +39,9 @@ export default function Slider({
 
   return (
     <div className="flex w-full">
-      <label className="w-32 shrink-0">{label}</label>
+      <label className="w-32 shrink-0">
+        {label}
+      </label>
       <div className="flex flex-auto items-center">
         <input
           className="w-full"
@@ -50,7 +52,9 @@ export default function Slider({
           value={normalizedValue * RESOLUTION}
           onChange={handleChange}
         />
-        <div className="w-1/5 text-end">{(normalizedValue * 100).toFixed()}%</div>
+        <div className="w-1/5 text-end">
+          {(normalizedValue * 100).toFixed()}%
+        </div>
       </div>
     </div>
   );

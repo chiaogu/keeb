@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Synth, SynthConfig } from "@src/synth";
 
-export type SynthControlState = Omit<Synth, "getState" | "trigger" | "dispose"> & {
+export type SynthControlState = Omit<Synth, "getState" | "trigger" | "dispose" | "ready" | "setOnChangeListener"> & {
   state: SynthConfig;
 };
 

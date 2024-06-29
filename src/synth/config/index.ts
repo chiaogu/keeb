@@ -4,22 +4,24 @@ import { metalSynthConfig } from "./metalSynth";
 import { noiseSynthConfig } from "./noiseSynth";
 import { bitCrusherConfig } from "./bitCrusher";
 import { membraneSynthConfig } from "./membraneSynth";
-import { SynthNodeState } from "..";
+import { ADSR } from "@src/types";
 
-type RangeControlConfig = {
-  type: "range";
-  range: [number, number];
-  defaultValue: number;
-  step?: number;
-};
-
-type SelectControl = {
-  type: "select";
-  options: string[];
-  defaultValue: string;
-};
-
-export type NodeControlConfig = RangeControlConfig | SelectControl;
+export type NodeControlConfig =
+  | {
+      type: "range";
+      range: [number, number];
+      defaultValue: number;
+      step?: number;
+    }
+  | {
+      type: "select";
+      options: string[];
+      defaultValue: string;
+    }
+  | {
+      type: "adsr";
+      defaultValue: ADSR;
+    };
 
 export type SynthNodeConfig<T extends Tone.ToneAudioNode> = {
   controls: Record<string, NodeControlConfig>;

@@ -11,3 +11,5 @@ export type KeyboardConfig = {
     down: SoundConfig,
   },
 };
+
+export type ADSR = [number, number, number, number];
