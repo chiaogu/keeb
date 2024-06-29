@@ -1,13 +1,10 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
+import baseSrcControls from "./baseSrcControls";
 
 export const metalSynthConfig: SynthNodeConfig<Tone.MetalSynth> = {
   controls: {
-    volume: {
-      defaultValue: -30,
-      type: "range",
-      range: [-80, -15],
-    },
+    ...baseSrcControls,
     harmonicity: {
       defaultValue: 6,
       type: "range",
@@ -34,7 +31,7 @@ export const metalSynthConfig: SynthNodeConfig<Tone.MetalSynth> = {
       range: [0, 7000],
     },
   },
-  createNode: () => new Tone.MetalSynth,
+  createNode: () => new Tone.MetalSynth(),
   setState(node, state) {
     node.set({
       volume: state.volume as number,
@@ -47,7 +44,11 @@ export const metalSynthConfig: SynthNodeConfig<Tone.MetalSynth> = {
   trigger(node, state) {
     let frequency = state.frequency as number;
     frequency += Math.random() * 100;
-    node.triggerAttackRelease(frequency as number, "128n");
+    node.triggerAttackRelease(
+      frequency as number,
+      state.duration as number,
+      `+${state.delay}`,
+    );
   },
 };
 

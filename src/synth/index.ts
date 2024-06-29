@@ -27,13 +27,21 @@ export type SynthConfig = {
   fxs: SynthFxNodeState[];
 };
 
+function defaultMissingFields(state: SynthNodeState) {
+  const config = nodeConfig[state.type];
+  const newData: typeof state.data = {};
+  Object.entries(config.controls).forEach(([key, { defaultValue }]) => {
+    newData[key] = state.data[key] ?? defaultValue;
+  });
+  return newData;
+}
+
 export default function createSynth(config: SynthConfig) {
   const state: SynthConfig = config;
   let srcNode: SupportedSrcToneNode | null = null;
   let fxNodes: SupportedFxToneNode[] = [];
   let handleChange: (() => void) | null = null;
 
-  // TODO: set default value when there are missing fields
   setSrcState(state.src);
   setFxs(state.fxs);
 
@@ -46,6 +54,8 @@ export default function createSynth(config: SynthConfig) {
   }
 
   function setSrcState(src: SynthConfig["src"]) {
+    src.data = defaultMissingFields(src);
+    
     if (srcNode === null || src.type !== state.src.type) {
       if (srcNode) srcNode.disconnect().dispose();
       srcNode = createSrcNode(src.type);
@@ -61,6 +71,7 @@ export default function createSynth(config: SynthConfig) {
   function setFxs(fxs: SynthConfig["fxs"]) {
     if (!srcNode) throw new Error("synth is not initialized yet");
 
+    fxs.forEach((fx) => fx.data = defaultMissingFields(fx));
     fxNodes = fxs.map((fx) => createFxNode(fx.type));
     fxs.forEach((fx, index) => setFxState(index, fx));
     rechain();

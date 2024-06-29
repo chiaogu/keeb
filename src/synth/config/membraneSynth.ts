@@ -1,13 +1,10 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
+import baseSrcControls from "./baseSrcControls";
 
 export const membraneSynthConfig: SynthNodeConfig<Tone.MembraneSynth> = {
   controls: {
-    volume: {
-      defaultValue: -15,
-      type: "range",
-      range: [-80, -15],
-    },
+    ...baseSrcControls,
     frequency: {
       defaultValue: 1125,
       type: "range",
@@ -35,7 +32,11 @@ export const membraneSynthConfig: SynthNodeConfig<Tone.MembraneSynth> = {
   trigger(node, state) {
     let frequency = state.frequency as number;
     frequency += Math.random() * 100;
-    node.triggerAttackRelease(frequency, "64n");
+    node.triggerAttackRelease(
+      frequency,
+      state.duration as number,
+      `+${state.delay}`,
+    );
   },
 };
 

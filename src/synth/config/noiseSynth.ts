@@ -1,16 +1,13 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 import { ADSR } from "@src/types";
+import baseSrcControls from "./baseSrcControls";
 
 // TODO: validate schema
 
 export const noiseSynthConfig: SynthNodeConfig<Tone.NoiseSynth> = {
   controls: {
-    volume: {
-      type: "range",
-      defaultValue: -15,
-      range: [-80, -15],
-    },
+    ...baseSrcControls,
     type: {
       type: "select",
       defaultValue: "brown",
@@ -37,8 +34,8 @@ export const noiseSynthConfig: SynthNodeConfig<Tone.NoiseSynth> = {
       type: state.type as Tone.NoiseType,
     });
   },
-  trigger(node) {
-    node.triggerAttackRelease("64n");
+  trigger(node, state) {
+    node.triggerAttackRelease(state.duration as number, `+${state.delay}`);
   }
 };
 
