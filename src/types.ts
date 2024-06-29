@@ -1,3 +1,4 @@
+import * as Tone from "@src/tone";
 import { SynthConfig } from "./synth";
 
 export type SoundConfig = {
@@ -12,4 +13,12 @@ export type KeyboardConfig = {
   },
 };
 
-export type ADSR = [number, number, number, number];
+export type Envelope = {
+  attack: number;
+  decay: number;
+  sustain: number;
+  release: number;
+  attackCurve: Tone.EnvelopeCurve;
+  releaseCurve: Tone.EnvelopeCurve;
+  decayCurve: 'linear' | 'exponential';
+};

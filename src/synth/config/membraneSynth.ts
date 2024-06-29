@@ -1,6 +1,6 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
-import baseSrcControls from "./baseSrcControls";
+import { baseSrcControls } from "./shared";
 
 export const membraneSynthConfig: SynthNodeConfig<Tone.MembraneSynth> = {
   controls: {

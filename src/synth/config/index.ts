@@ -4,7 +4,7 @@ import { metalSynthConfig } from "./metalSynth";
 import { noiseSynthConfig } from "./noiseSynth";
 import { bitCrusherConfig } from "./bitCrusher";
 import { membraneSynthConfig } from "./membraneSynth";
-import { ADSR } from "@src/types";
+import { Envelope } from "@src/types";
 
 export type NodeControlConfig =
   | {
@@ -19,8 +19,8 @@ export type NodeControlConfig =
       defaultValue: string;
     }
   | {
-      type: "adsr";
-      defaultValue: ADSR;
+      type: "envelope";
+      defaultValue: Envelope;
     };
 
 export type SynthNodeConfig<T extends Tone.ToneAudioNode> = {

@@ -1,6 +1,7 @@
+import { Envelope } from "@src/types";
 import { NodeControlConfig } from ".";
 
-const baseSrcControls: Record<string, NodeControlConfig> = {
+export const baseSrcControls: Record<string, NodeControlConfig> = {
   volume: {
     type: "range",
     defaultValue: -10,
@@ -18,4 +19,12 @@ const baseSrcControls: Record<string, NodeControlConfig> = {
   },
 };
 
-export default baseSrcControls;
+export const defauleEnvelope: Envelope = {
+  attack: 0,
+  decay: 0,
+  sustain: 1,
+  release: 0,
+  attackCurve: 'linear',
+  decayCurve: 'linear',
+  releaseCurve: 'linear'
+};

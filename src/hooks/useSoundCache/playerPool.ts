@@ -19,6 +19,5 @@ export function lazyInit() {
 export function play(buffer: Tone.ToneAudioBuffer) {
   players[index].buffer = buffer;
   players[index].start();
-  console.log('play', index);
   index = (index + 1) % POOL_SIZE;
 }
