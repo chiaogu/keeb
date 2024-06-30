@@ -29,15 +29,19 @@ export default function FxControl({
         <label>{splitCamelCase(fx.type)}</label>
         <FxActions onRemove={onRemove} onAdd={() => setNewFxOpen(true)} />
       </div>
-      {Object.entries(nodeConfig[fx.type].controls).map(([key, config]) => (
-        <Control
-          key={key}
-          config={config}
-          name={key}
-          value={fx.data[key]}
-          onChange={(v) => onChange(key, v)}
-        />
-      ))}
+      {Object.entries(nodeConfig[fx.type].controls).map(([key, config]) => {
+        const schema = nodeConfig[fx.type].schema.shape;
+        return (
+          <Control
+            key={key}
+            config={config}
+            schema={schema[key as keyof typeof schema]}
+            name={key}
+            value={fx.data[key]}
+            onChange={(v) => onChange(key, v)}
+          />
+        );
+      })}
     </>
   );
 }

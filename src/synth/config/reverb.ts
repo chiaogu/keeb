@@ -17,16 +17,8 @@ export const reverbConfig: SynthNodeConfig<Tone.Reverb, typeof zReverb> = {
   schema: zReverb,
   controls: {
     ...baseFxControls,
-    decay: {
-      defaultValue: 1,
-      type: "range",
-      range: [0.001, MAX_SOUND_DURATION],
-    },
-    preDelay: {
-      defaultValue: 0.05,
-      type: "range",
-      range: [0, 0.5],
-    },
+    decay: { type: "range" },
+    preDelay: { type: "range" },
   },
   createNode: () => new Tone.Reverb(),
   setState(node, state) {

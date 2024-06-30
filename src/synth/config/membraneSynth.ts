@@ -16,21 +16,9 @@ export const membraneSynthConfig: SynthNodeConfig<
   schema: zMembraneSynth,
   controls: {
     ...baseSrcControls,
-    frequency: {
-      defaultValue: 1125,
-      type: "range",
-      range: [0, 5000],
-    },
-    octaves: {
-      defaultValue: 1,
-      type: "range",
-      range: [0.5, 8],
-    },
-    pitchDecay: {
-      defaultValue: 0.05,
-      type: "range",
-      range: [0, 0.5],
-    },
+    frequency: { type: "range" },
+    octaves: { type: "range" },
+    pitchDecay: { type: "range" },
   },
   createNode: () => new Tone.MembraneSynth(),
   setState(node, state) {

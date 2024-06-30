@@ -14,11 +14,7 @@ export const bitCrusherConfig: SynthNodeConfig<
   schema: zBitCrusher,
   controls: {
     ...baseFxControls,
-    bits: {
-      defaultValue: 8,
-      type: "range",
-      range: [1, 16],
-    },
+    bits: { type: "range" },
   },
   createNode: () => new Tone.BitCrusher(),
   setState(node, state) {

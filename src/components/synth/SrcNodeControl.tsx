@@ -21,20 +21,24 @@ export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
         onChange={(type) => setSrcState({ type, data: {} })}
       />
       {Object.entries(nodeConfig[state.src.type].controls).map(
-        ([key, config]) => (
-          <Control
-            key={key}
-            config={config}
-            name={key}
-            value={state.src.data[key]}
-            onChange={(value) =>
-              setSrcState({
-                ...state.src,
-                data: { ...state.src.data, [key]: value },
-              })
-            }
-          />
-        ),
+        ([key, config]) => {
+          const schema = nodeConfig[state.src.type].schema.shape;
+          return (
+            <Control
+              key={key}
+              config={config}
+              schema={schema[key as keyof typeof schema]}
+              name={key}
+              value={state.src.data[key]}
+              onChange={(value) =>
+                setSrcState({
+                  ...state.src,
+                  data: { ...state.src.data, [key]: value },
+                })
+              }
+            />
+          );
+        },
       )}
     </div>
   );

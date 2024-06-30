@@ -10,9 +10,6 @@ import { z } from "zod";
 export type NodeControlConfig =
   | {
       type: "range";
-      range: [number, number];
-      defaultValue: number;
-      step?: number;
     }
   | {
       type: "select";

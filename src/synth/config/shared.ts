@@ -10,21 +10,9 @@ export const zBaseSynthSrc = z.object({
 type BaseSynthSrc = z.infer<typeof zBaseSynthSrc>;
 
 export const baseSrcControls: Record<keyof BaseSynthSrc, NodeControlConfig> = {
-  volume: {
-    type: "range",
-    defaultValue: -10,
-    range: [-80, -15],
-  },
-  duration: {
-    type: "range",
-    defaultValue: 0.1,
-    range: [0.001, 0.2],
-  },
-  delay: {
-    type: "range",
-    defaultValue: 0,
-    range: [0, 0.2],
-  },
+  volume: { type: "range" },
+  duration: { type: "range" },
+  delay: { type: "range" },
 };
 
 export const zBaseSynthFx = z.object({
@@ -34,11 +22,7 @@ export const zBaseSynthFx = z.object({
 type BaseSynthFx = z.infer<typeof zBaseSynthFx>;
 
 export const baseFxControls: Record<keyof BaseSynthFx, NodeControlConfig> = {
-  wet: {
-    defaultValue: 0.5,
-    type: "range",
-    range: [0, 1],
-  },
+  wet: { type: "range" },
 };
 
 const zEnvelopeCurve = z

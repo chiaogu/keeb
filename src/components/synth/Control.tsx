@@ -5,12 +5,15 @@ import { useMemo } from "react";
 import { splitCamelCase } from "@src/utils/utils";
 import { Envelope } from "@src/types";
 import EnvelopeControl from "./EnvelopeControl";
+import { z } from "zod";
+import { getNumberDef } from "@src/utils/schema";
 
 type ControlProps = {
   config: NodeControlConfig;
   name: string;
   value: unknown;
   onChange: (v: unknown) => void;
+  schema: z.ZodTypeAny;
 };
 
 export default function Control({
@@ -18,18 +21,20 @@ export default function Control({
   name,
   value,
   onChange,
+  schema,
 }: ControlProps) {
   const label = useMemo(() => splitCamelCase(name), [name]);
 
   if (config.type === "range") {
+    const { min, max, step } = getNumberDef(schema);
     return (
       <Slider
         label={label}
         value={value as number}
         onChange={onChange}
-        min={config.range[0]}
-        max={config.range[1]}
-        step={config.step}
+        min={min}
+        max={max}
+        step={step}
       />
     );
   } else if (config.type === "select") {
