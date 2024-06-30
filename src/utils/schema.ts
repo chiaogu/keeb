@@ -47,3 +47,7 @@ export function instanceOf<S extends z.ZodTypeAny, T extends z.ZodTypeAny>(
 ) {
   return isEqual(schema, targetSchema);
 }
+
+export function withDefaults(schema: z.ZodTypeAny) {
+  return schema.default({}).catch({} as z.infer<typeof schema>);
+}

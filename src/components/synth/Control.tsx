@@ -7,6 +7,10 @@ import EnvelopeControl from "./EnvelopeControl";
 import { z } from "zod";
 import { getEnumDef, getNumberDef, instanceOf, removeDefault } from "@src/utils/schema";
 import { zEnvelope, Envelope } from "@src/synth/config/envelope";
+import ReadOnly from "../shared/ReadOnly";
+import { Noise, zNoise } from "@src/synth/config/noise";
+import NoiseControl from "./NestedObjectControl";
+import NestedObjectControl from "./NestedObjectControl";
 
 type ControlProps = {
   config?: NodeControlConfig;
@@ -56,7 +60,16 @@ export default function Control({
         onChange={onChange}
       />
     );
+  } else if (innerSchema instanceof z.ZodObject) {
+    return (
+      <NestedObjectControl
+        schema={innerSchema}
+        value={value as Record<string, unknown>}
+        label={label}
+        onChange={onChange}
+      />
+    );
   }
 
-  return null;
+  return <ReadOnly label={label} value={`${value}`} />;
 }

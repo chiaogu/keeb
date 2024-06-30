@@ -1,10 +1,11 @@
+import { withDefaults } from "@src/utils/schema";
 import { z } from "zod";
 
 const zEnvelopeCurve = z
   .enum(["linear", "exponential", "bounce", "cosine", "sine", "ripple", "step"])
   .catch("linear");
 
-const zEnvelopeWithoutDefaults = z.object({
+const zInnerEnvelope = z.object({
   attack: z.number().min(0).max(1).catch(0),
   decay: z.number().min(0).max(1).catch(0),
   sustain: z.number().min(0).max(1).catch(1),
@@ -14,8 +15,6 @@ const zEnvelopeWithoutDefaults = z.object({
   releaseCurve: zEnvelopeCurve,
 });
 
-export const zEnvelope = zEnvelopeWithoutDefaults
-  .default({})
-  .catch({} as z.infer<typeof zEnvelopeWithoutDefaults>);
+export const zEnvelope = withDefaults(zInnerEnvelope);
 
-export type Envelope = z.infer<typeof zEnvelope>;
+export type Envelope = z.infer<typeof zInnerEnvelope>;

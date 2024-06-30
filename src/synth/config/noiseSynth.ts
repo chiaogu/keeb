@@ -3,9 +3,10 @@ import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 import { zBaseSynthSrc } from "./shared";
 import { zEnvelope } from "./envelope";
+import { zNoise } from "./noise";
 
 const zNoiseSynth = zBaseSynthSrc.extend({
-  type: z.enum(["brown", "white", "pink"]).catch("white"),
+  noise: zNoise,
   envelope: zEnvelope,
 });
 
@@ -16,14 +17,7 @@ export const noiseSynthConfig: SynthNodeConfig<
   schema: zNoiseSynth,
   createNode: () => new Tone.NoiseSynth(),
   setState(node, state) {
-    node.set({
-      volume: state.volume,
-      envelope: state.envelope,
-    });
-
-    node.noise.set({
-      type: state.type,
-    });
+    node.set(state);
   },
   trigger(node, state) {
     node.triggerAttackRelease(
