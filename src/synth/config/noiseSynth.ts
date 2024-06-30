@@ -21,15 +21,8 @@ export const noiseSynthConfig: SynthNodeConfig<
   schema: zNoiseSynth,
   controls: {
     ...baseSrcControls,
-    type: {
-      type: "select",
-      defaultValue: "brown",
-      options: Object.keys(zNoiseSynth.shape.type.removeCatch().enum),
-    },
-    envelope: {
-      type: "envelope",
-      defaultValue: defauleEnvelope,
-    },
+    type: { type: "select" },
+    envelope: { type: "envelope" },
   },
   createNode: () => new Tone.NoiseSynth(),
   setState(node, state) {

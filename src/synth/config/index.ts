@@ -4,7 +4,6 @@ import { metalSynthConfig } from "./metalSynth";
 import { noiseSynthConfig } from "./noiseSynth";
 import { bitCrusherConfig } from "./bitCrusher";
 import { membraneSynthConfig } from "./membraneSynth";
-import { Envelope } from "@src/types";
 import { z } from "zod";
 
 export type NodeControlConfig =
@@ -13,12 +12,9 @@ export type NodeControlConfig =
     }
   | {
       type: "select";
-      options: readonly string[];
-      defaultValue: string;
     }
   | {
       type: "envelope";
-      defaultValue: Envelope;
     };
 
 export type SynthNodeConfig<

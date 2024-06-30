@@ -6,7 +6,7 @@ import { splitCamelCase } from "@src/utils/utils";
 import { Envelope } from "@src/types";
 import EnvelopeControl from "./EnvelopeControl";
 import { z } from "zod";
-import { getNumberDef } from "@src/utils/schema";
+import { getEnumDef, getNumberDef } from "@src/utils/schema";
 
 type ControlProps = {
   config: NodeControlConfig;
@@ -38,12 +38,13 @@ export default function Control({
       />
     );
   } else if (config.type === "select") {
+    const options = getEnumDef(schema);
     return (
       <RadioGroup
         label={label}
         value={value as string}
         onChange={onChange}
-        options={config.options}
+        options={options}
       />
     );
   } else if (config.type === "envelope") {

@@ -37,3 +37,11 @@ export function getNumberDef(schema: z.ZodTypeAny) {
     step: stepDef?.value
   };
 }
+
+export function getEnumDef(schema: z.ZodTypeAny) {
+  const enumSchema = removeDefault(schema);
+  if (!(enumSchema instanceof z.ZodEnum)) {
+    throw new Error(`${schema} is not a enum`);
+  }
+  return enumSchema.options as string[];
+}
