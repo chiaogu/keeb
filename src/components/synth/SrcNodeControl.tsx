@@ -20,14 +20,14 @@ export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
         value={state.src.type}
         onChange={(type) => setSrcState({ type, data: {} })}
       />
-      {Object.entries(nodeConfig[state.src.type].controls).map(
-        ([key, config]) => {
-          const schema = nodeConfig[state.src.type].schema.shape;
+      {Object.entries(nodeConfig[state.src.type].schema.shape).map(
+        ([key, schema]) => {
+          const controls = nodeConfig[state.src.type].controls;
           return (
             <Control
               key={key}
-              config={config}
-              schema={schema[key as keyof typeof schema]}
+              config={controls?.[key as keyof typeof controls]}
+              schema={schema}
               name={key}
               value={state.src.data[key]}
               onChange={(value) =>

@@ -3,7 +3,6 @@ import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 import {
   baseSrcControls,
-  defauleEnvelope,
   Envelope,
   zBaseSynthSrc,
   zEnvelope,

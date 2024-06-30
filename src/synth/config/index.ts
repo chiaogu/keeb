@@ -22,7 +22,7 @@ export type SynthNodeConfig<
   Z extends z.ZodTypeAny,
 > = {
   schema: Z;
-  controls: Record<keyof z.infer<Z>, NodeControlConfig>;
+  controls?: Partial<Record<keyof z.infer<Z>, NodeControlConfig>>;
   createNode: () => T;
   setState: (node: T, state: z.infer<Z>) => void;
   trigger?: (node: T, state: z.infer<Z>) => void;

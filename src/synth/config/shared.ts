@@ -40,12 +40,8 @@ const zEnvelopeWithoutDefaults = z.object({
 });
 
 export const zEnvelope = zEnvelopeWithoutDefaults
-.default({})
-.catch(
-  {
-    attack: 0,
-  } as z.infer<typeof zEnvelopeWithoutDefaults>,
-);
+  .default({})
+  .catch({} as z.infer<typeof zEnvelopeWithoutDefaults>);
 
 export type Envelope = z.infer<typeof zEnvelope>;
 

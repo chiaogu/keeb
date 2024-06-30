@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-hook/debounce": "^4.0.0",
+    "lodash-es": "^4.17.21",
     "pretty-bytes": "^6.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -19,6 +20,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.12",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/uuid": "^10.0.0",

@@ -1,6 +1,7 @@
+import { isEqual } from "lodash-es";
 import { z } from "zod";
 
-export function removeDefault(schema: z.ZodTypeAny): unknown {
+export function removeDefault(schema: z.ZodTypeAny) {
   if (schema instanceof z.ZodDefault) {
     return removeDefault(schema.removeDefault());
   }
@@ -12,36 +13,37 @@ export function removeDefault(schema: z.ZodTypeAny): unknown {
   return schema;
 }
 
-export function getNumberDef(schema: z.ZodTypeAny) {
-  const numberSchema = removeDefault(schema);
-  if (!(numberSchema instanceof z.ZodNumber)) {
-    throw new Error(`${schema} is not a number`);
-  }
-  
-  if (numberSchema.minValue == null) {
+export function getNumberDef(schema: z.ZodNumber) {
+  if (schema.minValue == null) {
     throw new Error(`${schema} does not have min`);
   }
-  
-  if (numberSchema.maxValue == null) {
+
+  if (schema.maxValue == null) {
     throw new Error(`${schema} does not have max`);
   }
 
-  const { checks } = numberSchema._def;
-  type StepDef = z.ZodNumberCheck & { kind: 'multipleOf' }
-  const stepDef = checks.find(({ kind }) => kind === 'multipleOf') as StepDef;
-  
-  
+  const { checks } = schema._def;
+  type StepDef = z.ZodNumberCheck & { kind: "multipleOf" };
+  const stepDef = checks.find(({ kind }) => kind === "multipleOf") as StepDef;
+
   return {
-    min: numberSchema.minValue,
-    max: numberSchema.maxValue,
-    step: stepDef?.value
+    min: schema.minValue,
+    max: schema.maxValue,
+    step: stepDef?.value,
   };
 }
 
-export function getEnumDef(schema: z.ZodTypeAny) {
-  const enumSchema = removeDefault(schema);
-  if (!(enumSchema instanceof z.ZodEnum)) {
-    throw new Error(`${schema} is not a enum`);
-  }
-  return enumSchema.options as string[];
+export function getEnumDef(schema: z.ZodEnum<[string, ...string[]]>) {
+  return schema.options;
+}
+
+export function parse<T extends z.ZodTypeAny>(data: unknown, schema: T) {
+  return schema.safeParse(data) as ReturnType<T["safeParse"]>;
+}
+
+export function instanceOf<S extends z.ZodTypeAny, T extends z.ZodTypeAny>(
+  schema: S,
+  targetSchema: T,
+) {
+  return isEqual(schema, targetSchema);
 }

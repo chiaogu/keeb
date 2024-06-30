@@ -6,10 +6,11 @@ import { splitCamelCase } from "@src/utils/utils";
 import { Envelope } from "@src/types";
 import EnvelopeControl from "./EnvelopeControl";
 import { z } from "zod";
-import { getEnumDef, getNumberDef } from "@src/utils/schema";
+import { getEnumDef, getNumberDef, instanceOf, parse, removeDefault } from "@src/utils/schema";
+import { zEnvelope } from "@src/synth/config/shared";
 
 type ControlProps = {
-  config: NodeControlConfig;
+  config?: NodeControlConfig;
   name: string;
   value: unknown;
   onChange: (v: unknown) => void;
@@ -17,16 +18,17 @@ type ControlProps = {
 };
 
 export default function Control({
-  config,
+  // config,
   name,
   value,
   onChange,
   schema,
 }: ControlProps) {
   const label = useMemo(() => splitCamelCase(name), [name]);
-
-  if (config.type === "range") {
-    const { min, max, step } = getNumberDef(schema);
+  const innerSchema = useMemo(() => removeDefault(schema), [schema]);
+  
+  if (innerSchema instanceof z.ZodNumber) {
+    const { min, max, step } = getNumberDef(innerSchema);
     return (
       <Slider
         label={label}
@@ -37,8 +39,8 @@ export default function Control({
         step={step}
       />
     );
-  } else if (config.type === "select") {
-    const options = getEnumDef(schema);
+  } else if (innerSchema instanceof z.ZodEnum) {
+    const options = getEnumDef(innerSchema);
     return (
       <RadioGroup
         label={label}
@@ -47,7 +49,7 @@ export default function Control({
         options={options}
       />
     );
-  } else if (config.type === "envelope") {
+  } else if (instanceOf(zEnvelope, schema)) {
     return (
       <EnvelopeControl
         envelope={value as Envelope}
