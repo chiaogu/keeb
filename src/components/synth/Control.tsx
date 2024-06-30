@@ -3,11 +3,10 @@ import Slider from "@src/components/shared/Slider";
 import RadioGroup from "@src/components/shared/RadioGroup";
 import { useMemo } from "react";
 import { splitCamelCase } from "@src/utils/utils";
-import { Envelope } from "@src/types";
 import EnvelopeControl from "./EnvelopeControl";
 import { z } from "zod";
-import { getEnumDef, getNumberDef, instanceOf, parse, removeDefault } from "@src/utils/schema";
-import { zEnvelope } from "@src/synth/config/shared";
+import { getEnumDef, getNumberDef, instanceOf, removeDefault } from "@src/utils/schema";
+import { zEnvelope, Envelope } from "@src/synth/config/envelope";
 
 type ControlProps = {
   config?: NodeControlConfig;

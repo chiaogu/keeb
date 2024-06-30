@@ -4,25 +4,21 @@ import { SynthNodeConfig } from ".";
 import { zBaseSynthSrc } from "./shared";
 import { zEnvelope } from "./envelope";
 
-const zNoiseSynth = zBaseSynthSrc.extend({
+const zPluckSynth = zBaseSynthSrc.extend({
   type: z.enum(["brown", "white", "pink"]).catch("white"),
   envelope: zEnvelope,
 });
 
-export const noiseSynthConfig: SynthNodeConfig<
+export const pluchSynthConfig: SynthNodeConfig<
   Tone.NoiseSynth,
-  typeof zNoiseSynth
+  typeof zPluckSynth
 > = {
-  schema: zNoiseSynth,
+  schema: zPluckSynth,
   createNode: () => new Tone.NoiseSynth(),
   setState(node, state) {
     node.set({
       volume: state.volume,
       envelope: state.envelope,
-    });
-
-    node.noise.set({
-      type: state.type,
     });
   },
   trigger(node, state) {

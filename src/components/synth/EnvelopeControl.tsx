@@ -1,4 +1,4 @@
-import { Envelope } from "@src/types";
+import { Envelope } from "@src/synth/config/envelope";
 import Slider from "../shared/Slider";
 
 type EnvelopeProps = {

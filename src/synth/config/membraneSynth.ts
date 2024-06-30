@@ -32,5 +32,3 @@ export const membraneSynthConfig: SynthNodeConfig<
     );
   },
 };
-
-export const setNoiseSynthState = membraneSynthConfig.setState;
