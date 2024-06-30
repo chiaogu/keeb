@@ -15,13 +15,6 @@ export const membraneSynthConfig: SynthNodeConfig<
 > = {
   schema: zMembraneSynth,
   createNode: () => new Tone.MembraneSynth(),
-  setState(node, state) {
-    node.set({
-      volume: state.volume,
-      octaves: state.octaves,
-      pitchDecay: state.pitchDecay,
-    });
-  },
   trigger(node, state) {
     let frequency = state.frequency;
     frequency += Math.random() * 100;

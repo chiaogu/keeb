@@ -1,8 +1,12 @@
 import * as Tone from "@src/tone";
-import { FxNodeType, SrcNodeType, nodeConfig } from "./config";
+import { FxNodeType, SrcNodeType, SynthNodeType, nodeConfig } from "./config";
 
-type SupportedSrcToneNode = ReturnType<(typeof nodeConfig)[SrcNodeType]['createNode']>;
-type SupportedFxToneNode = ReturnType<(typeof nodeConfig)[FxNodeType]['createNode']>;
+type SupportedSrcToneNode = ReturnType<
+  (typeof nodeConfig)[SrcNodeType]["createNode"]
+>;
+type SupportedFxToneNode = ReturnType<
+  (typeof nodeConfig)[FxNodeType]["createNode"]
+>;
 
 export type SynthSrcNodeState = {
   type: SrcNodeType;
@@ -39,6 +43,18 @@ export default function createSynth(config: SynthConfig) {
     srcNode.chain(...fxNodes, Tone.getDestination());
   }
 
+  function setToneState(
+    type: SynthNodeType,
+    node: SupportedSrcToneNode | SupportedFxToneNode,
+    state: Record<string, unknown>,
+  ) {
+    if (nodeConfig[type].setState) {
+      nodeConfig[type].setState?.(node as never, state as never);
+    } else {
+      node.set(state);
+    }
+  }
+
   function setSrcState(newSrc: SynthConfig["src"]) {
     const type = newSrc.type;
     const data = nodeConfig[type].schema.parse(newSrc.data);
@@ -49,10 +65,7 @@ export default function createSynth(config: SynthConfig) {
       rechain();
     }
 
-    nodeConfig[type].setState(
-      srcNode as never,
-      data as never,
-    );
+    setToneState(type, srcNode, data);
 
     state.src = { type, data };
     handleChange?.();
@@ -72,10 +85,9 @@ export default function createSynth(config: SynthConfig) {
   function setFxState(index: number, fxState: SynthConfig["fxs"][number]) {
     const type = fxState.type;
     const data = nodeConfig[type].schema.parse(fxState.data);
-    nodeConfig[fxState.type].setState(
-      fxNodes[index] as never,
-      data as never,
-    );
+
+    setToneState(fxState.type, fxNodes[index], data);
+    
     state.fxs[index] = { type, data };
     handleChange?.();
   }

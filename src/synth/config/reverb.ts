@@ -16,13 +16,6 @@ const zReverb = zBaseSynthFx.extend({
 export const reverbConfig: SynthNodeConfig<Tone.Reverb, typeof zReverb> = {
   schema: zReverb,
   createNode: () => new Tone.Reverb(),
-  setState(node, state) {
-    node.set({
-      wet: state.wet as number,
-      decay: state.decay as number,
-      preDelay: state.preDelay as number,
-    });
-  },
   ready: (node) => node.ready,
 };
 

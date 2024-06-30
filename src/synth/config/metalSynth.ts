@@ -19,9 +19,6 @@ export const metalSynthConfig: SynthNodeConfig<
 > = {
   schema: zMetalSynth,
   createNode: () => new Tone.MetalSynth(),
-  setState(node, state) {
-    node.set(state);
-  },
   trigger(node, state) {
     let frequency = state.frequency;
     frequency += Math.random() * 100;

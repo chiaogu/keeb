@@ -13,12 +13,6 @@ export const bitCrusherConfig: SynthNodeConfig<
 > = {
   schema: zBitCrusher,
   createNode: () => new Tone.BitCrusher(),
-  setState(node, state) {
-    node.set({
-      wet: state.wet as number,
-      bits: state.bits as number,
-    });
-  },
 };
 
 export const setBitCrusherState = bitCrusherConfig.setState;

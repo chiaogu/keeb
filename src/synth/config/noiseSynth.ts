@@ -19,9 +19,6 @@ export const noiseSynthConfig: SynthNodeConfig<
     noise: { label: null },
   },
   createNode: () => new Tone.NoiseSynth(),
-  setState(node, state) {
-    node.set(state);
-  },
   trigger(node, state) {
     node.triggerAttackRelease(
       state.duration,
