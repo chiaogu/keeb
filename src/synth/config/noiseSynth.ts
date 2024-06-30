@@ -1,17 +1,30 @@
+import { z } from "zod";
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
-import { Envelope } from "@src/types";
-import { baseSrcControls, defauleEnvelope } from "./shared";
+import {
+  baseSrcControls,
+  defauleEnvelope,
+  Envelope,
+  zBaseSynthSrc,
+  zEnvelope,
+} from "./shared";
 
-// TODO: validate schema
+const zNoiseSynth = zBaseSynthSrc.extend({
+  type: z.enum(["brown", "white", "pink"]).catch("white"),
+  envelope: zEnvelope,
+});
 
-export const noiseSynthConfig: SynthNodeConfig<Tone.NoiseSynth> = {
+export const noiseSynthConfig: SynthNodeConfig<
+  Tone.NoiseSynth,
+  typeof zNoiseSynth
+> = {
+  schema: zNoiseSynth,
   controls: {
     ...baseSrcControls,
     type: {
       type: "select",
       defaultValue: "brown",
-      options: ["brown", "white", "pink"],
+      options: Object.keys(zNoiseSynth.shape.type.removeCatch().enum),
     },
     envelope: {
       type: "envelope",
@@ -21,17 +34,17 @@ export const noiseSynthConfig: SynthNodeConfig<Tone.NoiseSynth> = {
   createNode: () => new Tone.NoiseSynth(),
   setState(node, state) {
     node.set({
-      volume: state.volume as number,
+      volume: state.volume,
       envelope: state.envelope as Envelope,
     });
-  
+
     node.noise.set({
-      type: state.type as Tone.NoiseType,
+      type: state.type,
     });
   },
   trigger(node, state) {
-    node.triggerAttackRelease(state.duration as number, `+${state.delay}`);
-  }
+    node.triggerAttackRelease(state.duration, `+${state.delay}`);
+  },
 };
 
 export const setNoiseSynthState = noiseSynthConfig.setState;

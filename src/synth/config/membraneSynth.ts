@@ -1,8 +1,19 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
-import { baseSrcControls } from "./shared";
+import { baseSrcControls, zBaseSynthSrc } from "./shared";
+import { z } from "zod";
 
-export const membraneSynthConfig: SynthNodeConfig<Tone.MembraneSynth> = {
+const zMembraneSynth = zBaseSynthSrc.extend({
+  frequency: z.number().min(0).max(5000).catch(1125),
+  octaves: z.number().min(0.5).max(8).catch(1),
+  pitchDecay: z.number().min(0).max(0.5).catch(0.05),
+});
+
+export const membraneSynthConfig: SynthNodeConfig<
+  Tone.MembraneSynth,
+  typeof zMembraneSynth
+> = {
+  schema: zMembraneSynth,
   controls: {
     ...baseSrcControls,
     frequency: {
@@ -24,17 +35,17 @@ export const membraneSynthConfig: SynthNodeConfig<Tone.MembraneSynth> = {
   createNode: () => new Tone.MembraneSynth(),
   setState(node, state) {
     node.set({
-      volume: state.volume as number,
-      octaves: state.octaves as number,
-      pitchDecay: state.pitchDecay as number,
+      volume: state.volume,
+      octaves: state.octaves,
+      pitchDecay: state.pitchDecay,
     });
   },
   trigger(node, state) {
-    let frequency = state.frequency as number;
+    let frequency = state.frequency;
     frequency += Math.random() * 100;
     node.triggerAttackRelease(
       frequency,
-      state.duration as number,
+      state.duration,
       `+${state.delay}`,
     );
   },

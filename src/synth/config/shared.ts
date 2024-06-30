@@ -1,7 +1,15 @@
-import { Envelope } from "@src/types";
+import { z } from "zod";
 import { NodeControlConfig } from ".";
 
-export const baseSrcControls: Record<string, NodeControlConfig> = {
+export const zBaseSynthSrc = z.object({
+  volume: z.number().min(-80).max(-15).catch(-10),
+  duration: z.number().min(0.001).max(0.2).catch(0.1),
+  delay: z.number().min(0).max(0.2).catch(0),
+});
+
+type BaseSynthSrc = z.infer<typeof zBaseSynthSrc>;
+
+export const baseSrcControls: Record<keyof BaseSynthSrc, NodeControlConfig> = {
   volume: {
     type: "range",
     defaultValue: -10,
@@ -18,6 +26,42 @@ export const baseSrcControls: Record<string, NodeControlConfig> = {
     range: [0, 0.2],
   },
 };
+
+export const zBaseSynthFx = z.object({
+  wet: z.number().min(0).max(1).catch(0.5),
+});
+
+type BaseSynthFx = z.infer<typeof zBaseSynthFx>;
+
+export const baseFxControls: Record<keyof BaseSynthFx, NodeControlConfig> = {
+  wet: {
+    defaultValue: 0.5,
+    type: "range",
+    range: [0, 1],
+  }
+};
+
+const zEnvelopeCurve = z.enum([
+  "linear",
+  "exponential",
+  "bounce",
+  "cosine",
+  "sine",
+  "ripple",
+  "step",
+]).catch('linear');
+
+export const zEnvelope = z.object({
+  attack: z.number().min(0).max(1).catch(0),
+  decay: z.number().min(0).max(1).catch(0),
+  sustain: z.number().min(0).max(1).catch(1),
+  release: z.number().min(0).max(1).catch(0),
+  attackCurve: zEnvelopeCurve,
+  decayCurve: z.enum(["linear", "exponential"]).catch('linear'),
+  releaseCurve: zEnvelopeCurve,
+});
+
+export type Envelope = z.infer<typeof zEnvelope>;
 
 export const defauleEnvelope: Envelope = {
   attack: 0,

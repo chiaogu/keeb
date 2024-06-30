@@ -1,6 +1,6 @@
 type RadioGroupProps<T extends string> = {
   label: string;
-  options: T[];
+  options: readonly T[];
   value?: T;
   onChange: (value: T) => void;
 };

@@ -1,18 +1,24 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
+import { baseFxControls, zBaseSynthFx } from "./shared";
+import { z } from "zod";
 
-export const bitCrusherConfig: SynthNodeConfig<Tone.BitCrusher> = {
+const zBitCrusher = zBaseSynthFx.extend({
+  bits: z.number().min(1).max(16).catch(8),
+});
+
+export const bitCrusherConfig: SynthNodeConfig<
+  Tone.BitCrusher,
+  typeof zBitCrusher
+> = {
+  schema: zBitCrusher,
   controls: {
-    wet: {
-      defaultValue: 0.5,
-      type: "range",
-      range: [0, 1],
-    },
+    ...baseFxControls,
     bits: {
       defaultValue: 8,
       type: "range",
       range: [1, 16],
-    }
+    },
   },
   createNode: () => new Tone.BitCrusher(),
   setState(node, state) {
@@ -20,7 +26,7 @@ export const bitCrusherConfig: SynthNodeConfig<Tone.BitCrusher> = {
       wet: state.wet as number,
       bits: state.bits as number,
     });
-  }
+  },
 };
 
 export const setBitCrusherState = bitCrusherConfig.setState;

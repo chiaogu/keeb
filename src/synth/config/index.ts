@@ -5,6 +5,7 @@ import { noiseSynthConfig } from "./noiseSynth";
 import { bitCrusherConfig } from "./bitCrusher";
 import { membraneSynthConfig } from "./membraneSynth";
 import { Envelope } from "@src/types";
+import { z } from "zod";
 
 export type NodeControlConfig =
   | {
@@ -15,7 +16,7 @@ export type NodeControlConfig =
     }
   | {
       type: "select";
-      options: string[];
+      options: readonly string[];
       defaultValue: string;
     }
   | {
@@ -23,11 +24,15 @@ export type NodeControlConfig =
       defaultValue: Envelope;
     };
 
-export type SynthNodeConfig<T extends Tone.ToneAudioNode> = {
-  controls: Record<string, NodeControlConfig>;
+export type SynthNodeConfig<
+  T extends Tone.ToneAudioNode,
+  Z extends z.ZodTypeAny,
+> = {
+  schema: Z;
+  controls: Record<keyof z.infer<Z>, NodeControlConfig>;
   createNode: () => T;
-  setState: (node: T, state: Record<string, unknown>) => void;
-  trigger?: (node: T, state: Record<string, unknown>) => void;
+  setState: (node: T, state: z.infer<Z>) => void;
+  trigger?: (node: T, state: z.infer<Z>) => void;
   ready?: (node: T) => Promise<void>;
 };
 
