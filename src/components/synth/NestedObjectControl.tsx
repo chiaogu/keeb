@@ -1,28 +1,37 @@
-import { Noise } from "@src/synth/config/noise";
 import Control from "./Control";
 import { z } from "zod";
+import { removeDefault } from "@src/utils/schema";
+import { useMemo } from "react";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type NestedObjectControlProps<T extends z.ZodObject<any>> = {
+type NestedObjectControlProps<T extends z.ZodTypeAny> = {
+  className?: string;
   schema: T;
-  label: string;
+  label?: string;
   value: Record<string, unknown>;
   onChange: (value: Record<string, unknown>) => void;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function NestedObjectControl<T extends z.ZodObject<any>>({
+export default function NestedObjectControl<T extends z.ZodTypeAny>({
+  className,
   label,
   schema,
   value,
   onChange,
 }: NestedObjectControlProps<T>) {
+  const innerSchema = useMemo(() => removeDefault(schema), [schema]);
+
+  if (!(innerSchema instanceof z.ZodObject)) {
+    return null;
+  }
+
   return (
-    <div className="mt-4 flex w-full flex-col items-center">
-      <div className="flex w-full">
-        <label className="w-32 shrink-0">{label}</label>
-      </div>
-      {Object.entries(schema.shape).map(([key, fieldSchema]) => (
+    <div className={`flex w-full flex-col items-center ${className}`}>
+      {label && (
+        <div className="flex w-full">
+          <label className="w-32 shrink-0">{label}</label>
+        </div>
+      )}
+      {Object.entries(innerSchema.shape).map(([key, fieldSchema]) => (
         <Control
           key={`${label}-${key}`}
           name={key}

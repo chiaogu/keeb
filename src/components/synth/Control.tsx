@@ -8,8 +8,6 @@ import { z } from "zod";
 import { getEnumDef, getNumberDef, instanceOf, removeDefault } from "@src/utils/schema";
 import { zEnvelope, Envelope } from "@src/synth/config/envelope";
 import ReadOnly from "../shared/ReadOnly";
-import { Noise, zNoise } from "@src/synth/config/noise";
-import NoiseControl from "./NestedObjectControl";
 import NestedObjectControl from "./NestedObjectControl";
 
 type ControlProps = {
@@ -63,6 +61,7 @@ export default function Control({
   } else if (innerSchema instanceof z.ZodObject) {
     return (
       <NestedObjectControl
+        className="mt-4"
         schema={innerSchema}
         value={value as Record<string, unknown>}
         label={label}

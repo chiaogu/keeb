@@ -19,11 +19,8 @@ export default function FxsControl({ synth }: SrcNodeControlProps) {
           fx={fx}
           onAdd={(type) => addFx(index, type)}
           onRemove={() => removeFx(index)}
-          onChange={(key, value) => {
-            setFxState(index, {
-              ...fx,
-              data: { ...fx.data, [key]: value },
-            });
+          onChange={(fx) => {
+            setFxState(index, fx);
           }}
         />
       ))}
