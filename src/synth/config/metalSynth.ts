@@ -1,6 +1,6 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
-import { baseSrcControls, zBaseSynthSrc } from "./shared";
+import { zBaseSynthSrc } from "./shared";
 import { z } from "zod";
 
 const zMetalSynth = zBaseSynthSrc.extend({
@@ -16,15 +16,6 @@ export const metalSynthConfig: SynthNodeConfig<
   typeof zMetalSynth
 > = {
   schema: zMetalSynth,
-  // TODO: Make controls optional
-  controls: {
-    ...baseSrcControls,
-    harmonicity: { type: "range" },
-    modulationIndex: { type: "range" },
-    frequency: { type: "range" },
-    octaves: { type: "range" },
-    resonance: { type: "range" },
-  },
   createNode: () => new Tone.MetalSynth(),
   setState(node, state) {
     node.set({

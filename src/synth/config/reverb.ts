@@ -2,7 +2,7 @@ import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 import { MAX_SOUND_DURATION } from "@src/utils/constants";
 import { z } from "zod";
-import { baseFxControls, zBaseSynthFx } from "./shared";
+import { zBaseSynthFx } from "./shared";
 
 const zReverb = zBaseSynthFx.extend({
   decay: z
@@ -15,11 +15,6 @@ const zReverb = zBaseSynthFx.extend({
 
 export const reverbConfig: SynthNodeConfig<Tone.Reverb, typeof zReverb> = {
   schema: zReverb,
-  controls: {
-    ...baseFxControls,
-    decay: { type: "range" },
-    preDelay: { type: "range" },
-  },
   createNode: () => new Tone.Reverb(),
   setState(node, state) {
     node.set({

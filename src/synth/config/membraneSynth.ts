@@ -1,6 +1,6 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
-import { baseSrcControls, zBaseSynthSrc } from "./shared";
+import { zBaseSynthSrc } from "./shared";
 import { z } from "zod";
 
 const zMembraneSynth = zBaseSynthSrc.extend({
@@ -14,12 +14,6 @@ export const membraneSynthConfig: SynthNodeConfig<
   typeof zMembraneSynth
 > = {
   schema: zMembraneSynth,
-  controls: {
-    ...baseSrcControls,
-    frequency: { type: "range" },
-    octaves: { type: "range" },
-    pitchDecay: { type: "range" },
-  },
   createNode: () => new Tone.MembraneSynth(),
   setState(node, state) {
     node.set({

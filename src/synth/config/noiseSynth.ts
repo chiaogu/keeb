@@ -2,7 +2,6 @@ import { z } from "zod";
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 import {
-  baseSrcControls,
   Envelope,
   zBaseSynthSrc,
   zEnvelope,
@@ -18,11 +17,6 @@ export const noiseSynthConfig: SynthNodeConfig<
   typeof zNoiseSynth
 > = {
   schema: zNoiseSynth,
-  controls: {
-    ...baseSrcControls,
-    type: { type: "select" },
-    envelope: { type: "envelope" },
-  },
   createNode: () => new Tone.NoiseSynth(),
   setState(node, state) {
     node.set({

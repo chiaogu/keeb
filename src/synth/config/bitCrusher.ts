@@ -1,6 +1,6 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
-import { baseFxControls, zBaseSynthFx } from "./shared";
+import { zBaseSynthFx } from "./shared";
 import { z } from "zod";
 
 const zBitCrusher = zBaseSynthFx.extend({
@@ -12,10 +12,6 @@ export const bitCrusherConfig: SynthNodeConfig<
   typeof zBitCrusher
 > = {
   schema: zBitCrusher,
-  controls: {
-    ...baseFxControls,
-    bits: { type: "range" },
-  },
   createNode: () => new Tone.BitCrusher(),
   setState(node, state) {
     node.set({
