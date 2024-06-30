@@ -17,7 +17,7 @@ export default function FxsControl({ synth }: SrcNodeControlProps) {
         <FxControl
           key={`${fx.type}-${index}`}
           fx={fx}
-          onAdd={(node) => addFx(index, node)}
+          onAdd={(type) => addFx(index, type)}
           onRemove={() => removeFx(index)}
           onChange={(key, value) => {
             setFxState(index, {
@@ -30,7 +30,7 @@ export default function FxsControl({ synth }: SrcNodeControlProps) {
       <NewFx
         open={newFxOpen}
         setOpen={setNewFxOpen}
-        onSelect={(node) => addFx(state.fxs.length, node)}
+        onSelect={(type) => addFx(state.fxs.length, type)}
       />
     </div>
   );

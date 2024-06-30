@@ -1,13 +1,8 @@
 import * as Tone from "@src/tone";
 import { FxNodeType, SrcNodeType, nodeConfig } from "./config";
-import {
-  createSrcNode,
-  SupportedSrcToneNode,
-  createFxNode,
-  SupportedFxToneNode,
-} from "./createSynthNode";
-import setToneNodeState from "./setToneNodeState";
-import triggerToneNode from "./triggerToneNode";
+
+type SupportedSrcToneNode = ReturnType<(typeof nodeConfig)[SrcNodeType]['createNode']>;
+type SupportedFxToneNode = ReturnType<(typeof nodeConfig)[FxNodeType]['createNode']>;
 
 export type SynthSrcNodeState = {
   type: SrcNodeType;
@@ -27,15 +22,6 @@ export type SynthConfig = {
   fxs: SynthFxNodeState[];
 };
 
-function defaultMissingFields(state: SynthNodeState) {
-  const config = nodeConfig[state.type];
-  const newData: typeof state.data = {};
-  Object.entries(config.controls).forEach(([key, { defaultValue }]) => {
-    newData[key] = state.data[key] ?? defaultValue;
-  });
-  return newData;
-}
-
 export default function createSynth(config: SynthConfig) {
   const state: SynthConfig = config;
   let srcNode: SupportedSrcToneNode | null = null;
@@ -53,26 +39,29 @@ export default function createSynth(config: SynthConfig) {
     srcNode.chain(...fxNodes, Tone.getDestination());
   }
 
-  function setSrcState(src: SynthConfig["src"]) {
-    src.data = defaultMissingFields(src);
-    
-    if (srcNode === null || src.type !== state.src.type) {
+  function setSrcState(newSrc: SynthConfig["src"]) {
+    const type = newSrc.type;
+    const data = nodeConfig[type].schema.parse(newSrc.data);
+
+    if (srcNode === null || type !== state.src.type) {
       if (srcNode) srcNode.disconnect().dispose();
-      srcNode = createSrcNode(src.type);
+      srcNode = nodeConfig[type].createNode();
       rechain();
     }
 
-    setToneNodeState(srcNode, src);
+    nodeConfig[type].setState(
+      srcNode as never,
+      data as never,
+    );
 
-    state.src = src;
+    state.src = { type, data };
     handleChange?.();
   }
 
   function setFxs(fxs: SynthConfig["fxs"]) {
     if (!srcNode) throw new Error("synth is not initialized yet");
 
-    fxs.forEach((fx) => fx.data = defaultMissingFields(fx));
-    fxNodes = fxs.map((fx) => createFxNode(fx.type));
+    fxNodes = fxs.map((fx) => nodeConfig[fx.type].createNode());
     fxs.forEach((fx, index) => setFxState(index, fx));
     rechain();
 
@@ -81,8 +70,13 @@ export default function createSynth(config: SynthConfig) {
   }
 
   function setFxState(index: number, fxState: SynthConfig["fxs"][number]) {
-    setToneNodeState(fxNodes[index], fxState);
-    state.fxs[index] = fxState;
+    const type = fxState.type;
+    const data = nodeConfig[type].schema.parse(fxState.data);
+    nodeConfig[fxState.type].setState(
+      fxNodes[index] as never,
+      data as never,
+    );
+    state.fxs[index] = { type, data };
     handleChange?.();
   }
 
@@ -91,14 +85,18 @@ export default function createSynth(config: SynthConfig) {
     setFxs(state.fxs);
   }
 
-  function addFx(index: number, node: SynthFxNodeState) {
-    state.fxs.splice(index, 0, node);
+  function addFx(index: number, type: FxNodeType) {
+    const data = nodeConfig[type].schema.parse({});
+    state.fxs.splice(index, 0, { type, data });
     setFxs(state.fxs);
   }
 
   function trigger() {
     if (!srcNode) throw new Error("synth is not initialized yet");
-    triggerToneNode(srcNode, state.src);
+    nodeConfig[state.src.type].trigger?.(
+      srcNode as never,
+      state.src.data as never,
+    );
   }
 
   function dispose() {

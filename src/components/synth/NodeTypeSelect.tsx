@@ -1,18 +1,17 @@
 import {
   FxNodeType,
   SrcNodeType,
+  SynthNodeType,
   fxNodeConfig,
   srcNodeConfig,
 } from "@src/synth/config";
-import { SynthNodeState } from "@src/synth";
-import getDefaultNodeState from "@src/synth/getDefaultNodeState";
 import { splitCamelCase } from "@src/utils/utils";
 
 type NodeType = "src" | "fx";
 
 type NodeTypeSelectProps = {
   type: NodeType;
-  onSelect: (nodeState: SynthNodeState) => void;
+  onSelect: (type: SynthNodeType) => void;
 };
 
 const options = {
@@ -32,12 +31,7 @@ export default function NodeTypeSelect({
           <button
             className="mr-8"
             key={option}
-            onClick={() =>
-              onSelect({
-                type: option,
-                data: getDefaultNodeState(option),
-              })
-            }
+            onClick={() => onSelect(option)}
           >
             {splitCamelCase(option)}
           </button>

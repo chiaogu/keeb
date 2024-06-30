@@ -1,12 +1,12 @@
 import { useCallback } from "react";
 import IconButton from "../shared/IconButton";
 import NodeTypeSelect from "./NodeTypeSelect";
-import { SynthFxNodeState } from "@src/synth";
+import { FxNodeType } from "@src/synth/config";
 
 type NewFxProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onSelect: (nodeState: SynthFxNodeState) => void;
+  onSelect: (type: FxNodeType) => void;
 }
 
 export default function NewFx({ onSelect, open, setOpen }: NewFxProps) {
@@ -23,9 +23,9 @@ export default function NewFx({ onSelect, open, setOpen }: NewFxProps) {
       {open && (
         <NodeTypeSelect
           type="fx"
-          onSelect={(node) => {
+          onSelect={(type) => {
             setOpen(false);
-            onSelect(node as SynthFxNodeState);
+            onSelect(type as FxNodeType);
           }}
         />
       )}

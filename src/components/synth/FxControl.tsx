@@ -1,6 +1,6 @@
 import { SynthFxNodeState } from "@src/synth";
 import FxActions from "./FxActions";
-import { nodeConfig } from "@src/synth/config";
+import { FxNodeType, nodeConfig } from "@src/synth/config";
 import Control from "./Control";
 import { splitCamelCase } from "@src/utils/utils";
 import { useState } from "react";
@@ -10,7 +10,7 @@ type FxControlProps = {
   fx: SynthFxNodeState;
   onRemove: () => void;
   onChange: (key: string, v: unknown) => void;
-  onAdd: (node: SynthFxNodeState) => void;
+  onAdd: (node: FxNodeType) => void;
 };
 
 export default function FxControl({

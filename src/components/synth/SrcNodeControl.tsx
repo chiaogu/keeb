@@ -1,6 +1,5 @@
 import Control from "./Control";
 import { SrcNodeType, nodeConfig, srcNodeConfig } from "@src/synth/config";
-import getDefaultNodeState from "@src/synth/getDefaultNodeState";
 import RadioGroup from "@src/components//shared/RadioGroup";
 import { SynthControlState } from "@src/hooks/useSynthState";
 
@@ -19,12 +18,7 @@ export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
         label="type"
         options={srcTypeOptions}
         value={state.src.type}
-        onChange={(type) =>
-          setSrcState({
-            type,
-            data: getDefaultNodeState(type),
-          })
-        }
+        onChange={(type) => setSrcState({ type, data: {} })}
       />
       {Object.entries(nodeConfig[state.src.type].controls).map(
         ([key, config]) => (

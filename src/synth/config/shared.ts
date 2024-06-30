@@ -38,28 +38,30 @@ export const baseFxControls: Record<keyof BaseSynthFx, NodeControlConfig> = {
     defaultValue: 0.5,
     type: "range",
     range: [0, 1],
-  }
+  },
 };
 
-const zEnvelopeCurve = z.enum([
-  "linear",
-  "exponential",
-  "bounce",
-  "cosine",
-  "sine",
-  "ripple",
-  "step",
-]).catch('linear');
+const zEnvelopeCurve = z
+  .enum(["linear", "exponential", "bounce", "cosine", "sine", "ripple", "step"])
+  .catch("linear");
 
-export const zEnvelope = z.object({
+const zEnvelopeWithoutDefaults = z.object({
   attack: z.number().min(0).max(1).catch(0),
   decay: z.number().min(0).max(1).catch(0),
   sustain: z.number().min(0).max(1).catch(1),
   release: z.number().min(0).max(1).catch(0),
   attackCurve: zEnvelopeCurve,
-  decayCurve: z.enum(["linear", "exponential"]).catch('linear'),
+  decayCurve: z.enum(["linear", "exponential"]).catch("linear"),
   releaseCurve: zEnvelopeCurve,
 });
+
+export const zEnvelope = zEnvelopeWithoutDefaults
+.default({})
+.catch(
+  {
+    attack: 0,
+  } as z.infer<typeof zEnvelopeWithoutDefaults>,
+);
 
 export type Envelope = z.infer<typeof zEnvelope>;
 
@@ -68,7 +70,7 @@ export const defauleEnvelope: Envelope = {
   decay: 0,
   sustain: 1,
   release: 0,
-  attackCurve: 'linear',
-  decayCurve: 'linear',
-  releaseCurve: 'linear'
+  attackCurve: "linear",
+  decayCurve: "linear",
+  releaseCurve: "linear",
 };
