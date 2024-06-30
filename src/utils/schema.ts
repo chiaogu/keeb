@@ -51,3 +51,12 @@ export function instanceOf<S extends z.ZodTypeAny, T extends z.ZodTypeAny>(
 export function withDefaults(schema: z.ZodTypeAny) {
   return schema.default({}).catch({} as z.infer<typeof schema>);
 }
+
+export function omit(schema: z.ZodTypeAny, keys: string[]) {
+  const innerSchema = removeDefault(schema);
+  if (!(innerSchema instanceof z.ZodObject)) {
+    return innerSchema;
+  }
+  
+  return innerSchema.omit(Object.fromEntries(keys.map(key => [key, true])));
+}

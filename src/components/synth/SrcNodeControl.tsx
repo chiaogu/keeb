@@ -1,7 +1,9 @@
 import { SrcNodeType, nodeConfig, srcNodeConfig } from "@src/synth/config";
 import RadioGroup from "@src/components//shared/RadioGroup";
 import { SynthControlState } from "@src/hooks/useSynthState";
-import NestedObjectControl from "./NestedObjectControl";
+import Controls from "./Controls";
+import { zBaseSynthSrc } from "@src/synth/config/shared";
+import { omit } from "@src/utils/schema";
 
 type SrcNodeControlProps = {
   synth: SynthControlState;
@@ -20,8 +22,25 @@ export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
         value={state.src.type}
         onChange={(type) => setSrcState({ type, data: {} })}
       />
-      <NestedObjectControl
-        schema={nodeConfig[state.src.type].schema}
+      <Controls
+        schema={zBaseSynthSrc}
+        value={state.src.data}
+        onChange={(data) =>
+          setSrcState({
+            ...state.src,
+            data: data,
+          })
+        }
+      />
+      <div className="mt-4 flex w-full">
+        <label className="w-32 shrink-0">{state.src.type}</label>
+      </div>
+      <Controls
+        schema={omit(
+          nodeConfig[state.src.type].schema,
+          Object.keys(zBaseSynthSrc.shape),
+        )}
+        controls={nodeConfig[state.src.type].controls}
         value={state.src.data}
         onChange={(data) =>
           setSrcState({

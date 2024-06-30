@@ -6,16 +6,9 @@ import { bitCrusherConfig } from "./bitCrusher";
 import { membraneSynthConfig } from "./membraneSynth";
 import { z } from "zod";
 
-export type NodeControlConfig =
-  | {
-      type: "range";
-    }
-  | {
-      type: "select";
-    }
-  | {
-      type: "envelope";
-    };
+export type NodeControlConfig = {
+  label?: string | null;
+}
 
 export type SynthNodeConfig<
   T extends Tone.ToneAudioNode,

@@ -4,7 +4,7 @@ import { FxNodeType, nodeConfig } from "@src/synth/config";
 import { splitCamelCase } from "@src/utils/utils";
 import { useState } from "react";
 import NewFx from "./NewFx";
-import NestedObjectControl from "./NestedObjectControl";
+import Controls from "./Controls";
 
 type FxControlProps = {
   fx: SynthFxNodeState;
@@ -29,8 +29,9 @@ export default function FxControl({
         <label>{splitCamelCase(fx.type)}</label>
         <FxActions onRemove={onRemove} onAdd={() => setNewFxOpen(true)} />
       </div>
-      <NestedObjectControl
+      <Controls
         schema={nodeConfig[fx.type].schema}
+        controls={nodeConfig[fx.type].controls}
         value={fx.data}
         onChange={(data) =>
           onChange({ ...fx, data })

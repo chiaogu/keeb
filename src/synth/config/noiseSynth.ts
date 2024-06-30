@@ -15,6 +15,9 @@ export const noiseSynthConfig: SynthNodeConfig<
   typeof zNoiseSynth
 > = {
   schema: zNoiseSynth,
+  controls: {
+    noise: { label: null },
+  },
   createNode: () => new Tone.NoiseSynth(),
   setState(node, state) {
     node.set(state);

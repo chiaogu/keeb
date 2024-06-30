@@ -21,7 +21,7 @@ export default function SynthControl({
 
   return (
     <div className="flex w-full flex-col items-center border-2 border-black p-8">
-      <div className="mb-4 flex w-full items-end justify-between">
+      <div className="flex w-full items-end justify-between">
         <label>{name}</label>
         <div className="flex space-x-2">
           {removable && <IconButton icon="remove" onClick={onRemove} />}

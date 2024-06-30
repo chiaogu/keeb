@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback, useMemo } from "react";
 
 type SliderProps = {
-  label: string;
+  label: string | null;
   value: number;
   max: number;
   min: number;

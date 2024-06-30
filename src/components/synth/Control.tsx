@@ -5,10 +5,15 @@ import { useMemo } from "react";
 import { splitCamelCase } from "@src/utils/utils";
 import EnvelopeControl from "./EnvelopeControl";
 import { z } from "zod";
-import { getEnumDef, getNumberDef, instanceOf, removeDefault } from "@src/utils/schema";
+import {
+  getEnumDef,
+  getNumberDef,
+  instanceOf,
+  removeDefault,
+} from "@src/utils/schema";
 import { zEnvelope, Envelope } from "@src/synth/config/envelope";
 import ReadOnly from "../shared/ReadOnly";
-import NestedObjectControl from "./NestedObjectControl";
+import Controls from "./Controls";
 
 type ControlProps = {
   config?: NodeControlConfig;
@@ -19,15 +24,18 @@ type ControlProps = {
 };
 
 export default function Control({
-  // config,
+  config,
   name,
   value,
   onChange,
   schema,
 }: ControlProps) {
-  const label = useMemo(() => splitCamelCase(name), [name]);
+  const label = useMemo(
+    () => config?.label === undefined ? splitCamelCase(name) : config?.label,
+    [config, name],
+  );
   const innerSchema = useMemo(() => removeDefault(schema), [schema]);
-  
+
   if (innerSchema instanceof z.ZodNumber) {
     const { min, max, step } = getNumberDef(innerSchema);
     return (
@@ -60,8 +68,7 @@ export default function Control({
     );
   } else if (innerSchema instanceof z.ZodObject) {
     return (
-      <NestedObjectControl
-        className="mt-4"
+      <Controls
         schema={innerSchema}
         value={value as Record<string, unknown>}
         label={label}

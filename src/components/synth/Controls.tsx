@@ -2,22 +2,25 @@ import Control from "./Control";
 import { z } from "zod";
 import { removeDefault } from "@src/utils/schema";
 import { useMemo } from "react";
+import { NodeControlConfig } from "@src/synth/config";
 
-type NestedObjectControlProps<T extends z.ZodTypeAny> = {
+type ControlsProps<T extends z.ZodTypeAny> = {
   className?: string;
   schema: T;
+  controls?: Record<string, NodeControlConfig>;
   label?: string;
   value: Record<string, unknown>;
   onChange: (value: Record<string, unknown>) => void;
 };
 
-export default function NestedObjectControl<T extends z.ZodTypeAny>({
+export default function Controls<T extends z.ZodTypeAny>({
   className,
   label,
   schema,
   value,
   onChange,
-}: NestedObjectControlProps<T>) {
+  controls,
+}: ControlsProps<T>) {
   const innerSchema = useMemo(() => removeDefault(schema), [schema]);
 
   if (!(innerSchema instanceof z.ZodObject)) {
@@ -27,7 +30,7 @@ export default function NestedObjectControl<T extends z.ZodTypeAny>({
   return (
     <div className={`flex w-full flex-col items-center ${className}`}>
       {label && (
-        <div className="flex w-full">
+        <div className="mt-4 flex w-full">
           <label className="w-32 shrink-0">{label}</label>
         </div>
       )}
@@ -43,6 +46,7 @@ export default function NestedObjectControl<T extends z.ZodTypeAny>({
             })
           }
           schema={fieldSchema as z.ZodTypeAny}
+          config={controls?.[key]}
         />
       ))}
     </div>
