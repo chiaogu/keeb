@@ -7,6 +7,7 @@ import { bitCrusherConfig } from "./bitCrusher";
 import { membraneSynthConfig } from "./membraneSynth";
 import { pluchSynthConfig } from "./pluckSynth";
 import { amSynthConfig } from "./amSynth";
+import { monoSynthConfig } from "./monoSynth";
 
 export type NodeControlConfig = {
   label?: string | null;
@@ -30,6 +31,7 @@ export const srcNodeConfig = {
   membrane: membraneSynthConfig,
   pluck: pluchSynthConfig,
   am: amSynthConfig,
+  mono: monoSynthConfig,
 };
 
 export const fxNodeConfig = {
