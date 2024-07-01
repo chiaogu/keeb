@@ -8,7 +8,7 @@ type ControlsProps<T extends z.ZodTypeAny> = {
   className?: string;
   schema: T;
   controls?: Partial<Record<string, NodeControlConfig>>;
-  label?: string;
+  label?: string | null;
   value: Record<string, unknown>;
   onChange: (value: Record<string, unknown>) => void;
 };

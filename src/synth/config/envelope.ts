@@ -1,4 +1,4 @@
-import { withDefaults } from "@src/utils/schema";
+import { withInnerDefaults } from "@src/utils/schema";
 import { z } from "zod";
 
 const zEnvelopeCurve = z
@@ -15,6 +15,6 @@ const zInnerEnvelope = z.object({
   releaseCurve: zEnvelopeCurve,
 });
 
-export const zEnvelope = withDefaults(zInnerEnvelope);
+export const zEnvelope = withInnerDefaults(zInnerEnvelope);
 
 export type Envelope = z.infer<typeof zInnerEnvelope>;

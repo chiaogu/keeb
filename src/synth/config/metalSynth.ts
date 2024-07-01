@@ -1,15 +1,15 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
-import { zBaseSynthSrc } from "./shared";
+import { zBaseSynthSrc, zFrequency, zHarmonicity } from "./shared";
 import { z } from "zod";
 import { zEnvelope } from "./envelope";
-import assignToneDefaults from "../assignToneDefaults";
+import withToneDefaults from "../withToneDefaults";
 
-const zMetalSynth = assignToneDefaults(
+const zMetalSynth = withToneDefaults(
   zBaseSynthSrc.extend({
-    harmonicity: z.number().min(0.1).max(10),
+    frequency: zFrequency,
+    harmonicity: zHarmonicity,
     modulationIndex: z.number().min(1).max(100),
-    frequency: z.number().min(0).max(5000).catch(1125),
     octaves: z.number().min(-10).max(10),
     resonance: z.number().min(0).max(7000),
     envelope: zEnvelope,

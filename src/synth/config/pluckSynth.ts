@@ -3,9 +3,9 @@ import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 import { zBaseSynthSrc } from "./shared";
 import { MAX_SOUND_DURATION } from "@src/utils/constants";
-import assignToneDefaults from "../assignToneDefaults";
+import withToneDefaults from "../withToneDefaults";
 
-const zPluckSynth = assignToneDefaults(
+const zPluckSynth = withToneDefaults(
   zBaseSynthSrc.extend({
     frequency: z.number().min(0).max(1000).catch(500),
     attackNoise: z.number().min(0.1).max(20),

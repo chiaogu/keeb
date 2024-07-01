@@ -52,7 +52,7 @@ export default function Control({
     const options = getEnumDef(innerSchema);
     return (
       <RadioGroup
-        label={label}
+        label={label ?? ''}
         value={value as string}
         onChange={onChange}
         options={options}
@@ -62,7 +62,7 @@ export default function Control({
     return (
       <EnvelopeControl
         envelope={value as Envelope}
-        label={label}
+        label={label ?? ''}
         onChange={onChange}
       />
     );
@@ -77,5 +77,5 @@ export default function Control({
     );
   }
 
-  return <ReadOnly label={label} value={`${value}`} />;
+  return <ReadOnly label={label ?? ''} value={`${value}`} />;
 }

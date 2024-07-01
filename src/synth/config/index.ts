@@ -6,6 +6,7 @@ import { noiseSynthConfig } from "./noiseSynth";
 import { bitCrusherConfig } from "./bitCrusher";
 import { membraneSynthConfig } from "./membraneSynth";
 import { pluchSynthConfig } from "./pluckSynth";
+import { amSynthConfig } from "./amSynth";
 
 export type NodeControlConfig = {
   label?: string | null;
@@ -27,7 +28,8 @@ export const srcNodeConfig = {
   metal: metalSynthConfig,
   noise: noiseSynthConfig,
   membrane: membraneSynthConfig,
-  pluck: pluchSynthConfig, 
+  pluck: pluchSynthConfig,
+  am: amSynthConfig,
 };
 
 export const fxNodeConfig = {

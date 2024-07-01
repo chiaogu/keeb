@@ -1,10 +1,10 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
-import { zBaseSynthSrc } from "./shared";
+import { zBaseSynthSrc, zFrequency } from "./shared";
 import { z } from "zod";
 
 const zMembraneSynth = zBaseSynthSrc.extend({
-  frequency: z.number().min(0).max(5000).catch(1125),
+  frequency: zFrequency,
   octaves: z.number().min(0.5).max(8).catch(1),
   pitchDecay: z.number().min(0).max(0.5).catch(0.05),
 });

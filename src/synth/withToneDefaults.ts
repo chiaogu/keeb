@@ -1,7 +1,7 @@
 import * as Tone from "@src/tone";
 import { z } from "zod";
 
-export default function assignToneDefaults(
+export default function withToneDefaults(
   schema: z.ZodTypeAny,
   node: {
     new (): Tone.ToneAudioNode;

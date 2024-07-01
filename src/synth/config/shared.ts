@@ -9,3 +9,7 @@ export const zBaseSynthSrc = z.object({
 export const zBaseSynthFx = z.object({
   wet: z.number().min(0).max(1).catch(0.5),
 });
+
+export const zHarmonicity = z.number().min(0.1).max(10);
+
+export const zFrequency = z.number().min(0).max(5000).catch(1125);
