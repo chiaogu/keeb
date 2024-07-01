@@ -1,10 +1,11 @@
 import * as Tone from "@src/tone";
+import { z } from "zod";
 import { reverbConfig } from "./reverb";
 import { metalSynthConfig } from "./metalSynth";
 import { noiseSynthConfig } from "./noiseSynth";
 import { bitCrusherConfig } from "./bitCrusher";
 import { membraneSynthConfig } from "./membraneSynth";
-import { z } from "zod";
+import { pluchSynthConfig } from "./pluckSynth";
 
 export type NodeControlConfig = {
   label?: string | null;
@@ -26,6 +27,7 @@ export const srcNodeConfig = {
   metal: metalSynthConfig,
   noise: noiseSynthConfig,
   membrane: membraneSynthConfig,
+  pluck: pluchSynthConfig, 
 };
 
 export const fxNodeConfig = {

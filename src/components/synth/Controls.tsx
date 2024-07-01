@@ -7,7 +7,7 @@ import { NodeControlConfig } from "@src/synth/config";
 type ControlsProps<T extends z.ZodTypeAny> = {
   className?: string;
   schema: T;
-  controls?: Record<string, NodeControlConfig>;
+  controls?: Partial<Record<string, NodeControlConfig>>;
   label?: string;
   value: Record<string, unknown>;
   onChange: (value: Record<string, unknown>) => void;

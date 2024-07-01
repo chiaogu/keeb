@@ -14,9 +14,9 @@ export default function RadioGroup<T extends string>({
   return (
     <div className="flex w-full">
       <label className="w-32 shrink-0">{label}</label>
-      <div className="flex space-x-4">
+      <div className="flex flex-wrap">
         {options.map((option) => (
-          <div className="flex space-x-1" key={option}>
+          <div className="mr-4 flex space-x-1" key={option}>
             <input
               type="radio"
               value={option}

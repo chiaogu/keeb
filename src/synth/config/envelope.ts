@@ -7,8 +7,8 @@ const zEnvelopeCurve = z
 
 const zInnerEnvelope = z.object({
   attack: z.number().min(0).max(1).catch(0),
-  decay: z.number().min(0).max(1).catch(0),
-  sustain: z.number().min(0).max(1).catch(1),
+  decay: z.number().min(0).max(1).catch(0.05),
+  sustain: z.number().min(0).max(1).catch(0),
   release: z.number().min(0).max(1).catch(0),
   attackCurve: zEnvelopeCurve,
   decayCurve: z.enum(["linear", "exponential"]).catch("linear"),

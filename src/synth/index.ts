@@ -57,7 +57,12 @@ export default function createSynth(config: SynthConfig) {
 
   function setSrcState(newSrc: SynthConfig["src"]) {
     const type = newSrc.type;
-    const data = nodeConfig[type].schema.parse(newSrc.data);
+    const { data, error } = nodeConfig[type].schema.safeParse(newSrc.data);
+    
+    if (error) {
+      console.error(error.issues);
+      throw error;
+    }
 
     if (srcNode === null || type !== state.src.type) {
       if (srcNode) srcNode.disconnect().dispose();
