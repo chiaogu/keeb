@@ -1,5 +1,6 @@
 import { Envelope } from "@src/synth/config/envelope";
 import Slider from "../shared/Slider";
+import SectionHeader from "../shared/SectionHeader";
 
 type EnvelopeProps = {
   envelope: Envelope;
@@ -16,9 +17,7 @@ export default function EnvelopeControl({
 }: EnvelopeProps) {
   return (
     <div className="mt-4 flex w-full flex-col items-center">
-      <div className="flex w-full">
-        <label className="w-32 shrink-0">{label}</label>
-      </div>
+      <SectionHeader label={label} />
       {adsrLabels.map((adsr) => (
         <Slider
           key={`${label}-${adsr}`}

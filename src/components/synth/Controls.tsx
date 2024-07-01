@@ -3,6 +3,7 @@ import { z } from "zod";
 import { removeDefault } from "@src/utils/schema";
 import { useMemo } from "react";
 import { NodeControlConfig } from "@src/synth/config";
+import SectionHeader from "../shared/SectionHeader";
 
 type ControlsProps<T extends z.ZodTypeAny> = {
   className?: string;
@@ -29,11 +30,7 @@ export default function Controls<T extends z.ZodTypeAny>({
 
   return (
     <div className={`flex w-full flex-col items-center ${className}`}>
-      {label && (
-        <div className="mt-4 flex w-full">
-          <label className="w-32 shrink-0">{label}</label>
-        </div>
-      )}
+      {label && <SectionHeader className="mt-4" label={label} />}
       {Object.entries(innerSchema.shape).map(([key, fieldSchema]) => (
         <Control
           key={`${label}-${key}`}

@@ -5,6 +5,7 @@ import { splitCamelCase } from "@src/utils/utils";
 import { useState } from "react";
 import NewFx from "./NewFx";
 import Controls from "./Controls";
+import SectionHeader from "../shared/SectionHeader";
 
 type FxControlProps = {
   fx: SynthFxNodeState;
@@ -25,10 +26,13 @@ export default function FxControl({
       {newFxOpen && (
         <NewFx open={newFxOpen} setOpen={setNewFxOpen} onSelect={onAdd} />
       )}
-      <div className="mt-4 flex w-full items-end justify-between">
+      <SectionHeader className="mt-4" label={splitCamelCase(fx.type)}>
+        <FxActions onRemove={onRemove} onAdd={() => setNewFxOpen(true)} />
+      </SectionHeader>
+      {/* <div className="mt-4 flex w-full items-end justify-between">
         <label>{splitCamelCase(fx.type)}</label>
         <FxActions onRemove={onRemove} onAdd={() => setNewFxOpen(true)} />
-      </div>
+      </div> */}
       <Controls
         schema={nodeConfig[fx.type].schema}
         controls={nodeConfig[fx.type].controls}

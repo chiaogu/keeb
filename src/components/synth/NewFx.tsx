@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import IconButton from "../shared/IconButton";
 import NodeTypeSelect from "./NodeTypeSelect";
 import { FxNodeType } from "@src/synth/config";
+import SectionHeader from "../shared/SectionHeader";
 
 type NewFxProps = {
   open: boolean;
@@ -14,12 +15,9 @@ export default function NewFx({ onSelect, open, setOpen }: NewFxProps) {
 
   return (
     <div className="flex w-full flex-col">
-      <div className="mt-4 flex items-end justify-between">
-        <label>fx</label>
-        <div className="flex">
-          <IconButton icon={open ? 'close' : 'add'} onClick={toggleSelecting} />
-        </div>
-      </div>
+      <SectionHeader className="mt-4" label="fx">
+        <IconButton icon={open ? 'close' : 'add'} onClick={toggleSelecting} />
+      </SectionHeader>
       {open && (
         <NodeTypeSelect
           type="fx"

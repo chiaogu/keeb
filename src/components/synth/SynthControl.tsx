@@ -3,6 +3,7 @@ import SrcNodeControl from "./SrcNodeControl";
 import FxsControl from "./FxsControl";
 import useSynthState from "@src/hooks/useSynthState";
 import IconButton from "../shared/IconButton";
+import SectionHeader from "../shared/SectionHeader";
 
 type SynthControlProps = {
   name: string;
@@ -21,12 +22,15 @@ export default function SynthControl({
 
   return (
     <div className="flex w-full flex-col items-center border-2 border-black p-8">
-      <div className="flex w-full items-end justify-between">
+      {/* <div className="flex w-full items-end justify-between">
         <label>{name}</label>
         <div className="flex space-x-2">
           {removable && <IconButton icon="remove" onClick={onRemove} />}
         </div>
-      </div>
+      </div> */}
+      <SectionHeader label={name}>
+        {removable && <IconButton icon="remove" onClick={onRemove} />}
+      </SectionHeader>
       <SrcNodeControl synth={synthState} />
       <FxsControl synth={synthState} />
     </div>

@@ -4,6 +4,7 @@ import { SynthControlState } from "@src/hooks/useSynthState";
 import Controls from "./Controls";
 import { zBaseSynthSrc } from "@src/synth/config/shared";
 import { omit } from "@src/utils/schema";
+import SectionHeader from "../shared/SectionHeader";
 
 type SrcNodeControlProps = {
   synth: SynthControlState;
@@ -32,9 +33,7 @@ export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
           })
         }
       />
-      <div className="mt-4 flex w-full">
-        <label className="w-32 shrink-0">{state.src.type}</label>
-      </div>
+      <SectionHeader className="mt-4" label={state.src.type} />
       <Controls
         schema={omit(
           nodeConfig[state.src.type].schema,

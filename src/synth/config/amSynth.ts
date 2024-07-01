@@ -4,12 +4,13 @@ import { SynthNodeConfig } from ".";
 import { zBaseSynthSrc, zFrequency, zHarmonicity } from "./shared";
 import { zEnvelope } from "./envelope";
 import withToneDefaults from "../withToneDefaults";
+import { zOmniOscillator } from "./omniOscillator";
 
 const zAmSynth = withToneDefaults(zBaseSynthSrc.extend({
   frequency: zFrequency,
   harmonicity: zHarmonicity,
+	modulation: zOmniOscillator,
 	modulationEnvelope: zEnvelope,
-	// modulation: OmniOscillatorSynthOptions;
 }), Tone.AMOscillator);
 
 export const amSynthConfig: SynthNodeConfig<
