@@ -1,27 +1,27 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
-import { zBaseSynthSrc, zFrequency } from "./shared";
+import { zBaseSynthSrc, zFrequency, zHarmonicity } from "./shared";
 import { zEnvelope } from "./envelope";
 import withToneDefaults from "../withToneDefaults";
 import { zOmniOscillator } from "./omniOscillator";
 import { z } from "zod";
-import { zFilter } from "./filter";
 
-const zMonoSynth = withToneDefaults(zBaseSynthSrc.extend({
+const zFmSynth = withToneDefaults(zBaseSynthSrc.extend({
   frequency: zFrequency,
   oscillator: zOmniOscillator,
   envelope: zEnvelope,
-  filter: zFilter,
-  filterEnvelope: zEnvelope,
-  
-}), Tone.AMOscillator);
+  harmonicity: zHarmonicity,
+  modulation: zOmniOscillator,
+  modulationEnvelope: zEnvelope,
+  modulationIndex: z.number().min(0.01).max(1000),
+}), Tone.FMOscillator);
 
-export const monoSynthConfig: SynthNodeConfig<
-  Tone.MonoSynth,
-  typeof zMonoSynth
+export const fmSynthConfig: SynthNodeConfig<
+  Tone.FMSynth,
+  typeof zFmSynth
 > = {
-  schema: zMonoSynth,
-  createNode: () => new Tone.MonoSynth(),
+  schema: zFmSynth,
+  createNode: () => new Tone.FMSynth(),
   trigger(node, state) {
     let frequency = state.frequency;
     frequency += Math.random() * 100;

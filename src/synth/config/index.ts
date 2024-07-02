@@ -8,6 +8,8 @@ import { membraneSynthConfig } from "./membraneSynth";
 import { pluchSynthConfig } from "./pluckSynth";
 import { amSynthConfig } from "./amSynth";
 import { monoSynthConfig } from "./monoSynth";
+import { fmSynthConfig } from "./fmSynth";
+import { baseSynthConfig } from "./baseSynth";
 
 export type NodeControlConfig = {
   label?: string | null;
@@ -26,12 +28,14 @@ export type SynthNodeConfig<
 };
 
 export const srcNodeConfig = {
-  metal: metalSynthConfig,
-  noise: noiseSynthConfig,
-  membrane: membraneSynthConfig,
-  pluck: pluchSynthConfig,
-  am: amSynthConfig,
+  base: baseSynthConfig,
   mono: monoSynthConfig,
+  fm: fmSynthConfig,
+  am: amSynthConfig,
+  noise: noiseSynthConfig,
+  pluck: pluchSynthConfig,
+  membrane: membraneSynthConfig,
+  metal: metalSynthConfig,
 };
 
 export const fxNodeConfig = {
