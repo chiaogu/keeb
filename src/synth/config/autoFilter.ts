@@ -10,11 +10,14 @@ export const autoFilterConfig = createConfig(
     baseFrequency: zFrequency,
     depth: z.number().min(0).max(1),
     filter: zInnerFilter.omit({ gain: true, frequency: true }),
-    frequency: zFrequency,
+    frequency: z.number().min(0).max(500),
     octaves: z.number().min(0.5).max(8),
     type: z.enum(["sawtooth", "sine", "square", "triangle"]),
   }),
   {
+    createNode() {
+      return new Tone.AutoFilter().start();
+    },
     setState(node, state) {
       node.set({
         ...state,

@@ -13,6 +13,9 @@ import { baseSynthConfig } from "./baseSynth";
 import { autoWahConfig } from "./autoWah";
 import { chebyshevConfig } from "./chebyshev";
 import { autoFilterConfig } from "./autoFilter";
+import { chorusConfig } from "./chorus";
+import { distortionConfig } from "./distortion";
+import { feedbackDelayConfig } from "./feedbackDelay";
 
 export type NodeControlConfig = {
   label?: string | null;
@@ -47,6 +50,9 @@ export const fxNodeConfig = {
   autoWah: autoWahConfig,
   chebyshev: chebyshevConfig,
   autoFilter: autoFilterConfig,
+  chorus: chorusConfig,
+  distortion: distortionConfig,
+  feedbackDelay: feedbackDelayConfig,
 };
 
 export const nodeConfig = {

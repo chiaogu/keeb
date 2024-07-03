@@ -1,13 +1,13 @@
 import * as Tone from "@src/tone";
 import { SynthNodeConfig } from ".";
 import { z } from "zod";
-import { zBaseSynthFx } from "./shared";
+import { zBaseSynthFx, zOversample } from "./shared";
 import withToneDefaults from "../withToneDefaults";
 
 const zChebyshev = withToneDefaults(
   zBaseSynthFx.extend({
     order: z.number().min(0).max(100),
-    oversample: z.enum(["none", "2x", "4x"]),
+    oversample: zOversample,
   }),
   Tone.Chebyshev,
 );
