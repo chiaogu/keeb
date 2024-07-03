@@ -16,6 +16,11 @@ import { autoFilterConfig } from "./autoFilter";
 import { chorusConfig } from "./chorus";
 import { distortionConfig } from "./distortion";
 import { feedbackDelayConfig } from "./feedbackDelay";
+import { freeverbConfig } from "./freeverb";
+import { frequencyShifterConfig } from "./frequencyShifter";
+import { jcreverbConfig } from "./jcReverb";
+import { phaserConfig } from "./phaser";
+import { pingPongDelayConfig } from "./pingPongDelay";
 
 export type NodeControlConfig = {
   label?: string | null;
@@ -53,6 +58,11 @@ export const fxNodeConfig = {
   chorus: chorusConfig,
   distortion: distortionConfig,
   feedbackDelay: feedbackDelayConfig,
+  freeverb: freeverbConfig,
+  frequencyShifter: frequencyShifterConfig,
+  jcReverb: jcreverbConfig,
+  phaser: phaserConfig,
+  pingPongDelay: pingPongDelayConfig,
 };
 
 export const nodeConfig = {
