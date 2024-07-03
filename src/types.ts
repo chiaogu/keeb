@@ -1,3 +1,4 @@
+import * as Tone from '@src/tone';
 import { SynthConfig } from "./synth";
 
 export type SoundConfig = {
@@ -11,3 +12,8 @@ export type KeyboardConfig = {
     down: SoundConfig,
   },
 };
+
+export type ToneClass<T extends Tone.ToneAudioNode> = {
+	new (): T;
+	getDefaults: (...args: unknown[]) => unknown;
+}

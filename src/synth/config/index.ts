@@ -10,6 +10,9 @@ import { amSynthConfig } from "./amSynth";
 import { monoSynthConfig } from "./monoSynth";
 import { fmSynthConfig } from "./fmSynth";
 import { baseSynthConfig } from "./baseSynth";
+import { autoWahConfig } from "./autoWah";
+import { chebyshevConfig } from "./chebyshev";
+import { autoFilterConfig } from "./autoFilter";
 
 export type NodeControlConfig = {
   label?: string | null;
@@ -41,6 +44,9 @@ export const srcNodeConfig = {
 export const fxNodeConfig = {
   reverb: reverbConfig,
   bitCrusher: bitCrusherConfig,
+  autoWah: autoWahConfig,
+  chebyshev: chebyshevConfig,
+  autoFilter: autoFilterConfig,
 };
 
 export const nodeConfig = {

@@ -14,5 +14,3 @@ export const bitCrusherConfig: SynthNodeConfig<
   schema: zBitCrusher,
   createNode: () => new Tone.BitCrusher(),
 };
-
-export const setBitCrusherState = bitCrusherConfig.setState;

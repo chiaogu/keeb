@@ -18,5 +18,3 @@ export const reverbConfig: SynthNodeConfig<Tone.Reverb, typeof zReverb> = {
   createNode: () => new Tone.Reverb(),
   ready: (node) => node.ready,
 };
-
-export const setReverbState = reverbConfig.setState;
