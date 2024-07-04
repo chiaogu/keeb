@@ -1,27 +1,27 @@
 import * as Tone from "@src/tone";
-import { SynthNodeConfig } from ".";
 import { zBaseSynthSrc } from "./shared";
 import { zEnvelope } from "./envelope";
 import { zNoise } from "./noise";
+import createConfig from "../createConfig";
 
 const zNoiseSynth = zBaseSynthSrc.extend({
-  noise: zNoise,
+  ...zNoise.shape,
   envelope: zEnvelope,
 });
 
-export const noiseSynthConfig: SynthNodeConfig<
-  Tone.NoiseSynth,
-  typeof zNoiseSynth
-> = {
-  schema: zNoiseSynth,
-  controls: {
-    noise: { label: null },
+export const noiseSynthConfig = createConfig(Tone.NoiseSynth, zNoiseSynth, {
+  setState(node, state) {
+    node.set({
+      ...state,
+      noise: {
+        type: state.type,
+        playbackRate: state.playbackRate,
+        fadeIn: state.fadeIn,
+        fadeOut: state.fadeOut,
+      },
+    });
   },
-  createNode: () => new Tone.NoiseSynth(),
   trigger(node, state) {
-    node.triggerAttackRelease(
-      state.duration,
-      `+${state.delay}`,
-    );
+    node.triggerAttackRelease(state.duration, `+${state.delay}`);
   },
-};
+});

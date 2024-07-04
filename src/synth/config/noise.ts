@@ -4,7 +4,7 @@ import { z } from "zod";
 
 export const noiseTypeOptions = ["brown", "white", "pink"] as const;
 
-const zInnerNoise = z.object({
+export const zNoise = z.object({
   type: z.enum(noiseTypeOptions).catch("white"),
   playbackRate: z.number().min(0.001).max(1).catch(1),
   fadeIn: z
@@ -19,6 +19,6 @@ const zInnerNoise = z.object({
     .catch(0),
 });
 
-export const zNoise = withInnerDefaults(zInnerNoise);
+// export const zNoise = withInnerDefaults(zInnerNoise);
 
-export type Noise = z.infer<typeof zInnerNoise>;
+export type Noise = z.infer<typeof zNoise>;
