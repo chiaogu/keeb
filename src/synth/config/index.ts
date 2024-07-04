@@ -21,6 +21,9 @@ import { frequencyShifterConfig } from "./frequencyShifter";
 import { jcreverbConfig } from "./jcReverb";
 import { phaserConfig } from "./phaser";
 import { pingPongDelayConfig } from "./pingPongDelay";
+import { pitchShiftConfig } from "./pitchShift";
+import { tremoloConfig } from "./tremolo";
+import { vibratoConfig } from "./vibrato";
 
 export type NodeControlConfig = {
   label?: string | null;
@@ -63,6 +66,9 @@ export const fxNodeConfig = {
   jcReverb: jcreverbConfig,
   phaser: phaserConfig,
   pingPongDelay: pingPongDelayConfig,
+  pitchShift: pitchShiftConfig,
+  tremolo: tremoloConfig,
+  vibrato: vibratoConfig,
 };
 
 export const nodeConfig = {
