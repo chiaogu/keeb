@@ -13,7 +13,7 @@ export default function SectionHeader({
 }: SectionHeaderProps) {
   return (
     <div className={`flex w-full items-end justify-between ${className}`}>
-      <label className="w-32 shrink-0">
+      <label className="shrink-0">
         {label}
       </label>
       <div className="flex space-x-2">{children}</div>

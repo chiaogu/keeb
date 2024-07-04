@@ -29,7 +29,7 @@ export default function NodeTypeSelect({
       <div className="inline-block w-full">
         {options[type].map((option) => (
           <button
-            className="mr-8"
+            className="mr-5 underline"
             key={option}
             onClick={() => onSelect(option)}
           >

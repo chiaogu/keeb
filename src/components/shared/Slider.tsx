@@ -1,23 +1,24 @@
 import { ChangeEvent, useCallback, useMemo } from "react";
+import LabelField, { LabelFieldProps } from "./LabelField";
 
 type SliderProps = {
-  label: string | null;
+  label: string;
   value: number;
   max: number;
   min: number;
   step?: number;
   onChange: (v: number) => void;
-};
+} & Omit<LabelFieldProps, 'children'>;
 
 const RESOLUTION = 100000;
 
 export default function Slider({
-  label,
   value,
   onChange,
   step,
   max,
   min,
+  ...labelFields
 }: SliderProps) {
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -38,10 +39,7 @@ export default function Slider({
   }, [max, min, step]);
 
   return (
-    <div className="flex w-full">
-      <label className="w-32 shrink-0">
-        {label}
-      </label>
+    <LabelField {...labelFields}>
       <div className="flex flex-auto items-center">
         <input
           className="w-full"
@@ -56,6 +54,6 @@ export default function Slider({
           {(normalizedValue * 100).toFixed()}%
         </div>
       </div>
-    </div>
+    </LabelField>
   );
 }

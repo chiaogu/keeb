@@ -33,17 +33,17 @@ export default function Control({
   schema,
   indent,
 }: ControlProps) {
-  const label = useMemo(() => {
-    const value =
-      config?.label === undefined ? splitCamelCase(name) : config?.label;
-    return `${indent} ${value}`;
-  }, [config, name, indent]);
+  const label = useMemo(
+    () => (config?.label == undefined ? splitCamelCase(name) : config?.label),
+    [config, name],
+  );
   const innerSchema = useMemo(() => removeDefault(schema), [schema]);
 
   if (innerSchema instanceof z.ZodNumber) {
     const { min, max, step } = getNumberDef(innerSchema);
     return (
       <Slider
+        indent={indent}
         label={label}
         value={value as number}
         onChange={onChange}
@@ -56,7 +56,8 @@ export default function Control({
     const options = getEnumDef(innerSchema);
     return (
       <RadioGroup
-        label={label ?? ""}
+        indent={indent}
+        label={label}
         value={value as string}
         onChange={onChange}
         options={options}
@@ -65,8 +66,9 @@ export default function Control({
   } else if (instanceOf(zEnvelope, schema)) {
     return (
       <EnvelopeControl
+        indent={indent}
+        label={label}
         envelope={value as Envelope}
-        label={label ?? ""}
         onChange={onChange}
       />
     );
@@ -84,5 +86,5 @@ export default function Control({
     );
   }
 
-  return <ReadOnly label={label ?? ""} value={`${value}`} />;
+  return <ReadOnly label={label} value={`${value}`} />;
 }

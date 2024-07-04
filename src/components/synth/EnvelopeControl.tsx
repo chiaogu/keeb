@@ -1,24 +1,25 @@
 import { Envelope, zEnvelope } from "@src/synth/config/envelope";
-import Slider from "../shared/Slider";
 import SectionHeader from "../shared/SectionHeader";
 import Controls from "./Controls";
 
 type EnvelopeProps = {
-  envelope: Envelope;
   label: string;
+  envelope: Envelope;
   onChange: (adsr: Envelope) => void;
+  indent?: number;
 };
 
 export default function EnvelopeControl({
-  envelope,
   label,
+  envelope,
   onChange,
+  indent = 0,
 }: EnvelopeProps) {
   return (
     <div className="flex w-full flex-col items-center">
       <SectionHeader label={label}/>
       <Controls
-        indent={1}
+        indent={indent + 1}
         schema={zEnvelope}
         value={envelope}
         onChange={(newEnvelope) => onChange(newEnvelope as Envelope)}

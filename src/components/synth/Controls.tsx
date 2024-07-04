@@ -28,7 +28,9 @@ export default function Controls<T extends z.ZodTypeAny>({
   }
 
   return (
-    <div className={`flex w-full flex-col items-center ${className}`}>
+    <div
+      className={`flex w-full flex-col items-center ${className} ${indent > 0 ? "mb-2 border-l-2 border-dotted border-l-black" : ""}`}
+    >
       {Object.entries(innerSchema.shape).map(([key, fieldSchema]) => (
         <Control
           key={key}

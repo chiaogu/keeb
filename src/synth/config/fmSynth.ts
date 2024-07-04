@@ -8,9 +8,9 @@ import { z } from "zod";
 
 const zFmSynth = withToneDefaults(zBaseSynthSrc.extend({
   frequency: zFrequency,
+  harmonicity: zHarmonicity,
   oscillator: zOmniOscillator,
   envelope: zEnvelope,
-  harmonicity: zHarmonicity,
   modulation: zOmniOscillator,
   modulationEnvelope: zEnvelope,
   modulationIndex: z.number().min(0.01).max(1000),

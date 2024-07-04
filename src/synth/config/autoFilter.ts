@@ -3,6 +3,7 @@ import { z } from "zod";
 import { zBaseSynthFx, zFrequency } from "./shared";
 import createConfig from "../createConfig";
 import { zInnerFilter } from "./filter";
+import { withInnerDefaults } from "@src/utils/schema";
 
 export const autoFilterConfig = createConfig(
   Tone.AutoFilter,
@@ -10,9 +11,13 @@ export const autoFilterConfig = createConfig(
     baseFrequency: zFrequency,
     depth: z.number().min(0).max(1),
     filter: zInnerFilter.omit({ gain: true, frequency: true }),
-    frequency: z.number().min(0).max(500),
-    octaves: z.number().min(0.5).max(8),
-    type: z.enum(["sawtooth", "sine", "square", "triangle"]),
+    lfo: withInnerDefaults(
+      z.object({
+        frequency: z.number().min(0).max(500).catch(100),
+        octaves: z.number().min(0.5).max(8).catch(1),
+        type: z.enum(["sawtooth", "sine", "square", "triangle"]).catch("sine"),
+      }),
+    ),
   }),
   {
     createNode() {
@@ -21,6 +26,7 @@ export const autoFilterConfig = createConfig(
     setState(node, state) {
       node.set({
         ...state,
+        ...state.lfo,
         filter: {
           ...state.filter,
           rolloff: parseInt(state.filter.rolloff) as Tone.FilterRollOff,

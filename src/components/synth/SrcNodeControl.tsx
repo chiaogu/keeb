@@ -17,12 +17,6 @@ export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
 
   return (
     <div className="flex w-full flex-col items-center">
-      <RadioGroup
-        label="type"
-        options={srcTypeOptions}
-        value={state.src.type}
-        onChange={(type) => setSrcState({ type, data: {} })}
-      />
       <Controls
         schema={zBaseSynthSrc}
         value={state.src.data}
@@ -32,6 +26,12 @@ export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
             data: data,
           })
         }
+      />
+      <RadioGroup
+        label="type"
+        options={srcTypeOptions}
+        value={state.src.type}
+        onChange={(type) => setSrcState({ type, data: {} })}
       />
       <SectionHeader className="mt-4 font-bold" label={state.src.type} />
       <Controls
