@@ -1,3 +1,4 @@
+import { produce, castDraft, Immutable } from 'immer';
 import * as Tone from "@src/tone";
 import { FxNodeType, SrcNodeType, SynthNodeType, nodeConfig } from "./config";
 
@@ -27,7 +28,7 @@ export type SynthConfig = {
 };
 
 export default function createSynth(config: SynthConfig) {
-  const state: SynthConfig = config;
+  let state: Immutable<SynthConfig> = config;
   let srcNode: SupportedSrcToneNode | null = null;
   let fxNodes: SupportedFxToneNode[] = [];
   let handleChange: (() => void) | null = null;
@@ -58,7 +59,7 @@ export default function createSynth(config: SynthConfig) {
   function setSrcState(newSrc: SynthConfig["src"]) {
     const type = newSrc.type;
     const { data, error } = nodeConfig[type].schema.safeParse(newSrc.data);
-    
+
     if (error) {
       console.error(error.issues);
       throw error;
@@ -72,18 +73,22 @@ export default function createSynth(config: SynthConfig) {
 
     setToneState(type, srcNode, data);
 
-    state.src = { type, data };
+    state = produce(state, draft => {
+      draft.src = { type, data };
+    });
     handleChange?.();
   }
 
-  function setFxs(fxs: SynthConfig["fxs"]) {
+  function setFxs(fxs: Immutable<SynthConfig["fxs"]>) {
     if (!srcNode) throw new Error("synth is not initialized yet");
 
     fxNodes = fxs.map((fx) => nodeConfig[fx.type].createNode());
     fxs.forEach((fx, index) => setFxState(index, fx));
     rechain();
 
-    state.fxs = fxs;
+    state = produce(state, draft => {
+      draft.fxs = castDraft(fxs);
+    });
     handleChange?.();
   }
 
@@ -92,19 +97,25 @@ export default function createSynth(config: SynthConfig) {
     const data = nodeConfig[type].schema.parse(fxState.data);
 
     setToneState(fxState.type, fxNodes[index], data);
-    
-    state.fxs[index] = { type, data };
+
+    state = produce(state, draft => {
+      draft.fxs[index] = { type, data };
+    });
     handleChange?.();
   }
 
   function removeFx(index: number) {
-    state.fxs.splice(index, 1);
+    state = produce(state, draft => {
+      draft.fxs.splice(index, 1);
+    });
     setFxs(state.fxs);
   }
 
   function addFx(index: number, type: FxNodeType) {
-    const data = nodeConfig[type].schema.parse({});
-    state.fxs.splice(index, 0, { type, data });
+    state = produce(state, draft => {
+      const data = nodeConfig[type].schema.parse({});
+      draft.fxs.splice(index, 0, { type, data });
+    });
     setFxs(state.fxs);
   }
 
