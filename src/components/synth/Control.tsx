@@ -22,6 +22,7 @@ type ControlProps = {
   value: unknown;
   onChange: (v: unknown) => void;
   schema: z.ZodTypeAny;
+  indent: number;
 };
 
 export default function Control({
@@ -30,11 +31,13 @@ export default function Control({
   value,
   onChange,
   schema,
+  indent,
 }: ControlProps) {
-  const label = useMemo(
-    () => config?.label === undefined ? splitCamelCase(name) : config?.label,
-    [config, name],
-  );
+  const label = useMemo(() => {
+    const value =
+      config?.label === undefined ? splitCamelCase(name) : config?.label;
+    return `${indent} ${value}`;
+  }, [config, name, indent]);
   const innerSchema = useMemo(() => removeDefault(schema), [schema]);
 
   if (innerSchema instanceof z.ZodNumber) {
@@ -53,7 +56,7 @@ export default function Control({
     const options = getEnumDef(innerSchema);
     return (
       <RadioGroup
-        label={label ?? ''}
+        label={label ?? ""}
         value={value as string}
         onChange={onChange}
         options={options}
@@ -63,7 +66,7 @@ export default function Control({
     return (
       <EnvelopeControl
         envelope={value as Envelope}
-        label={label ?? ''}
+        label={label ?? ""}
         onChange={onChange}
       />
     );
@@ -71,15 +74,15 @@ export default function Control({
     return (
       <>
         {label && <SectionHeader label={label} />}
-          <Controls
+        <Controls
           schema={innerSchema}
           value={value as Record<string, unknown>}
-          label={label}
           onChange={onChange}
+          indent={indent + 1}
         />
       </>
     );
   }
 
-  return <ReadOnly label={label ?? ''} value={`${value}`} />;
+  return <ReadOnly label={label ?? ""} value={`${value}`} />;
 }
