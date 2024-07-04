@@ -16,8 +16,8 @@ export default function EnvelopeControl({
   onChange,
 }: EnvelopeProps) {
   return (
-    <div className="mt-4 flex w-full flex-col items-center">
-      <SectionHeader label={label} />
+    <div className="flex w-full flex-col items-center">
+      <SectionHeader label={label}/>
       {adsrLabels.map((adsr) => (
         <Slider
           key={`${label}-${adsr}`}

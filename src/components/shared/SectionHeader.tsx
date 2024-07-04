@@ -14,7 +14,7 @@ export default function SectionHeader({
   return (
     <div className={`flex w-full items-end justify-between ${className}`}>
       <label className="w-32 shrink-0">
-        <b>{label}</b>
+        {label}
       </label>
       <div className="flex space-x-2">{children}</div>
     </div>

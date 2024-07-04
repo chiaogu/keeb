@@ -28,7 +28,7 @@ export default function SynthControl({
           {removable && <IconButton icon="remove" onClick={onRemove} />}
         </div>
       </div> */}
-      <SectionHeader label={name}>
+      <SectionHeader className="font-bold" label={name}>
         {removable && <IconButton icon="remove" onClick={onRemove} />}
       </SectionHeader>
       <SrcNodeControl synth={synthState} />

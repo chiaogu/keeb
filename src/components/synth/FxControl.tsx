@@ -26,13 +26,9 @@ export default function FxControl({
       {newFxOpen && (
         <NewFx open={newFxOpen} setOpen={setNewFxOpen} onSelect={onAdd} />
       )}
-      <SectionHeader className="mt-4" label={splitCamelCase(fx.type)}>
+      <SectionHeader className="mt-4 font-bold" label={splitCamelCase(fx.type)}>
         <FxActions onRemove={onRemove} onAdd={() => setNewFxOpen(true)} />
       </SectionHeader>
-      {/* <div className="mt-4 flex w-full items-end justify-between">
-        <label>{splitCamelCase(fx.type)}</label>
-        <FxActions onRemove={onRemove} onAdd={() => setNewFxOpen(true)} />
-      </div> */}
       <Controls
         schema={nodeConfig[fx.type].schema}
         controls={nodeConfig[fx.type].controls}

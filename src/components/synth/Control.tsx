@@ -14,6 +14,7 @@ import {
 import { zEnvelope, Envelope } from "@src/synth/config/envelope";
 import ReadOnly from "../shared/ReadOnly";
 import Controls from "./Controls";
+import SectionHeader from "../shared/SectionHeader";
 
 type ControlProps = {
   config?: NodeControlConfig;
@@ -68,12 +69,15 @@ export default function Control({
     );
   } else if (innerSchema instanceof z.ZodObject) {
     return (
-      <Controls
-        schema={innerSchema}
-        value={value as Record<string, unknown>}
-        label={label}
-        onChange={onChange}
-      />
+      <>
+        {label && <SectionHeader label={label} />}
+          <Controls
+          schema={innerSchema}
+          value={value as Record<string, unknown>}
+          label={label}
+          onChange={onChange}
+        />
+      </>
     );
   }
 

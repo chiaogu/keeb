@@ -20,7 +20,7 @@ export default function SoundControl({ sound }: SoundControlProps) {
       ))}
       <div className="flex w-full flex-col items-center border-2 border-black p-8">
         <div className="flex w-full items-end justify-between">
-          <label>layer</label>
+          <label className="font-bold">layer</label>
           <div className="flex space-x-2">
             <IconButton icon="add" onClick={() => sound.addLayer()}/>
           </div>

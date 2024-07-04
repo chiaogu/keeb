@@ -33,7 +33,7 @@ export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
           })
         }
       />
-      <SectionHeader className="mt-4" label={state.src.type} />
+      <SectionHeader className="mt-4 font-bold" label={state.src.type} />
       <Controls
         schema={omit(
           nodeConfig[state.src.type].schema,

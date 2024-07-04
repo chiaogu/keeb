@@ -30,7 +30,7 @@ export default function Controls<T extends z.ZodTypeAny>({
 
   return (
     <div className={`flex w-full flex-col items-center ${className}`}>
-      {label && <SectionHeader className="mt-4" label={label} />}
+      {/* {label && <SectionHeader className="mt-4" label={label} />} */}
       {Object.entries(innerSchema.shape).map(([key, fieldSchema]) => (
         <Control
           key={`${label}-${key}`}
