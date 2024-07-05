@@ -25,6 +25,8 @@ import { pitchShiftConfig } from "./pitchShift";
 import { tremoloConfig } from "./tremolo";
 import { vibratoConfig } from "./vibrato";
 import { frequencyShifterConfig } from "./frequencyShifter";
+import { amplitudeEnvelopeConfig } from "./amplitudeEnvelope";
+import { compressorConfig } from "./compressor";
 
 export type NodeControlConfig = {
   label?: string | null;
@@ -75,6 +77,8 @@ export const fxNodeConfig = {
   pitchShift: pitchShiftConfig,
   tremolo: tremoloConfig,
   vibrato: vibratoConfig,
+  amplitudeEnvelope: amplitudeEnvelopeConfig,
+  compressor: compressorConfig,
 };
 
 export const nodeConfig = {
