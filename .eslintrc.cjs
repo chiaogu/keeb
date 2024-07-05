@@ -17,6 +17,14 @@ module.exports = {
     ],
     "semi": [2, "always"],
     'max-len': ["warn", { "code": 80, "ignoreStrings": true }],
-    "tailwindcss/no-custom-classname": ["off"]
+    "tailwindcss/no-custom-classname": ["off"],
+    "@typescript-eslint/no-unused-vars": [
+      "warn", // or "error"
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ]
   },
 }

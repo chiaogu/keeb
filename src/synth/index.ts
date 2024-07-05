@@ -124,7 +124,16 @@ export default function createSynth(config: SynthConfig) {
     nodeConfig[state.src.type].trigger?.(
       srcNode as never,
       state.src.data as never,
+      state.src.data as never,
     );
+    
+    state.fxs.forEach((fx, index) => {
+      nodeConfig[fx.type].trigger?.(
+        fxNodes[index] as never,
+        fx.data as never,
+        state.src.data as never,
+      );
+    });
   }
 
   function dispose() {

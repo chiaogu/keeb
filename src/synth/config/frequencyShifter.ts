@@ -6,6 +6,6 @@ import { z } from "zod";
 export const frequencyShifterConfig = createConfig(
   Tone.FrequencyShifter,
   zBaseSynthFx.extend({
-    frequency: z.number().min(-5000).max(5000).catch(0),
+    frequency: z.number().min(-1000).max(1000),
   }),
 );

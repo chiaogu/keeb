@@ -17,17 +17,18 @@ import { chorusConfig } from "./chorus";
 import { distortionConfig } from "./distortion";
 import { feedbackDelayConfig } from "./feedbackDelay";
 import { freeverbConfig } from "./freeverb";
-import { frequencyShifterConfig } from "./frequencyShifter";
+import { envelopeFrequencyShifterConfig } from "./envelopeFrequencyShifter";
 import { jcreverbConfig } from "./jcReverb";
 import { phaserConfig } from "./phaser";
 import { pingPongDelayConfig } from "./pingPongDelay";
 import { pitchShiftConfig } from "./pitchShift";
 import { tremoloConfig } from "./tremolo";
 import { vibratoConfig } from "./vibrato";
+import { frequencyShifterConfig } from "./frequencyShifter";
 
 export type NodeControlConfig = {
   label?: string | null;
-}
+};
 
 export type SynthNodeConfig<
   T extends Tone.ToneAudioNode,
@@ -37,7 +38,11 @@ export type SynthNodeConfig<
   createNode: () => T;
   controls?: Partial<Record<keyof z.infer<Z>, NodeControlConfig>>;
   setState?: (node: T, state: z.infer<Z>) => void;
-  trigger?: (node: T, state: z.infer<Z>) => void;
+  trigger?: (
+    node: T,
+    state: z.infer<Z>,
+    src: { duration: number; delay: number },
+  ) => void;
   ready?: (node: T) => Promise<void>;
 };
 
@@ -63,6 +68,7 @@ export const fxNodeConfig = {
   feedbackDelay: feedbackDelayConfig,
   freeverb: freeverbConfig,
   frequencyShifter: frequencyShifterConfig,
+  envelopeFrequencyShifter: envelopeFrequencyShifterConfig,
   jcReverb: jcreverbConfig,
   phaser: phaserConfig,
   pingPongDelay: pingPongDelayConfig,
