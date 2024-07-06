@@ -1,19 +1,24 @@
 import { useState } from 'react';
-import { SynthControlState } from '@src/hooks/useSynthState';
+import { Synth, SynthFxNodeState } from '@src/synth';
 import FxControl from './FxControl';
 import NewFx from './NewFx';
+import { Immutable } from 'immer';
 
-type SrcNodeControlProps = {
-  synth: SynthControlState;
+type SrcNodeControlProps = Pick<Synth, 'setFxState' | 'removeFx' | 'addFx'> & {
+  synthFxs: Immutable<SynthFxNodeState[]>;
 };
 
-export default function FxsControl({ synth }: SrcNodeControlProps) {
-  const { state, setFxState, removeFx, addFx } = synth;
+export default function FxsControl({
+  synthFxs,
+  setFxState,
+  removeFx,
+  addFx,
+}: SrcNodeControlProps) {
   const [newFxOpen, setNewFxOpen] = useState(false);
 
   return (
     <div className='flex w-full flex-col items-start'>
-      {state.fxs.map((fx, index) => (
+      {synthFxs.map((fx, index) => (
         <FxControl
           key={`${fx.type}-${index}`}
           fx={fx}
@@ -27,7 +32,7 @@ export default function FxsControl({ synth }: SrcNodeControlProps) {
       <NewFx
         open={newFxOpen}
         setOpen={setNewFxOpen}
-        onSelect={(type) => addFx(state.fxs.length, type)}
+        onSelect={(type) => addFx(synthFxs.length, type)}
       />
     </div>
   );

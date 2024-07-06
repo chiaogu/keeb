@@ -25,8 +25,16 @@ export default function SynthControl({
       <SectionHeader className='font-bold' label={name}>
         {removable && <IconButton icon='remove' onClick={onRemove} />}
       </SectionHeader>
-      <SrcNodeControl synth={synthState} />
-      <FxsControl synth={synthState} />
+      <SrcNodeControl
+        synthSrc={synthState.state.src}
+        setSrcState={synthState.setSrcState}
+      />
+      <FxsControl
+        synthFxs={synthState.state.fxs}
+        addFx={synthState.addFx}
+        removeFx={synthState.removeFx}
+        setFxState={synthState.setFxState}
+      />
     </div>
   );
 }

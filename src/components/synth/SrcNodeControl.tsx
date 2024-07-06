@@ -1,5 +1,5 @@
 import RadioGroup from '@src/components//shared/RadioGroup';
-import { SynthControlState } from '@src/hooks/useSynthState';
+import { Synth, SynthSrcNodeState } from '@src/synth';
 import { SrcNodeType, nodeConfig, srcNodeConfig } from '@src/synth/config';
 import { zBaseSynthSrc } from '@src/synth/config/shared';
 import { omit } from '@src/utils/schema';
@@ -7,22 +7,24 @@ import SectionHeader from '../shared/SectionHeader';
 import Controls from './Controls';
 
 type SrcNodeControlProps = {
-  synth: SynthControlState;
+  synthSrc: SynthSrcNodeState;
+  setSrcState: Synth['setSrcState'];
 };
 
 const srcTypeOptions = Object.keys(srcNodeConfig) as SrcNodeType[];
 
-export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
-  const { state, setSrcState } = synth;
-
+export default function SrcNodeControl({
+  synthSrc,
+  setSrcState,
+}: SrcNodeControlProps) {
   return (
     <div className='flex w-full flex-col items-center'>
       <Controls
         schema={zBaseSynthSrc}
-        value={state.src.data}
+        value={synthSrc.data}
         onChange={(data) =>
           setSrcState({
-            ...state.src,
+            ...synthSrc,
             data: data,
           })
         }
@@ -30,20 +32,20 @@ export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
       <RadioGroup
         label='type'
         options={srcTypeOptions}
-        value={state.src.type}
+        value={synthSrc.type}
         onChange={(type) => setSrcState({ type, data: {} })}
       />
-      <SectionHeader className='mt-4 font-bold' label={state.src.type} />
+      <SectionHeader className='mt-4 font-bold' label={synthSrc.type} />
       <Controls
         schema={omit(
-          nodeConfig[state.src.type].schema,
+          nodeConfig[synthSrc.type].schema,
           Object.keys(zBaseSynthSrc.shape),
         )}
-        controls={nodeConfig[state.src.type].controls}
-        value={state.src.data}
+        controls={nodeConfig[synthSrc.type].controls}
+        value={synthSrc.data}
         onChange={(data) =>
           setSrcState({
-            ...state.src,
+            ...synthSrc,
             data: data,
           })
         }
