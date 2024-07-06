@@ -1,9 +1,9 @@
-import * as Tone from "@src/tone";
-import { SynthNodeConfig } from ".";
-import { zBaseSynthSrc, zFrequency, zHarmonicity } from "./shared";
-import { z } from "zod";
-import { zEnvelope } from "./envelope";
-import withToneDefaults from "../withToneDefaults";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import { SynthNodeConfig } from '.';
+import withToneDefaults from '../withToneDefaults';
+import { zEnvelope } from './envelope';
+import { zBaseSynthSrc, zFrequency, zHarmonicity } from './shared';
 
 const zMetalSynth = withToneDefaults(
   zBaseSynthSrc.extend({

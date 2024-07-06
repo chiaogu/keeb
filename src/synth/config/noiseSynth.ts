@@ -1,8 +1,8 @@
-import * as Tone from "@src/tone";
-import { zBaseSynthSrc } from "./shared";
-import { zEnvelope } from "./envelope";
-import { zNoise } from "./noise";
-import createConfig from "../createConfig";
+import * as Tone from '@src/tone';
+import createConfig from '../createConfig';
+import { zEnvelope } from './envelope';
+import { zNoise } from './noise';
+import { zBaseSynthSrc } from './shared';
 
 const zNoiseSynth = zBaseSynthSrc.extend({
   ...zNoise.shape,

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 
 const KEY_LABEL: Record<string, string> = {
   ' ': 'Space',
@@ -6,17 +6,18 @@ const KEY_LABEL: Record<string, string> = {
 
 export function usePressedKeys() {
   const [pressedKeys, setPressedKeys] = useState<string[]>([]);
-  
+
   const onKeydown = useCallback((e: KeyboardEvent) => {
     const label = KEY_LABEL[e.key] ?? e.key;
-    if (!e.repeat) setPressedKeys((keys) => Array.from(new Set([...keys, label])));
+    if (!e.repeat)
+      setPressedKeys((keys) => Array.from(new Set([...keys, label])));
   }, []);
-  
+
   const onKeyUp = useCallback((e: KeyboardEvent) => {
     const label = KEY_LABEL[e.key] ?? e.key;
-    setPressedKeys((keys) => keys.filter(key => key !== label));
+    setPressedKeys((keys) => keys.filter((key) => key !== label));
   }, []);
-  
+
   useKeyEvents(onKeydown, onKeyUp);
 
   return pressedKeys;
@@ -34,7 +35,7 @@ export function useKeyEvents(
     addEventListener('keydown', handleKeydown);
     return () => removeEventListener('keydown', handleKeydown);
   }, [onKeydown, repeat]);
-  
+
   useEffect(() => {
     addEventListener('keyup', onKeyUp);
     return () => removeEventListener('keyup', onKeyUp);

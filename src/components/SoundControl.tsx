@@ -1,6 +1,6 @@
-import { Sound } from "@src/hooks/useSound";
-import SynthControl from "./synth/SynthControl";
-import IconButton from "./shared/IconButton";
+import { Sound } from '@src/hooks/useSound';
+import IconButton from './shared/IconButton';
+import SynthControl from './synth/SynthControl';
 
 type SoundControlProps = {
   sound: Sound;
@@ -8,7 +8,7 @@ type SoundControlProps = {
 
 export default function SoundControl({ sound }: SoundControlProps) {
   return (
-    <div className="flex w-full max-w-[500px] flex-col items-center space-y-5">
+    <div className='flex w-full max-w-[500px] flex-col items-center space-y-5'>
       {sound.synths.map((synth, index) => (
         <SynthControl
           key={synth.getState().id}
@@ -18,11 +18,11 @@ export default function SoundControl({ sound }: SoundControlProps) {
           removable={sound.synths.length > 1}
         />
       ))}
-      <div className="flex w-full flex-col items-center border-2 border-black p-8">
-        <div className="flex w-full items-end justify-between">
-          <label className="font-bold">layer</label>
-          <div className="flex space-x-2">
-            <IconButton icon="add" onClick={() => sound.addLayer()}/>
+      <div className='flex w-full flex-col items-center border-2 border-black p-8'>
+        <div className='flex w-full items-end justify-between'>
+          <label className='font-bold'>layer</label>
+          <div className='flex space-x-2'>
+            <IconButton icon='add' onClick={() => sound.addLayer()} />
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
-import { SynthControlState } from "@src/hooks/useSynthState";
-import FxControl from "./FxControl";
-import NewFx from "./NewFx";
-import { useState } from "react";
+import { useState } from 'react';
+import { SynthControlState } from '@src/hooks/useSynthState';
+import FxControl from './FxControl';
+import NewFx from './NewFx';
 
 type SrcNodeControlProps = {
   synth: SynthControlState;
@@ -12,7 +12,7 @@ export default function FxsControl({ synth }: SrcNodeControlProps) {
   const [newFxOpen, setNewFxOpen] = useState(false);
 
   return (
-    <div className="flex w-full flex-col items-start">
+    <div className='flex w-full flex-col items-start'>
       {state.fxs.map((fx, index) => (
         <FxControl
           key={`${fx.type}-${index}`}

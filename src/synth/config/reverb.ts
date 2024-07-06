@@ -1,8 +1,8 @@
-import * as Tone from "@src/tone";
-import { SynthNodeConfig } from ".";
-import { MAX_SOUND_DURATION } from "@src/utils/constants";
-import { z } from "zod";
-import { zBaseSynthFx } from "./shared";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import { MAX_SOUND_DURATION } from '@src/utils/constants';
+import { SynthNodeConfig } from '.';
+import { zBaseSynthFx } from './shared';
 
 const zReverb = zBaseSynthFx.extend({
   decay: z

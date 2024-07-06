@@ -4,10 +4,10 @@ import {
   SynthNodeType,
   fxNodeConfig,
   srcNodeConfig,
-} from "@src/synth/config";
-import { splitCamelCase } from "@src/utils/utils";
+} from '@src/synth/config';
+import { splitCamelCase } from '@src/utils/utils';
 
-type NodeType = "src" | "fx";
+type NodeType = 'src' | 'fx';
 
 type NodeTypeSelectProps = {
   type: NodeType;
@@ -24,12 +24,12 @@ export default function NodeTypeSelect({
   onSelect,
 }: NodeTypeSelectProps) {
   return (
-    <div className="flex w-full">
-      <label className="w-32 shrink-0">type</label>
-      <div className="inline-block w-full">
+    <div className='flex w-full'>
+      <label className='w-32 shrink-0'>type</label>
+      <div className='inline-block w-full'>
         {options[type].map((option) => (
           <button
-            className="mr-5 underline"
+            className='mr-5 underline'
             key={option}
             onClick={() => onSelect(option)}
           >

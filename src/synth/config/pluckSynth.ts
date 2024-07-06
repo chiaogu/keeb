@@ -1,9 +1,9 @@
-import { z } from "zod";
-import * as Tone from "@src/tone";
-import { SynthNodeConfig } from ".";
-import { zBaseSynthSrc } from "./shared";
-import { MAX_SOUND_DURATION } from "@src/utils/constants";
-import withToneDefaults from "../withToneDefaults";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import { MAX_SOUND_DURATION } from '@src/utils/constants';
+import { SynthNodeConfig } from '.';
+import withToneDefaults from '../withToneDefaults';
+import { zBaseSynthSrc } from './shared';
 
 const zPluckSynth = withToneDefaults(
   zBaseSynthSrc.extend({

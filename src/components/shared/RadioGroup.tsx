@@ -1,4 +1,4 @@
-import LabelField, { LabelFieldProps } from "./LabelField";
+import LabelField, { LabelFieldProps } from './LabelField';
 
 type RadioGroupProps<T extends string> = {
   label: string;
@@ -15,11 +15,11 @@ export default function RadioGroup<T extends string>({
 }: RadioGroupProps<T>) {
   return (
     <LabelField {...labelFields}>
-      <div className="flex flex-wrap">
+      <div className='flex flex-wrap'>
         {options.map((option) => (
-          <div className="mr-4 flex space-x-1" key={option}>
+          <div className='mr-4 flex space-x-1' key={option}>
             <input
-              type="radio"
+              type='radio'
               value={option}
               checked={value === option}
               onChange={() => onChange(option)}

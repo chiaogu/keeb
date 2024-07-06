@@ -1,5 +1,5 @@
-import * as Tone from "@src/tone";
-import { ToneClass } from "@src/types";
+import * as Tone from '@src/tone';
+import { ToneClass } from '@src/types';
 
 type ComponentFxClass<O> = {
   new (): Tone.Effect<O & Tone.EffectOptions> & {

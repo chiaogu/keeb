@@ -1,8 +1,8 @@
-import * as Tone from "@src/tone";
-import { z } from "zod";
-import { zBaseSynthFx } from "./shared";
-import createConfig from "../createConfig";
-import { MAX_SOUND_DURATION } from "@src/utils/constants";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import { MAX_SOUND_DURATION } from '@src/utils/constants';
+import createConfig from '../createConfig';
+import { zBaseSynthFx } from './shared';
 
 export const feedbackDelayConfig = createConfig(
   Tone.FeedbackDelay,

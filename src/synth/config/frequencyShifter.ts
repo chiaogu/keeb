@@ -1,7 +1,7 @@
-import * as Tone from "@src/tone";
-import { zBaseSynthFx } from "./shared";
-import createConfig from "../createConfig";
-import { z } from "zod";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import createConfig from '../createConfig';
+import { zBaseSynthFx } from './shared';
 
 export const frequencyShifterConfig = createConfig(
   Tone.FrequencyShifter,

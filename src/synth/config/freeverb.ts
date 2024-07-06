@@ -1,7 +1,7 @@
-import * as Tone from "@src/tone";
-import { zBaseSynthFx, zFrequency, zNormalRange } from "./shared";
-import createConfig from "../createConfig";
-import { removeDefault } from "@src/utils/schema";
+import * as Tone from '@src/tone';
+import { removeDefault } from '@src/utils/schema';
+import createConfig from '../createConfig';
+import { zBaseSynthFx, zFrequency, zNormalRange } from './shared';
 
 export const freeverbConfig = createConfig(
   Tone.Freeverb,

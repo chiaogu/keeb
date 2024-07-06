@@ -1,8 +1,8 @@
-import * as Tone from "@src/tone";
-import { zBaseSynthFx, zFrequency } from "./shared";
-import createConfig from "../createConfig";
-import { z } from "zod";
-import createFxClass from "../createFxClass";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import createConfig from '../createConfig';
+import createFxClass from '../createFxClass';
+import { zBaseSynthFx, zFrequency } from './shared';
 
 export const eq3Config = createConfig(
   createFxClass(Tone.EQ3),

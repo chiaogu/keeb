@@ -1,8 +1,8 @@
-import * as Tone from "@src/tone";
-import { zBaseSynthFx } from "./shared";
-import createConfig from "../createConfig";
-import { z } from "zod";
-import { MAX_SOUND_DURATION } from "@src/utils/constants";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import { MAX_SOUND_DURATION } from '@src/utils/constants';
+import createConfig from '../createConfig';
+import { zBaseSynthFx } from './shared';
 
 export const vibratoConfig = createConfig(
   Tone.Vibrato,
@@ -10,6 +10,6 @@ export const vibratoConfig = createConfig(
     depth: z.number().min(0).max(1),
     frequency: z.number().min(0).max(100),
     maxDelay: z.number().min(0).max(MAX_SOUND_DURATION),
-    type: z.enum(["sawtooth", "sine", "square", "triangle"]),
+    type: z.enum(['sawtooth', 'sine', 'square', 'triangle']),
   }),
 );

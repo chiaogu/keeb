@@ -1,6 +1,6 @@
-import { Envelope, zEnvelope } from "@src/synth/config/envelope";
-import SectionHeader from "../shared/SectionHeader";
-import Controls from "./Controls";
+import { Envelope, zEnvelope } from '@src/synth/config/envelope';
+import SectionHeader from '../shared/SectionHeader';
+import Controls from './Controls';
 
 type EnvelopeProps = {
   label: string;
@@ -16,8 +16,8 @@ export default function EnvelopeControl({
   indent = 0,
 }: EnvelopeProps) {
   return (
-    <div className="flex w-full flex-col items-center">
-      <SectionHeader label={label}/>
+    <div className='flex w-full flex-col items-center'>
+      <SectionHeader label={label} />
       <Controls
         indent={indent + 1}
         schema={zEnvelope}

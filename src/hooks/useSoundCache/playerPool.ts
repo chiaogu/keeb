@@ -1,4 +1,4 @@
-import * as Tone from "@src/tone";
+import * as Tone from '@src/tone';
 
 const POOL_SIZE = 32;
 const players: Tone.Player[] = [];

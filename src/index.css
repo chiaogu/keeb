@@ -6,6 +6,6 @@
 @tailwind utilities;
 
 * {
-  font-family: "Overpass Mono", monospace;
+  font-family: 'Overpass Mono', monospace;
   font-variant-ligatures: no-common-ligatures;
 }

@@ -1,8 +1,8 @@
-import * as Tone from "@src/tone";
-import { SynthNodeConfig } from ".";
-import { z } from "zod";
-import { zBaseSynthFx, zOversample } from "./shared";
-import withToneDefaults from "../withToneDefaults";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import { SynthNodeConfig } from '.';
+import withToneDefaults from '../withToneDefaults';
+import { zBaseSynthFx, zOversample } from './shared';
 
 const zChebyshev = withToneDefaults(
   zBaseSynthFx.extend({

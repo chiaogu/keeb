@@ -1,5 +1,5 @@
-import { isEqual } from "lodash-es";
-import { z } from "zod";
+import { isEqual } from 'lodash-es';
+import { z } from 'zod';
 
 export function removeDefault(schema: z.ZodTypeAny) {
   if (schema instanceof z.ZodDefault) {
@@ -23,8 +23,8 @@ export function getNumberDef(schema: z.ZodNumber) {
   }
 
   const { checks } = schema._def;
-  type StepDef = z.ZodNumberCheck & { kind: "multipleOf" };
-  const stepDef = checks.find(({ kind }) => kind === "multipleOf") as StepDef;
+  type StepDef = z.ZodNumberCheck & { kind: 'multipleOf' };
+  const stepDef = checks.find(({ kind }) => kind === 'multipleOf') as StepDef;
 
   return {
     min: schema.minValue,
@@ -38,7 +38,7 @@ export function getEnumDef(schema: z.ZodEnum<[string, ...string[]]>) {
 }
 
 export function parse<T extends z.ZodTypeAny>(data: unknown, schema: T) {
-  return schema.safeParse(data) as ReturnType<T["safeParse"]>;
+  return schema.safeParse(data) as ReturnType<T['safeParse']>;
 }
 
 export function instanceOf<S extends z.ZodTypeAny, T extends z.ZodTypeAny>(
@@ -57,6 +57,6 @@ export function omit(schema: z.ZodTypeAny, keys: string[]) {
   if (!(innerSchema instanceof z.ZodObject)) {
     return innerSchema;
   }
-  
-  return innerSchema.omit(Object.fromEntries(keys.map(key => [key, true])));
+
+  return innerSchema.omit(Object.fromEntries(keys.map((key) => [key, true])));
 }

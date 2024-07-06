@@ -1,7 +1,7 @@
-import * as Tone from "@src/tone";
-import { SynthNodeConfig } from ".";
-import { zBaseSynthFx } from "./shared";
-import { z } from "zod";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import { SynthNodeConfig } from '.';
+import { zBaseSynthFx } from './shared';
 
 const zBitCrusher = zBaseSynthFx.extend({
   bits: z.number().min(1).max(16).catch(8),

@@ -1,7 +1,7 @@
-import * as Tone from "@src/tone";
-import { zBaseSynthFx, zFrequency } from "./shared";
-import createConfig from "../createConfig";
-import { z } from "zod";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import createConfig from '../createConfig';
+import { zBaseSynthFx, zFrequency } from './shared';
 
 export const phaserConfig = createConfig(
   Tone.Phaser,

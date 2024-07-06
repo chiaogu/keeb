@@ -1,14 +1,15 @@
-import createSynth, { Synth, SynthConfig } from "@src/synth";
-import defaultSoundLayer from "@src/presets/synth/defaultSoundLayer.json";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { v4 as uuid } from "uuid";
-import { SoundConfig } from "@src/types";
-import useSoundCache from "./useSoundCache";
+import { Immutable } from 'immer';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { v4 as uuid } from 'uuid';
+import defaultSoundLayer from '@src/presets/synth/defaultSoundLayer.json';
+import createSynth, { Synth, SynthConfig } from '@src/synth';
+import { SoundConfig } from '@src/types';
+import useSoundCache from './useSoundCache';
 
 export type UseSoundProps = {
   config: SoundConfig;
-  onChange?: (sound: SoundConfig) => void;
-}
+  onChange?: (sound: Immutable<SoundConfig>) => void;
+};
 
 export default function useSound({ config, onChange }: UseSoundProps) {
   const initSynths = useMemo(
@@ -17,7 +18,7 @@ export default function useSound({ config, onChange }: UseSoundProps) {
   );
   const [synths, setSynths] = useState<Synth[]>(initSynths);
   const soundCache = useSoundCache();
-  
+
   const handleChange = useCallback(() => {
     soundCache.clear();
     onChange?.({
@@ -25,7 +26,7 @@ export default function useSound({ config, onChange }: UseSoundProps) {
       synths: synths.map((synth) => synth.getState()),
     });
   }, [soundCache, onChange, config.id, synths]);
-  
+
   useEffect(() => {
     synths.forEach((synth) => synth.setOnChangeListener(handleChange));
     handleChange();

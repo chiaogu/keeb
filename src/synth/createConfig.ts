@@ -1,8 +1,8 @@
-import * as Tone from "@src/tone";
-import { z } from "zod";
-import { SynthNodeConfig } from "./config";
-import withToneDefaults from "./withToneDefaults";
-import { ToneClass } from "@src/types";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import { ToneClass } from '@src/types';
+import { SynthNodeConfig } from './config';
+import withToneDefaults from './withToneDefaults';
 
 export default function createConfig<
   T extends Tone.ToneAudioNode,

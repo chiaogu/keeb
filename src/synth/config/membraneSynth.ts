@@ -1,7 +1,7 @@
-import * as Tone from "@src/tone";
-import { SynthNodeConfig } from ".";
-import { zBaseSynthSrc, zFrequency } from "./shared";
-import { z } from "zod";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import { SynthNodeConfig } from '.';
+import { zBaseSynthSrc, zFrequency } from './shared';
 
 const zMembraneSynth = zBaseSynthSrc.extend({
   frequency: zFrequency,
@@ -18,10 +18,6 @@ export const membraneSynthConfig: SynthNodeConfig<
   trigger(node, state) {
     let frequency = state.frequency;
     frequency += Math.random() * 100;
-    node.triggerAttackRelease(
-      frequency,
-      state.duration,
-      `+${state.delay}`,
-    );
+    node.triggerAttackRelease(frequency, state.duration, `+${state.delay}`);
   },
 };

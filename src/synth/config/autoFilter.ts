@@ -1,9 +1,9 @@
-import * as Tone from "@src/tone";
-import { z } from "zod";
-import { zBaseSynthFx, zFrequency } from "./shared";
-import createConfig from "../createConfig";
-import { zInnerFilter } from "./filter";
-import { withInnerDefaults } from "@src/utils/schema";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import { withInnerDefaults } from '@src/utils/schema';
+import createConfig from '../createConfig';
+import { zInnerFilter } from './filter';
+import { zBaseSynthFx, zFrequency } from './shared';
 
 export const autoFilterConfig = createConfig(
   Tone.AutoFilter,
@@ -15,7 +15,7 @@ export const autoFilterConfig = createConfig(
       z.object({
         frequency: z.number().min(0).max(500).catch(100),
         octaves: z.number().min(0.5).max(8).catch(1),
-        type: z.enum(["sawtooth", "sine", "square", "triangle"]).catch("sine"),
+        type: z.enum(['sawtooth', 'sine', 'square', 'triangle']).catch('sine'),
       }),
     ),
   }),

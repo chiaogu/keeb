@@ -1,10 +1,10 @@
-import { Synth } from "@src/synth";
-import * as Tone from "@src/tone";
-import { useCallback, useEffect, useMemo } from "react";
-import { v4 as uuid } from "uuid";
-import renderSound from "./renderSound";
-import logCacheSize from "./logCacheSize";
-import * as playerPool from "./playerPool";
+import { useCallback, useEffect, useMemo } from 'react';
+import { v4 as uuid } from 'uuid';
+import { Synth } from '@src/synth';
+import * as Tone from '@src/tone';
+import logCacheSize from './logCacheSize';
+import * as playerPool from './playerPool';
+import renderSound from './renderSound';
 
 export type SoundCache = Record<string, Record<string, Tone.ToneAudioBuffer>>;
 const cache: SoundCache = {};
@@ -43,7 +43,7 @@ export default function useSoundCache() {
       cache[instanceId][key] = new Tone.ToneAudioBuffer();
 
       const buffer = await renderSound(synths);
-      
+
       if (buffer) {
         cache[instanceId][key] = buffer;
       }

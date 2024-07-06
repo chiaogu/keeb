@@ -1,8 +1,8 @@
-import * as Tone from "@src/tone";
-import { zBaseSynthFx } from "./shared";
-import createConfig from "../createConfig";
-import { z } from "zod";
-import createFxClass from "../createFxClass";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import createConfig from '../createConfig';
+import createFxClass from '../createFxClass';
+import { zBaseSynthFx } from './shared';
 
 export const zCompressorSchema = z.object({
   attack: z.number().min(0).max(1),

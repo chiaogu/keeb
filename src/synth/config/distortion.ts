@@ -1,7 +1,7 @@
-import * as Tone from "@src/tone";
-import { z } from "zod";
-import { zBaseSynthFx, zOversample } from "./shared";
-import createConfig from "../createConfig";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import createConfig from '../createConfig';
+import { zBaseSynthFx, zOversample } from './shared';
 
 export const distortionConfig = createConfig(
   Tone.Distortion,

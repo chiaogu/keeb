@@ -1,8 +1,8 @@
-import Control from "./Control";
-import { z } from "zod";
-import { removeDefault } from "@src/utils/schema";
-import { useMemo } from "react";
-import { NodeControlConfig } from "@src/synth/config";
+import { useMemo } from 'react';
+import { z } from 'zod';
+import { NodeControlConfig } from '@src/synth/config';
+import { removeDefault } from '@src/utils/schema';
+import Control from './Control';
 
 type ControlsProps<T extends z.ZodTypeAny> = {
   className?: string;
@@ -29,7 +29,7 @@ export default function Controls<T extends z.ZodTypeAny>({
 
   return (
     <div
-      className={`flex w-full flex-col items-center ${className} ${indent > 0 ? "mb-2 border-l-2 border-dotted border-l-black" : ""}`}
+      className={`flex w-full flex-col items-center ${className} ${indent > 0 ? 'mb-2 border-l-2 border-dotted border-l-black' : ''}`}
     >
       {Object.entries(innerSchema.shape).map(([key, fieldSchema]) => (
         <Control

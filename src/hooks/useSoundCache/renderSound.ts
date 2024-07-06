@@ -1,6 +1,6 @@
-import createSynth, { Synth } from "@src/synth";
-import * as Tone from "@src/tone";
-import { MAX_SOUND_DURATION } from "@src/utils/constants";
+import createSynth, { Synth } from '@src/synth';
+import * as Tone from '@src/tone';
+import { MAX_SOUND_DURATION } from '@src/utils/constants';
 
 let renderQueue: Promise<Tone.ToneAudioBuffer | void> = Promise.resolve();
 

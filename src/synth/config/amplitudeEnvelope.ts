@@ -1,10 +1,10 @@
-import * as Tone from "@src/tone";
-import createConfig from "../createConfig";
-import { zEnvelope } from "./envelope";
-import { removeDefault } from "@src/utils/schema";
-import { zBaseSynthFx } from "./shared";
-import { z } from "zod";
-import createFxClass from "../createFxClass";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import { removeDefault } from '@src/utils/schema';
+import createConfig from '../createConfig';
+import createFxClass from '../createFxClass';
+import { zEnvelope } from './envelope';
+import { zBaseSynthFx } from './shared';
 
 export const amplitudeEnvelopeConfig = createConfig(
   createFxClass(Tone.AmplitudeEnvelope),

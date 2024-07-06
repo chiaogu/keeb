@@ -1,10 +1,10 @@
-import { SrcNodeType, nodeConfig, srcNodeConfig } from "@src/synth/config";
-import RadioGroup from "@src/components//shared/RadioGroup";
-import { SynthControlState } from "@src/hooks/useSynthState";
-import Controls from "./Controls";
-import { zBaseSynthSrc } from "@src/synth/config/shared";
-import { omit } from "@src/utils/schema";
-import SectionHeader from "../shared/SectionHeader";
+import RadioGroup from '@src/components//shared/RadioGroup';
+import { SynthControlState } from '@src/hooks/useSynthState';
+import { SrcNodeType, nodeConfig, srcNodeConfig } from '@src/synth/config';
+import { zBaseSynthSrc } from '@src/synth/config/shared';
+import { omit } from '@src/utils/schema';
+import SectionHeader from '../shared/SectionHeader';
+import Controls from './Controls';
 
 type SrcNodeControlProps = {
   synth: SynthControlState;
@@ -16,7 +16,7 @@ export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
   const { state, setSrcState } = synth;
 
   return (
-    <div className="flex w-full flex-col items-center">
+    <div className='flex w-full flex-col items-center'>
       <Controls
         schema={zBaseSynthSrc}
         value={state.src.data}
@@ -28,12 +28,12 @@ export default function SrcNodeControl({ synth }: SrcNodeControlProps) {
         }
       />
       <RadioGroup
-        label="type"
+        label='type'
         options={srcTypeOptions}
         value={state.src.type}
         onChange={(type) => setSrcState({ type, data: {} })}
       />
-      <SectionHeader className="mt-4 font-bold" label={state.src.type} />
+      <SectionHeader className='mt-4 font-bold' label={state.src.type} />
       <Controls
         schema={omit(
           nodeConfig[state.src.type].schema,

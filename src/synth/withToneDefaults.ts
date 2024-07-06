@@ -1,12 +1,11 @@
+import { z } from 'zod';
 import * as Tone from '@src/tone';
-import { ToneClass } from "@src/types";
-import { z } from "zod";
+import { ToneClass } from '@src/types';
 
 export default function withToneDefaults<Z extends z.ZodTypeAny>(
   schema: Z,
   node: ToneClass<Tone.ToneAudioNode>,
 ): Z {
-
   if (!(schema instanceof z.ZodObject)) {
     throw new Error(`assignToneDefaults cannot be used for ${schema}`);
   }
@@ -22,7 +21,7 @@ export default function withToneDefaults<Z extends z.ZodTypeAny>(
 
         const newField = (field as z.ZodTypeAny).catch(defaults[key]);
         return [key, newField];
-      })
-    )
+      }),
+    ),
   ) as unknown as Z;
 }

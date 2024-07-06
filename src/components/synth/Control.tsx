@@ -1,20 +1,20 @@
-import { NodeControlConfig } from "@src/synth/config";
-import Slider from "@src/components/shared/Slider";
-import RadioGroup from "@src/components/shared/RadioGroup";
-import { useMemo } from "react";
-import { splitCamelCase } from "@src/utils/utils";
-import EnvelopeControl from "./EnvelopeControl";
-import { z } from "zod";
+import { useMemo } from 'react';
+import { z } from 'zod';
+import RadioGroup from '@src/components/shared/RadioGroup';
+import Slider from '@src/components/shared/Slider';
+import { NodeControlConfig } from '@src/synth/config';
+import { zEnvelope, Envelope } from '@src/synth/config/envelope';
 import {
   getEnumDef,
   getNumberDef,
   instanceOf,
   removeDefault,
-} from "@src/utils/schema";
-import { zEnvelope, Envelope } from "@src/synth/config/envelope";
-import ReadOnly from "../shared/ReadOnly";
-import Controls from "./Controls";
-import SectionHeader from "../shared/SectionHeader";
+} from '@src/utils/schema';
+import { splitCamelCase } from '@src/utils/utils';
+import ReadOnly from '../shared/ReadOnly';
+import SectionHeader from '../shared/SectionHeader';
+import Controls from './Controls';
+import EnvelopeControl from './EnvelopeControl';
 
 type ControlProps = {
   config?: NodeControlConfig;

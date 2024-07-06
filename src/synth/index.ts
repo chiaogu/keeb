@@ -1,12 +1,12 @@
 import { produce, castDraft, Immutable } from 'immer';
-import * as Tone from "@src/tone";
-import { FxNodeType, SrcNodeType, SynthNodeType, nodeConfig } from "./config";
+import * as Tone from '@src/tone';
+import { FxNodeType, SrcNodeType, SynthNodeType, nodeConfig } from './config';
 
 type SupportedSrcToneNode = ReturnType<
-  (typeof nodeConfig)[SrcNodeType]["createNode"]
+  (typeof nodeConfig)[SrcNodeType]['createNode']
 >;
 type SupportedFxToneNode = ReturnType<
-  (typeof nodeConfig)[FxNodeType]["createNode"]
+  (typeof nodeConfig)[FxNodeType]['createNode']
 >;
 
 export type SynthSrcNodeState = {
@@ -37,7 +37,7 @@ export default function createSynth(config: SynthConfig) {
   setFxs(state.fxs);
 
   function rechain() {
-    if (!srcNode) throw new Error("synth is not initialized yet");
+    if (!srcNode) throw new Error('synth is not initialized yet');
 
     srcNode.disconnect();
     fxNodes.forEach((fxNode) => fxNode.disconnect());
@@ -56,7 +56,7 @@ export default function createSynth(config: SynthConfig) {
     }
   }
 
-  function setSrcState(newSrc: SynthConfig["src"]) {
+  function setSrcState(newSrc: SynthConfig['src']) {
     const type = newSrc.type;
     const { data, error } = nodeConfig[type].schema.safeParse(newSrc.data);
 
@@ -73,46 +73,46 @@ export default function createSynth(config: SynthConfig) {
 
     setToneState(type, srcNode, data);
 
-    state = produce(state, draft => {
+    state = produce(state, (draft) => {
       draft.src = { type, data };
     });
     handleChange?.();
   }
 
-  function setFxs(fxs: Immutable<SynthConfig["fxs"]>) {
-    if (!srcNode) throw new Error("synth is not initialized yet");
+  function setFxs(fxs: Immutable<SynthConfig['fxs']>) {
+    if (!srcNode) throw new Error('synth is not initialized yet');
 
     fxNodes = fxs.map((fx) => nodeConfig[fx.type].createNode());
     fxs.forEach((fx, index) => setFxState(index, fx));
     rechain();
 
-    state = produce(state, draft => {
+    state = produce(state, (draft) => {
       draft.fxs = castDraft(fxs);
     });
     handleChange?.();
   }
 
-  function setFxState(index: number, fxState: SynthConfig["fxs"][number]) {
+  function setFxState(index: number, fxState: SynthConfig['fxs'][number]) {
     const type = fxState.type;
     const data = nodeConfig[type].schema.parse(fxState.data);
 
     setToneState(fxState.type, fxNodes[index], data);
 
-    state = produce(state, draft => {
+    state = produce(state, (draft) => {
       draft.fxs[index] = { type, data };
     });
     handleChange?.();
   }
 
   function removeFx(index: number) {
-    state = produce(state, draft => {
+    state = produce(state, (draft) => {
       draft.fxs.splice(index, 1);
     });
     setFxs(state.fxs);
   }
 
   function addFx(index: number, type: FxNodeType) {
-    state = produce(state, draft => {
+    state = produce(state, (draft) => {
       const data = nodeConfig[type].schema.parse({});
       draft.fxs.splice(index, 0, { type, data });
     });
@@ -120,13 +120,13 @@ export default function createSynth(config: SynthConfig) {
   }
 
   function trigger() {
-    if (!srcNode) throw new Error("synth is not initialized yet");
+    if (!srcNode) throw new Error('synth is not initialized yet');
     nodeConfig[state.src.type].trigger?.(
       srcNode as never,
       state.src.data as never,
       state.src.data as never,
     );
-    
+
     state.fxs.forEach((fx, index) => {
       nodeConfig[fx.type].trigger?.(
         fxNodes[index] as never,
@@ -137,7 +137,7 @@ export default function createSynth(config: SynthConfig) {
   }
 
   function dispose() {
-    if (!srcNode) throw new Error("synth is not initialized yet");
+    if (!srcNode) throw new Error('synth is not initialized yet');
     srcNode.dispose();
     fxNodes.forEach((fxNode) => fxNode.dispose());
     handleChange = null;
@@ -148,7 +148,7 @@ export default function createSynth(config: SynthConfig) {
   }
 
   async function ready() {
-    if (!srcNode) throw new Error("synth is not initialized yet");
+    if (!srcNode) throw new Error('synth is not initialized yet');
 
     await nodeConfig[state.src.type].ready?.(srcNode as never);
     await Promise.all(

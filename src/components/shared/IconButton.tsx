@@ -7,7 +7,7 @@ type ButtonProps = {
 export default function IconButton({ onClick, icon, className }: ButtonProps) {
   return (
     <button className={`flex ${className}`} onClick={onClick}>
-      <span className="material-symbols-outlined">{icon}</span>
+      <span className='material-symbols-outlined'>{icon}</span>
     </button>
   );
 }

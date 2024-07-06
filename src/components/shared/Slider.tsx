@@ -1,5 +1,5 @@
-import { ChangeEvent, useCallback, useMemo } from "react";
-import LabelField, { LabelFieldProps } from "./LabelField";
+import { ChangeEvent, useCallback, useMemo } from 'react';
+import LabelField, { LabelFieldProps } from './LabelField';
 
 type SliderProps = {
   label: string;
@@ -40,17 +40,17 @@ export default function Slider({
 
   return (
     <LabelField {...labelFields}>
-      <div className="flex flex-auto items-center">
+      <div className='flex flex-auto items-center'>
         <input
-          className="w-full"
-          type="range"
-          min="0"
+          className='w-full'
+          type='range'
+          min='0'
           max={RESOLUTION}
           step={normalizedStep ? normalizedStep * RESOLUTION : undefined}
           value={normalizedValue * RESOLUTION}
           onChange={handleChange}
         />
-        <div className="w-1/5 text-end">
+        <div className='w-1/5 text-end'>
           {(normalizedValue * 100).toFixed()}%
         </div>
       </div>

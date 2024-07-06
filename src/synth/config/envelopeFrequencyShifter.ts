@@ -1,8 +1,8 @@
-import * as Tone from "@src/tone";
-import { zBaseSynthFx } from "./shared";
-import createConfig from "../createConfig";
-import { z } from "zod";
-import { zEnvelope } from "./envelope";
+import { z } from 'zod';
+import * as Tone from '@src/tone';
+import createConfig from '../createConfig';
+import { zEnvelope } from './envelope';
+import { zBaseSynthFx } from './shared';
 
 interface EnvelopeFrequencyShifterOptions extends Tone.EffectOptions {
   frequency: number;
@@ -41,7 +41,7 @@ export class EnvelopeFrequencyShifter extends Tone.FrequencyShifter {
     this._envelope.dispose();
     return this;
   }
-  
+
   triggerAttackRelease(duration: Tone.Unit.Time, time?: Tone.Unit.Time) {
     this._envelope.triggerAttackRelease(duration, time);
   }
@@ -68,5 +68,5 @@ export const envelopeFrequencyShifterConfig = createConfig(
     trigger(node, _state, { duration, delay }) {
       node.triggerAttackRelease(duration, `+${delay}`);
     },
-  }
+  },
 );
