@@ -34,6 +34,7 @@ export default function useSound({ config, onChange }: UseSoundProps) {
 
   return useMemo(
     () => ({
+      id: config.id,
       synths,
       trigger(key: string) {
         soundCache.trigger(key, synths);
@@ -52,7 +53,7 @@ export default function useSound({ config, onChange }: UseSoundProps) {
         ]);
       },
     }),
-    [soundCache, synths],
+    [soundCache, synths, config],
   );
 }
 

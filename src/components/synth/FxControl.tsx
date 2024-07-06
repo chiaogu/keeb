@@ -4,8 +4,8 @@ import { FxNodeType, nodeConfig } from '@src/synth/config';
 import { splitCamelCase } from '@src/utils/utils';
 import SectionHeader from '../shared/SectionHeader';
 import Controls from './Controls';
-import FxActions from './FxActions';
 import NewFx from './NewFx';
+import IconButton from '../shared/IconButton';
 
 type FxControlProps = {
   fx: SynthFxNodeState;
@@ -27,7 +27,8 @@ export default function FxControl({
         <NewFx open={newFxOpen} setOpen={setNewFxOpen} onSelect={onAdd} />
       )}
       <SectionHeader className='mt-4 font-bold' label={splitCamelCase(fx.type)}>
-        <FxActions onRemove={onRemove} onAdd={() => setNewFxOpen(true)} />
+        <IconButton icon='remove' onClick={onRemove} />
+        <IconButton icon='add' onClick={() => setNewFxOpen(true)} />
       </SectionHeader>
       <Controls
         schema={nodeConfig[fx.type].schema}

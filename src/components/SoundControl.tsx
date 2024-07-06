@@ -1,5 +1,6 @@
 import { Sound } from '@src/hooks/useSound';
 import IconButton from './shared/IconButton';
+import SectionHeader from './shared/SectionHeader';
 import SynthControl from './synth/SynthControl';
 
 type SoundControlProps = {
@@ -9,6 +10,13 @@ type SoundControlProps = {
 export default function SoundControl({ sound }: SoundControlProps) {
   return (
     <div className='flex w-full max-w-[500px] flex-col items-center space-y-5'>
+      <div className='flex w-full flex-col items-center border-2 border-black p-8'>
+        <SectionHeader className='font-bold' label={sound.id}>
+          <IconButton icon='upload' onClick={() => {}} />
+          <IconButton icon='download' onClick={() => {}} />
+          {/* <IconButton icon='favorite' onClick={() => {}} /> */}
+        </SectionHeader>
+      </div>
       {sound.synths.map((synth, index) => (
         <SynthControl
           key={synth.getState().id}

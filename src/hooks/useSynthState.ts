@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
 import { Synth, SynthConfig } from '@src/synth';
+import { Immutable } from 'immer';
 
 export type SynthControlState = Omit<
   Synth,
   'getState' | 'trigger' | 'dispose' | 'ready' | 'setOnChangeListener'
 > & {
-  state: SynthConfig;
+  state: Immutable<SynthConfig>;
 };
 
 export default function useSynthState(synth: Synth): SynthControlState {
