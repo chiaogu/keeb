@@ -12,12 +12,17 @@ export type UseSoundProps = {
 };
 
 export default function useSound({ config, onChange }: UseSoundProps) {
-  const initSynths = useMemo(
-    () => config.synths.map(createSynth),
-    [config.synths],
-  );
-  const [synths, setSynths] = useState<Synth[]>(initSynths);
+  const [synths, setSynths] = useState<Synth[]>([]);
   const soundCache = useSoundCache();
+
+  useEffect(() => {
+    setSynths(
+      config.synths.map((synthConfig) => {
+        const synth = createSynth(synthConfig);
+        return synth;
+      }),
+    );
+  }, [config.synths]);
 
   const handleChange = useCallback(() => {
     soundCache.clear();
