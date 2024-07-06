@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import * as Tone from '@src/tone';
+import { z } from 'zod';
 import createConfig from '../createConfig';
 import { zEnvelope } from './envelope';
 import { zBaseSynthFx } from './shared';

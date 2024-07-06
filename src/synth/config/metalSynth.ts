@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import * as Tone from '@src/tone';
+import { z } from 'zod';
 import { SynthNodeConfig } from '.';
 import withToneDefaults from '../withToneDefaults';
 import { zEnvelope } from './envelope';

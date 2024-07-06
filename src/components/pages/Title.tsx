@@ -1,5 +1,5 @@
-import { useCallback, useEffect } from 'react';
 import * as Tone from '@src/tone';
+import { useCallback, useEffect } from 'react';
 
 type TitleProps = {
   onStart: () => void;

@@ -1,9 +1,9 @@
-import { Immutable } from 'immer';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { v4 as uuid } from 'uuid';
 import defaultSoundLayer from '@src/presets/synth/defaultSoundLayer.json';
 import createSynth, { Synth, SynthConfig } from '@src/synth';
 import { SoundConfig } from '@src/types';
+import { Immutable } from 'immer';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { v4 as uuid } from 'uuid';
 import useSoundCache from './useSoundCache';
 
 export type UseSoundProps = {

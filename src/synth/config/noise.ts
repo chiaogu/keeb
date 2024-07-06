@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import { MAX_SOUND_DURATION } from '@src/utils/constants';
+import { z } from 'zod';
 
 export const noiseTypeOptions = ['brown', 'white', 'pink'] as const;
 

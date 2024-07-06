@@ -1,6 +1,6 @@
-import { z } from 'zod';
 import * as Tone from '@src/tone';
 import { removeDefault } from '@src/utils/schema';
+import { z } from 'zod';
 import createConfig from '../createConfig';
 import createFxClass from '../createFxClass';
 import { zEnvelope } from './envelope';

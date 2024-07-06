@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
 import { Synth, SynthConfig } from '@src/synth';
 import { Immutable } from 'immer';
+import { useMemo, useState } from 'react';
 
 export type SynthControlState = Omit<
   Synth,

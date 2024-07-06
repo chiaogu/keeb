@@ -1,5 +1,5 @@
-import { useCallback } from 'react';
 import { FxNodeType } from '@src/synth/config';
+import { useCallback } from 'react';
 import IconButton from '../shared/IconButton';
 import SectionHeader from '../shared/SectionHeader';
 import NodeTypeSelect from './NodeTypeSelect';

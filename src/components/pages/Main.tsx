@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import Keys from '@src/components/synth/Keys';
 import useKeyboardSound from '@src/hooks/useKeyboardSound';
+import { useState } from 'react';
 import SoundControl from '../SoundControl';
 import RadioGroup from '../shared/RadioGroup';
 

@@ -1,6 +1,6 @@
-import { z } from 'zod';
 import * as Tone from '@src/tone';
 import { MAX_SOUND_DURATION } from '@src/utils/constants';
+import { z } from 'zod';
 import { SynthNodeConfig } from '.';
 import { zBaseSynthFx } from './shared';
 

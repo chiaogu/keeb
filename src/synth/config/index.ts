@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import * as Tone from '@src/tone';
+import { z } from 'zod';
 import { amSynthConfig } from './amSynth';
 import { amplitudeEnvelopeConfig } from './amplitudeEnvelope';
 import { autoFilterConfig } from './autoFilter';

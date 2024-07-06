@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import { withInnerDefaults } from '@src/utils/schema';
+import { z } from 'zod';
 
 const zEnvelopeCurve = z
   .enum(['linear', 'exponential', 'bounce', 'cosine', 'sine', 'ripple', 'step'])

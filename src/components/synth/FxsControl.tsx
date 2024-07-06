@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { Synth, SynthFxNodeState } from '@src/synth';
+import { Immutable } from 'immer';
+import { useState } from 'react';
 import FxControl from './FxControl';
 import NewFx from './NewFx';
-import { Immutable } from 'immer';
 
 type SrcNodeControlProps = Pick<Synth, 'setFxState' | 'removeFx' | 'addFx'> & {
   synthFxs: Immutable<SynthFxNodeState[]>;

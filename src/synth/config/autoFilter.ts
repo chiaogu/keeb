@@ -1,6 +1,6 @@
-import { z } from 'zod';
 import * as Tone from '@src/tone';
 import { withInnerDefaults } from '@src/utils/schema';
+import { z } from 'zod';
 import createConfig from '../createConfig';
 import { zInnerFilter } from './filter';
 import { zBaseSynthFx, zFrequency } from './shared';

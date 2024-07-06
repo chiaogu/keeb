@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo } from 'react';
-import { v4 as uuid } from 'uuid';
 import { Synth } from '@src/synth';
 import * as Tone from '@src/tone';
+import { useCallback, useEffect, useMemo } from 'react';
+import { v4 as uuid } from 'uuid';
 import logCacheSize from './logCacheSize';
 import * as playerPool from './playerPool';
 import renderSound from './renderSound';

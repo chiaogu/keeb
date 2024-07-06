@@ -1,6 +1,6 @@
-import { produce, castDraft, Immutable } from 'immer';
 import * as Tone from '@src/tone';
-import { FxNodeType, SrcNodeType, SynthNodeType, nodeConfig } from './config';
+import { castDraft, Immutable, produce } from 'immer';
+import { FxNodeType, nodeConfig, SrcNodeType, SynthNodeType } from './config';
 
 type SupportedSrcToneNode = ReturnType<
   (typeof nodeConfig)[SrcNodeType]['createNode']

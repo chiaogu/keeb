@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
-import { z } from 'zod';
 import { NodeControlConfig } from '@src/synth/config';
 import { removeDefault } from '@src/utils/schema';
+import { useMemo } from 'react';
+import { z } from 'zod';
 import Control from './Control';
 
 type ControlsProps<T extends z.ZodTypeAny> = {

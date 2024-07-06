@@ -1,11 +1,11 @@
-import { useState } from 'react';
 import { SynthFxNodeState } from '@src/synth';
 import { FxNodeType, nodeConfig } from '@src/synth/config';
 import { splitCamelCase } from '@src/utils/utils';
+import { useState } from 'react';
+import IconButton from '../shared/IconButton';
 import SectionHeader from '../shared/SectionHeader';
 import Controls from './Controls';
 import NewFx from './NewFx';
-import IconButton from '../shared/IconButton';
 
 type FxControlProps = {
   fx: SynthFxNodeState;

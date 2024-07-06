@@ -1,9 +1,7 @@
-import { useMemo } from 'react';
-import { z } from 'zod';
 import RadioGroup from '@src/components/shared/RadioGroup';
 import Slider from '@src/components/shared/Slider';
 import { NodeControlConfig } from '@src/synth/config';
-import { zEnvelope, Envelope } from '@src/synth/config/envelope';
+import { Envelope, zEnvelope } from '@src/synth/config/envelope';
 import {
   getEnumDef,
   getNumberDef,
@@ -11,6 +9,8 @@ import {
   removeDefault,
 } from '@src/utils/schema';
 import { splitCamelCase } from '@src/utils/utils';
+import { useMemo } from 'react';
+import { z } from 'zod';
 import ReadOnly from '../shared/ReadOnly';
 import SectionHeader from '../shared/SectionHeader';
 import Controls from './Controls';

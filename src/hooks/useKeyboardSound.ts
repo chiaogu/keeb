@@ -1,9 +1,9 @@
-import { Immutable } from 'immer';
-import { useMemo, useRef } from 'react';
 import useSound from '@src/hooks/useSound';
 import defaultKeyboard from '@src/presets/keyboard/defaultKeyboard.json';
 import { KeyboardConfig, SoundConfig } from '@src/types';
 import * as storage from '@src/utils/localstorage';
+import { Immutable } from 'immer';
+import { useMemo, useRef } from 'react';
 import useKeySounds from './useKeySounds';
 
 function getKeyboardConfig() {

@@ -1,4 +1,3 @@
-import prettyBytes from 'pretty-bytes';
 import { SoundCache } from '.';
 
 export default function logCacheSize(cache: SoundCache) {
