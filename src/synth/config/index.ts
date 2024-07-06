@@ -27,6 +27,10 @@ import { vibratoConfig } from "./vibrato";
 import { frequencyShifterConfig } from "./frequencyShifter";
 import { amplitudeEnvelopeConfig } from "./amplitudeEnvelope";
 import { compressorConfig } from "./compressor";
+import { eq3Config } from "./eq3";
+import { multibandCompressorConfig } from "./multibandCompressor";
+import { gateConfig } from "./gate";
+import { limiterConfig } from "./limiter";
 
 export type NodeControlConfig = {
   label?: string | null;
@@ -79,6 +83,10 @@ export const fxNodeConfig = {
   vibrato: vibratoConfig,
   amplitudeEnvelope: amplitudeEnvelopeConfig,
   compressor: compressorConfig,
+  eq3: eq3Config,
+  multibandCompressor: multibandCompressorConfig,
+  gate: gateConfig,
+  limiter: limiterConfig,
 };
 
 export const nodeConfig = {
