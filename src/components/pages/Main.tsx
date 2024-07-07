@@ -33,6 +33,7 @@ function Main() {
         onFxChange={sound.setFxState}
         onRemoveFx={sound.removeFx}
         onAddFx={sound.addFx}
+        onNameChange={sound.setName}
       />
     </div>
   );

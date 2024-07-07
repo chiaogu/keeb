@@ -1,5 +1,4 @@
 import { SoundConfig } from '@src/types';
-import day from 'dayjs';
 
 export default function download(fileName: string, data: unknown) {
   const jsonData = JSON.stringify(data, null, 2);
@@ -15,5 +14,5 @@ export default function download(fileName: string, data: unknown) {
 }
 
 export function downloadSound(sound: SoundConfig) {
-  download(`${sound.name}-${day().format('YYYYMMDDHHmmss')}.json`, sound);
+  download(`${sound.name}.json`, sound);
 }
