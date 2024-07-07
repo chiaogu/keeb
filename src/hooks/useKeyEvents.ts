@@ -1,34 +1,18 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-const KEY_LABEL: Record<string, string> = {
-  ' ': 'Space',
+type UseKeyEventsArgs = {
+  onKeydown?: (e: KeyboardEvent) => void;
+  onKeyUp?: (e: KeyboardEvent) => void;
+  repeat?: boolean;
 };
 
-export function usePressedKeys() {
-  const [pressedKeys, setPressedKeys] = useState<string[]>([]);
-
-  const onKeydown = useCallback((e: KeyboardEvent) => {
-    const label = KEY_LABEL[e.key] ?? e.key;
-    if (!e.repeat)
-      setPressedKeys((keys) => Array.from(new Set([...keys, label])));
-  }, []);
-
-  const onKeyUp = useCallback((e: KeyboardEvent) => {
-    const label = KEY_LABEL[e.key] ?? e.key;
-    setPressedKeys((keys) => keys.filter((key) => key !== label));
-  }, []);
-
-  useKeyEvents(onKeydown, onKeyUp);
-
-  return pressedKeys;
-}
-
-export function useKeyEvents(
-  onKeydown: (e: KeyboardEvent) => void,
-  onKeyUp: (e: KeyboardEvent) => void,
+export function useKeyEvents({
+  onKeydown,
+  onKeyUp,
   repeat = false,
-) {
+}: UseKeyEventsArgs) {
   useEffect(() => {
+    if (!onKeydown) return;
     const handleKeydown = (e: KeyboardEvent) => {
       if (!repeat && !e.repeat) onKeydown(e);
     };
@@ -37,6 +21,7 @@ export function useKeyEvents(
   }, [onKeydown, repeat]);
 
   useEffect(() => {
+    if (!onKeyUp) return;
     addEventListener('keyup', onKeyUp);
     return () => removeEventListener('keyup', onKeyUp);
   }, [onKeyUp]);

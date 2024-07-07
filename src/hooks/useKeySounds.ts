@@ -17,5 +17,5 @@ export default function useKeySounds(down: Sound, up: Sound) {
     [up],
   );
 
-  useKeyEvents(onKeydown, onKeyUp);
+  useKeyEvents({ onKeydown, onKeyUp });
 }
