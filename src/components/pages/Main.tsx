@@ -34,7 +34,7 @@ function Main() {
         onRemoveFx={sound.removeFx}
         onAddFx={sound.addFx}
         onNameChange={sound.setName}
-        onLoadSound={console.log}
+        onLoadSound={sound.loadConfig}
       />
     </div>
   );

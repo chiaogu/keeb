@@ -5,7 +5,7 @@ import useSynths from './useSynths';
 
 export default function useSound(config: SoundConfig) {
   const soundCache = useSoundCache();
-  const { states, synths, ...methods } = useSynths(config.synths);
+  const { states, synths, reset, ...methods } = useSynths(config.synths);
   const [name, setName] = useState(config.name ?? 'untitled');
 
   useEffect(() => {
@@ -21,9 +21,13 @@ export default function useSound(config: SoundConfig) {
       trigger(key: string) {
         soundCache.trigger(key, synths);
       },
+      loadConfig(config: SoundConfig) {
+        setName(config.name);
+        reset(config.synths);
+      },
       ...methods,
     }),
-    [config.id, name, states, methods, soundCache, synths],
+    [config.id, name, states, methods, soundCache, synths, reset],
   );
 }
 

@@ -91,6 +91,10 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
           });
         });
       },
+      reset(newSynths: SynthConfig[]) {
+        synths.forEach((s) => s.synth.dispose());
+        setSynths(newSynths.map(createSynthState));
+      }
     }),
     [setSynths, synths],
   );
