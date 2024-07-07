@@ -1,16 +1,11 @@
 import * as Tone from '@src/tone';
 import { z } from 'zod';
-import { SynthNodeConfig } from '.';
+import createConfig from '../createConfig';
 import { zBaseSynthFx } from './shared';
 
-const zBitCrusher = zBaseSynthFx.extend({
-  bits: z.number().min(1).max(16).catch(8),
-});
-
-export const bitCrusherConfig: SynthNodeConfig<
+export const bitCrusherConfig = createConfig(
   Tone.BitCrusher,
-  typeof zBitCrusher
-> = {
-  schema: zBitCrusher,
-  createNode: () => new Tone.BitCrusher(),
-};
+  zBaseSynthFx.extend({
+    bits: z.number().min(1).max(16).catch(8),
+  }),
+);
