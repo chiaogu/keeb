@@ -2,6 +2,7 @@
   "sound": {
     "down": {
       "id": "sound-1",
+      "name": "default-down-sound",
       "synths": [
         {
           "id": "synth-1",
@@ -31,6 +32,7 @@
     },
     "up": {
       "id": "sound-2",
+      "name": "default-up-sound",
       "synths": [
         {
           "id": "synth-3",

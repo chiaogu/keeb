@@ -37,6 +37,8 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
     [synthConfigs],
   );
   const [synths, setSynths] = useImmer<SynthState[]>(initSynthStates);
+  
+  // TODO: Separate state and synth and dispose when unmounted
 
   return useMemo(
     () => ({

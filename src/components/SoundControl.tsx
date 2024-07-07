@@ -3,6 +3,7 @@ import IconButton from './shared/IconButton';
 import SectionHeader from './shared/SectionHeader';
 import SynthControl from './synth/SynthControl';
 import { SoundConfig } from '@src/types';
+import download, { downloadSound } from '@src/utils/download';
 
 type SoundControlProps = {
   sound: SoundConfig;
@@ -26,9 +27,9 @@ export default function SoundControl({
   return (
     <div className='flex w-full max-w-[500px] flex-col items-center space-y-5'>
       <div className='flex w-full flex-col items-center border-2 border-black p-8'>
-        <SectionHeader className='font-bold' label={sound.id}>
+        <SectionHeader className='font-bold' label={sound.name}>
           <IconButton icon='upload' onClick={() => {}} />
-          <IconButton icon='download' onClick={() => {}} />
+          <IconButton icon='download' onClick={() => downloadSound(sound)} />
         </SectionHeader>
       </div>
       {sound.synths.map((synth, index) => (

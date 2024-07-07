@@ -3,6 +3,7 @@ import { SynthConfig } from './synth';
 
 export type SoundConfig = {
   id: string;
+  name: string;
   synths: SynthConfig[];
 };
 

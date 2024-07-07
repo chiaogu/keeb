@@ -1,9 +1,8 @@
 import useSound from '@src/hooks/useSound';
 import defaultKeyboard from '@src/presets/keyboard/defaultKeyboard.json';
-import { KeyboardConfig, SoundConfig } from '@src/types';
+import { KeyboardConfig } from '@src/types';
 import * as storage from '@src/utils/localstorage';
-import { Immutable } from 'immer';
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import useKeySounds from './useKeySounds';
 
 function getKeyboardConfig() {
@@ -12,40 +11,17 @@ function getKeyboardConfig() {
 
 export type KeyEvent = 'down' | 'up';
 
-function createSoundChangeHandler(config: KeyboardConfig, event: KeyEvent) {
-  return (sound: Immutable<SoundConfig>) => {
-    storage.setKeyboardConfig({
-      ...config,
-      sound: {
-        ...config.sound,
-        [event]: sound,
-      },
-    });
-  };
-}
-
 export default function useKeyboardSound() {
   const config = useRef(getKeyboardConfig());
+  const down = useSound(config.current.sound.down);
+  const up = useSound(config.current.sound.up);
 
-  const handleUpSoundChange = useMemo(
-    () => createSoundChangeHandler(config.current, 'up'),
-    [],
-  );
-
-  const handleDownSoundChange = useMemo(
-    () => createSoundChangeHandler(config.current, 'down'),
-    [],
-  );
-
-  const down = useSound({
-    config: config.current.sound.down,
-    onChange: handleDownSoundChange,
-  });
-
-  const up = useSound({
-    config: config.current.sound.up,
-    onChange: handleUpSoundChange,
-  });
+  useEffect(() => {
+    storage.setKeyboardConfig({
+      ...config,
+      sound: { down, up },
+    });
+  }, [down, up]);
 
   useKeySounds(down, up);
 

@@ -1,36 +1,29 @@
 import { SoundConfig } from '@src/types';
-import { Immutable } from 'immer';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useSoundCache from './useSoundCache';
 import useSynths from './useSynths';
 
-export type UseSoundProps = {
-  config: SoundConfig;
-  onChange?: (sound: Immutable<SoundConfig>) => void;
-};
-
-export default function useSound({ config, onChange }: UseSoundProps) {
-  const { states, synths, ...methods } = useSynths(config.synths);
+export default function useSound(config: SoundConfig) {
   const soundCache = useSoundCache();
+  const { states, synths, ...methods } = useSynths(config.synths);
+  const [name, setName] = useState(config.name ?? 'untitled');
 
   useEffect(() => {
     soundCache.clear();
-    onChange?.({
-      id: config.id,
-      synths: states,
-    });
-  }, [soundCache, onChange, config.id, states]);
+  }, [soundCache, config.id, states]);
 
   return useMemo(
     () => ({
       id: config.id,
+      name,
+      setName,
       synths: states,
       trigger(key: string) {
         soundCache.trigger(key, synths);
       },
       ...methods,
     }),
-    [config.id, states, methods, soundCache, synths],
+    [config.id, name, states, methods, soundCache, synths],
   );
 }
 
