@@ -6,8 +6,11 @@ import createSynth, {
   SynthSrcNodeState,
 } from '@src/synth';
 import { FxNodeType } from '@src/synth/config';
-import { Immutable, castDraft } from 'immer';
-import { useEffect, useMemo } from 'react';
+import parseNodeData, {
+  parseFxNodeState,
+  parseSrcNodeState,
+} from '@src/synth/parseNodeData';
+import { useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import { v4 as uuid } from 'uuid';
 
@@ -17,9 +20,14 @@ type SynthState = {
 };
 
 function createSynthState(config: SynthConfig) {
+  const parsed = {
+    id: config.id,
+    src: parseSrcNodeState(config.src),
+    fxs: config.fxs.map(parseFxNodeState),
+  };
   return {
-    state: config,
-    synth: createSynth(config),
+    state: parsed,
+    synth: createSynth(parsed),
   };
 }
 
@@ -32,30 +40,52 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
 
   return useMemo(
     () => ({
-      synths: synths.map(({ state }) => state),
+      states: synths.map(({ state }) => state),
+      synths: synths.map(({ synth }) => synth),
       removeLayer(index: number) {
         synths[index].synth.dispose();
-        setSynths((synths) => synths.filter((_, i) => i !== index));
+        setSynths((states) => states.filter((_, i) => i !== index));
       },
       addLayer() {
-        setSynths((synths) =>
-          synths.push(
+        setSynths((states) => {
+          states.push(
             createSynthState({
               ...(defaultSoundLayer as SynthConfig),
               id: uuid(),
             }),
-          ),
-        );
+          );
+        });
       },
       setSrcState(index: number, src: SynthSrcNodeState) {
-        synths[index].synth.setSrcState(src);
-        setSynths((synths) => synths[index].state.src = src);
+        const parsed = parseSrcNodeState(src);
+        synths[index].synth.setSrcState(parsed);
+
+        setSynths((states) => {
+          states[index].state.src = parsed;
+        });
       },
       setFxState(synthIndex: number, fxIndex: number, fx: SynthFxNodeState) {
-        synths[synthIndex].synth.setFxState(fxIndex, fx);
+        const parsed = parseFxNodeState(fx);
+        synths[synthIndex].synth.setFxState(fxIndex, parsed);
+        setSynths((states) => {
+          states[synthIndex].state.fxs[fxIndex] = parsed;
+        });
       },
-      removeFx(synthIndex: number, fxIndex: number) {},
-      addFx(synthIndex: number, fxIndex: number, type: FxNodeType) {},
+      removeFx(synthIndex: number, fxIndex: number) {
+        synths[synthIndex].synth.removeFx(fxIndex);
+        setSynths((states) => {
+          states[synthIndex].state.fxs.splice(fxIndex, 1);
+        });
+      },
+      addFx(synthIndex: number, fxIndex: number, type: FxNodeType) {
+        synths[synthIndex].synth.addFx(fxIndex, type);
+        setSynths((states) => {
+          states[synthIndex].state.fxs.splice(fxIndex, 0, {
+            type,
+            data: parseNodeData(type, {}),
+          });
+        });
+      },
     }),
     [setSynths, synths],
   );

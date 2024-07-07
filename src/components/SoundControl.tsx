@@ -2,9 +2,10 @@ import { Sound } from '@src/hooks/useSound';
 import IconButton from './shared/IconButton';
 import SectionHeader from './shared/SectionHeader';
 import SynthControl from './synth/SynthControl';
+import { SoundConfig } from '@src/types';
 
 type SoundControlProps = {
-  sound: Sound;
+  sound: SoundConfig;
   onRemoveLayer: Sound['removeLayer'];
   onAddLayer: Sound['addLayer'];
   onSrcChange: Sound['setSrcState'];
@@ -32,28 +33,22 @@ export default function SoundControl({
       </div>
       {sound.synths.map((synth, index) => (
         <SynthControl
-          key={synth.getState().id}
+          key={synth.id}
           name={`layer ${index}`}
           synth={synth}
           removable={sound.synths.length > 1}
-          onRemove={() => {
-            sound.removeLayer(index);
-            onRemoveLayer(index);
-          }}
+          onRemove={() => onRemoveLayer(index)}
           onSrcChange={(src) => onSrcChange(index, src)}
           onFxChange={(fxIndex, fx) => onFxChange(index, fxIndex, fx)}
           onRemoveFx={(fxIndex) => onRemoveFx(index, fxIndex)}
-          onAddFx={(fxIndex, fx) => onAddFx(index, fxIndex, fx)}
+          onAddFx={(fxIndex, fxType) => onAddFx(index, fxIndex, fxType)}
         />
       ))}
       <div className='flex w-full flex-col items-center border-2 border-black p-8'>
         <div className='flex w-full items-end justify-between'>
           <label className='font-bold'>layer</label>
           <div className='flex space-x-2'>
-            <IconButton icon='add' onClick={() => {
-              sound.addLayer();
-              onAddLayer();
-            }} />
+            <IconButton icon='add' onClick={onAddLayer} />
           </div>
         </div>
       </div>

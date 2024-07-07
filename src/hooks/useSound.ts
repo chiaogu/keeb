@@ -1,9 +1,6 @@
-import defaultSoundLayer from '@src/presets/synth/defaultSoundLayer.json';
-import createSynth, { Synth, SynthConfig } from '@src/synth';
 import { SoundConfig } from '@src/types';
 import { Immutable } from 'immer';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { v4 as uuid } from 'uuid';
+import { useEffect, useMemo } from 'react';
 import useSoundCache from './useSoundCache';
 import useSynths from './useSynths';
 
@@ -13,56 +10,27 @@ export type UseSoundProps = {
 };
 
 export default function useSound({ config, onChange }: UseSoundProps) {
-  const synthStates = useSynths(config.synths);
-  
-  const [synths, setSynths] = useState<Synth[]>([]);
+  const { states, synths, ...methods } = useSynths(config.synths);
   const soundCache = useSoundCache();
 
   useEffect(() => {
-    setSynths(
-      config.synths.map((synthConfig) => {
-        const synth = createSynth(synthConfig);
-        return synth;
-      }),
-    );
-  }, [config.synths]);
-
-  const handleChange = useCallback(() => {
     soundCache.clear();
     onChange?.({
       id: config.id,
-      synths: synths.map((synth) => synth.getState()),
+      synths: states,
     });
-  }, [soundCache, onChange, config.id, synths]);
-
-  useEffect(() => {
-    synths.forEach((synth) => synth.setOnChangeListener(handleChange));
-    handleChange();
-  }, [handleChange, synths]);
+  }, [soundCache, onChange, config.id, states]);
 
   return useMemo(
     () => ({
       id: config.id,
-      ...synthStates,
-      synths,
+      synths: states,
       trigger(key: string) {
         soundCache.trigger(key, synths);
       },
-      removeLayer(index: number) {
-        synths[index].dispose();
-        setSynths((synths) => synths.filter((_, i) => i !== index));
-      },
-      addLayer() {
-        setSynths((synths) => [
-          ...synths,
-          createSynth({
-            ...(defaultSoundLayer as SynthConfig),
-            id: uuid(),
-          }),
-        ]);
-      },
+      ...methods,
     }),
-    [soundCache, synths, config, synthStates],
+    [config.id, states, methods, soundCache, synths],
   );
 }
 

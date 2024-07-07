@@ -1,5 +1,5 @@
 import useSynthState from '@src/hooks/useSynthState';
-import { Synth } from '@src/synth';
+import { Synth, SynthConfig } from '@src/synth';
 import IconButton from '../shared/IconButton';
 import SectionHeader from '../shared/SectionHeader';
 import FxsControl from './FxsControl';
@@ -7,7 +7,7 @@ import SrcNodeControl from './SrcNodeControl';
 
 type SynthControlProps = {
   name: string;
-  synth: Synth;
+  synth: SynthConfig;
   removable: boolean;
   onRemove: () => void;
   onSrcChange: Synth['setSrcState'];
@@ -26,34 +26,20 @@ export default function SynthControl({
   onAddFx,
   onRemoveFx,
 }: SynthControlProps) {
-  const synthState = useSynthState(synth);
-
   return (
     <div className='flex w-full flex-col items-center border-2 border-black p-8'>
       <SectionHeader className='font-bold' label={name}>
         {removable && <IconButton icon='remove' onClick={onRemove} />}
       </SectionHeader>
       <SrcNodeControl
-        src={synthState.state.src}
-        onChange={(...args) => {
-          synthState.setSrcState(...args);
-          onSrcChange(...args);
-        }}
+        src={synth.src}
+        onChange={onSrcChange}
       />
       <FxsControl
-        fxs={synthState.state.fxs}
-        onAdd={(...args) => {
-          synthState.addFx(...args);
-          onAddFx(...args);
-        }}
-        onRemove={(...args) => {
-          synthState.removeFx(...args);
-          onRemoveFx(...args);
-        }}
-        onChange={(...args) => {
-          synthState.setFxState(...args);
-          onFxChange(...args);
-        }}
+        fxs={synth.fxs}
+        onAdd={onAddFx}
+        onRemove={onRemoveFx}
+        onChange={onFxChange}
       />
     </div>
   );

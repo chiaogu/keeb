@@ -10,10 +10,9 @@ function getKeyboardConfig() {
   return storage.getKeyboardConfig() ?? (defaultKeyboard as KeyboardConfig);
 }
 
-function createSoundChangeHandler(
-  config: KeyboardConfig,
-  event: 'down' | 'up',
-) {
+export type KeyEvent = 'down' | 'up';
+
+function createSoundChangeHandler(config: KeyboardConfig, event: KeyEvent) {
   return (sound: Immutable<SoundConfig>) => {
     storage.setKeyboardConfig({
       ...config,

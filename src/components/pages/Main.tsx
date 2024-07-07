@@ -1,12 +1,16 @@
 import Keys from '@src/components/synth/Keys';
-import useKeyboardSound from '@src/hooks/useKeyboardSound';
-import { useState } from 'react';
+import useKeyboardSound, { KeyEvent } from '@src/hooks/useKeyboardSound';
+import { useMemo, useState } from 'react';
 import SoundControl from '../SoundControl';
 import RadioGroup from '../shared/RadioGroup';
 
 function Main() {
-  const [keyEvent, setKeyEvent] = useState('down');
+  const [keyEvent, setKeyEvent] = useState<KeyEvent>('down');
   const keyboard = useKeyboardSound();
+  const sound = useMemo(
+    () => (keyEvent === 'down' ? keyboard.down : keyboard.up),
+    [keyEvent, keyboard],
+  );
 
   return (
     <div className='flex flex-col items-center space-y-5'>
@@ -22,13 +26,13 @@ function Main() {
         </div>
       </div>
       <SoundControl
-        sound={keyEvent === 'down' ? keyboard.down : keyboard.up}
-        onRemoveLayer={console.log}
-        onAddLayer={console.log}
-        onSrcChange={console.log}
-        onFxChange={console.log}
-        onRemoveFx={console.log}
-        onAddFx={console.log}
+        sound={sound}
+        onRemoveLayer={sound.removeLayer}
+        onAddLayer={sound.addLayer}
+        onSrcChange={sound.setSrcState}
+        onFxChange={sound.setFxState}
+        onRemoveFx={sound.removeFx}
+        onAddFx={sound.addFx}
       />
     </div>
   );

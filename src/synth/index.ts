@@ -1,6 +1,7 @@
 import * as Tone from '@src/tone';
 import { castDraft, Immutable, produce } from 'immer';
 import { FxNodeType, nodeConfig, SrcNodeType, SynthNodeType } from './config';
+import parseNodeData from './parseNodeData';
 
 type SupportedSrcToneNode = ReturnType<
   (typeof nodeConfig)[SrcNodeType]['createNode']
@@ -58,12 +59,7 @@ export default function createSynth(config: SynthConfig) {
 
   function setSrcState(newSrc: SynthConfig['src']) {
     const type = newSrc.type;
-    const { data, error } = nodeConfig[type].schema.safeParse(newSrc.data);
-
-    if (error) {
-      console.error(error.issues);
-      throw error;
-    }
+    const data = parseNodeData(type, newSrc.data);
 
     if (srcNode === null || type !== state.src.type) {
       if (srcNode) srcNode.disconnect().dispose();
@@ -94,7 +90,7 @@ export default function createSynth(config: SynthConfig) {
 
   function setFxState(index: number, fxState: SynthConfig['fxs'][number]) {
     const type = fxState.type;
-    const data = nodeConfig[type].schema.parse(fxState.data);
+    const data = parseNodeData(type, fxState.data);
 
     setToneState(fxState.type, fxNodes[index], data);
 
@@ -113,7 +109,7 @@ export default function createSynth(config: SynthConfig) {
 
   function addFx(index: number, type: FxNodeType) {
     state = produce(state, (draft) => {
-      const data = nodeConfig[type].schema.parse({});
+      const data = parseNodeData(type, {});
       draft.fxs.splice(index, 0, { type, data });
     });
     setFxs(state.fxs);
