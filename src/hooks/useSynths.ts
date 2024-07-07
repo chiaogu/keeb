@@ -13,7 +13,7 @@ import { useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import { v4 as uuid } from 'uuid';
 
-type SynthState = {
+export type SynthState = {
   synth: Synth;
   state: SynthConfig;
 };
@@ -35,20 +35,19 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
     () => synthConfigs.map(createSynthState),
     [synthConfigs],
   );
-  const [synths, setSynths] = useImmer<SynthState[]>(initSynthStates);
+  const [synthStates, setSynthStates] = useImmer<SynthState[]>(initSynthStates);
 
-  // TODO: Separate state and synth and dispose when unmounted
+  // TODO: Dispose when unmounted
 
   return useMemo(
     () => ({
-      states: synths.map(({ state }) => state),
-      synths: synths.map(({ synth }) => synth),
+      synthStates,
       removeLayer(index: number) {
-        synths[index].synth.dispose();
-        setSynths((states) => states.filter((_, i) => i !== index));
+        synthStates[index].synth.dispose();
+        setSynthStates((states) => states.filter((_, i) => i !== index));
       },
       addLayer() {
-        setSynths((states) => {
+        setSynthStates((states) => {
           states.push(
             createSynthState({
               id: uuid(),
@@ -63,28 +62,28 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
       },
       setSrcState(index: number, src: SynthSrcNodeState) {
         const parsed = parseSrcNodeState(src);
-        synths[index].synth.setSrcState(parsed);
+        synthStates[index].synth.setSrcState(parsed);
 
-        setSynths((states) => {
+        setSynthStates((states) => {
           states[index].state.src = parsed;
         });
       },
       setFxState(synthIndex: number, fxIndex: number, fx: SynthFxNodeState) {
         const parsed = parseFxNodeState(fx);
-        synths[synthIndex].synth.setFxState(fxIndex, parsed);
-        setSynths((states) => {
+        synthStates[synthIndex].synth.setFxState(fxIndex, parsed);
+        setSynthStates((states) => {
           states[synthIndex].state.fxs[fxIndex] = parsed;
         });
       },
       removeFx(synthIndex: number, fxIndex: number) {
-        synths[synthIndex].synth.removeFx(fxIndex);
-        setSynths((states) => {
+        synthStates[synthIndex].synth.removeFx(fxIndex);
+        setSynthStates((states) => {
           states[synthIndex].state.fxs.splice(fxIndex, 1);
         });
       },
       addFx(synthIndex: number, fxIndex: number, type: FxNodeType) {
-        synths[synthIndex].synth.addFx(fxIndex, type);
-        setSynths((states) => {
+        synthStates[synthIndex].synth.addFx(fxIndex, type);
+        setSynthStates((states) => {
           states[synthIndex].state.fxs.splice(fxIndex, 0, {
             type,
             data: parseNodeData(type, {}),
@@ -92,10 +91,10 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
         });
       },
       reset(newSynths: SynthConfig[]) {
-        synths.forEach((s) => s.synth.dispose());
-        setSynths(newSynths.map(createSynthState));
+        synthStates.forEach((s) => s.synth.dispose());
+        setSynthStates(newSynths.map(createSynthState));
       }
     }),
-    [setSynths, synths],
+    [setSynthStates, synthStates],
   );
 }

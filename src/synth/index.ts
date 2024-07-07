@@ -29,7 +29,6 @@ export type SynthConfig = {
 };
 
 export default function createSynth(config: SynthConfig) {
-  // TDOD stateless
   let state: Immutable<SynthConfig> = config;
   let srcNode: SupportedSrcToneNode | null = null;
   let fxNodes: SupportedFxToneNode[] = [];
@@ -161,7 +160,6 @@ export default function createSynth(config: SynthConfig) {
     setFxState,
     removeFx,
     addFx,
-    getState: () => state,
     trigger,
     dispose,
     setOnChangeListener,

@@ -1,4 +1,3 @@
-import useSynthState from '@src/hooks/useSynthState';
 import { Synth, SynthConfig } from '@src/synth';
 import IconButton from '../shared/IconButton';
 import SectionHeader from '../shared/SectionHeader';
@@ -31,10 +30,7 @@ export default function SynthControl({
       <SectionHeader className='font-bold' label={name}>
         {removable && <IconButton icon='remove' onClick={onRemove} />}
       </SectionHeader>
-      <SrcNodeControl
-        src={synth.src}
-        onChange={onSrcChange}
-      />
+      <SrcNodeControl src={synth.src} onChange={onSrcChange} />
       <FxsControl
         fxs={synth.fxs}
         onAdd={onAddFx}
