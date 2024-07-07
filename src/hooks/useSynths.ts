@@ -1,4 +1,3 @@
-import defaultSoundLayer from '@src/presets/synth/defaultSoundLayer.json';
 import createSynth, {
   Synth,
   SynthConfig,
@@ -37,7 +36,7 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
     [synthConfigs],
   );
   const [synths, setSynths] = useImmer<SynthState[]>(initSynthStates);
-  
+
   // TODO: Separate state and synth and dispose when unmounted
 
   return useMemo(
@@ -52,8 +51,12 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
         setSynths((states) => {
           states.push(
             createSynthState({
-              ...(defaultSoundLayer as SynthConfig),
               id: uuid(),
+              src: {
+                type: 'noise',
+                data: {},
+              },
+              fxs: [],
             }),
           );
         });

@@ -1,9 +1,10 @@
 import { Sound } from '@src/hooks/useSound';
 import { SoundConfig } from '@src/types';
-import { downloadSound } from '@src/utils/download';
+import { downloadSound } from '@src/utils/file';
 import IconButton from './shared/IconButton';
 import SectionHeader from './shared/SectionHeader';
 import SynthControl from './synth/SynthControl';
+import useUploadSound from '@src/hooks/useUplodaFile';
 
 type SoundControlProps = {
   sound: SoundConfig;
@@ -14,6 +15,7 @@ type SoundControlProps = {
   onRemoveFx: Sound['removeFx'];
   onAddFx: Sound['addFx'];
   onNameChange: Sound['setName'];
+  onLoadSound: (sound: SoundConfig) => void;
 };
 
 export default function SoundControl({
@@ -25,7 +27,10 @@ export default function SoundControl({
   onRemoveFx,
   onAddFx,
   onNameChange,
+  onLoadSound,
 }: SoundControlProps) {
+  const { load, loading } = useUploadSound(onLoadSound);
+  
   return (
     <div className='flex w-full max-w-[500px] flex-col items-center space-y-5'>
       <div className='flex w-full flex-col items-center border-2 border-black p-8'>
@@ -34,7 +39,7 @@ export default function SoundControl({
           label={sound.name}
           onLabelChange={onNameChange}
         >
-          <IconButton icon='upload' onClick={() => {}} />
+          <IconButton icon='upload' onClick={load} />
           <IconButton icon='download' onClick={() => downloadSound(sound)} />
         </SectionHeader>
       </div>

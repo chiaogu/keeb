@@ -1,12 +1,41 @@
 import useSound from '@src/hooks/useSound';
-import defaultKeyboard from '@src/presets/keyboard/defaultKeyboard.json';
 import { KeyboardConfig } from '@src/types';
 import * as storage from '@src/utils/localstorage';
 import { useEffect, useMemo, useRef } from 'react';
+import { v4 as uuid } from 'uuid';
 import useKeySounds from './useKeySounds';
 
+function getDefaultKeyboardConfig(): KeyboardConfig {
+  return {
+    sound: {
+      up: {
+        id: uuid(),
+        name: 'untitled',
+        synths: [
+          {
+            id: uuid(),
+            src: { type: 'mono', data: {} },
+            fxs: [],
+          },
+        ],
+      },
+      down: {
+        id: uuid(),
+        name: 'untitled',
+        synths: [
+          {
+            id: uuid(),
+            src: { type: 'mono', data: {} },
+            fxs: [],
+          },
+        ],
+      },
+    },
+  };
+}
+
 function getKeyboardConfig() {
-  return storage.getKeyboardConfig() ?? (defaultKeyboard as KeyboardConfig);
+  return storage.getKeyboardConfig() ?? getDefaultKeyboardConfig();
 }
 
 export type KeyEvent = 'down' | 'up';
