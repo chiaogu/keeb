@@ -5,7 +5,6 @@ import { v4 as uuid } from 'uuid';
 import logCacheSize from './logCacheSize';
 import * as playerPool from './playerPool';
 import renderSound from './renderSound';
-import { SynthState } from '../useSynths';
 
 export type SoundCache = Record<string, Record<string, Tone.ToneAudioBuffer>>;
 const cache: SoundCache = {};
@@ -26,7 +25,7 @@ export default function useSoundCache() {
   }, [clear, instanceId]);
 
   const trigger = useMemo(() => {
-    function playCached(key: string, synths: SynthState[]) {
+    function playCached(key: string, synths: Synth[]) {
       try {
         playerPool.play(cache[instanceId][key]);
       } catch (e) {
@@ -36,11 +35,11 @@ export default function useSoundCache() {
       }
     }
 
-    function playRealtime(synths: SynthState[]) {
-      synths.forEach(({ synth }) => synth.trigger());
+    function playRealtime(synths: Synth[]) {
+      synths.forEach((synth) => synth.trigger());
     }
 
-    async function renderCache(key: string, synths: SynthState[]) {
+    async function renderCache(key: string, synths: Synth[]) {
       cache[instanceId][key] = new Tone.ToneAudioBuffer();
 
       const buffer = await renderSound(synths.map((s) => s.state));
@@ -52,7 +51,7 @@ export default function useSoundCache() {
       logCacheSize(cache);
     }
 
-    return (key: string, synths: SynthState[]) => {
+    return (key: string, synths: Synth[]) => {
       if (cache[instanceId][key]) {
         cache[instanceId][key].loaded
           ? playCached(key, synths)

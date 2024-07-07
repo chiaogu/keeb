@@ -28,7 +28,7 @@ export type SynthConfig = {
   fxs: SynthFxNodeState[];
 };
 
-export default function createSynth(config: SynthConfig) {
+export default function createSynth(config: Immutable<SynthConfig>) {
   let state: Immutable<SynthConfig> = config;
   let srcNode: SupportedSrcToneNode | null = null;
   let fxNodes: SupportedFxToneNode[] = [];
@@ -156,7 +156,6 @@ export default function createSynth(config: SynthConfig) {
 
   return {
     setSrcState,
-    setFxs,
     setFxState,
     removeFx,
     addFx,
@@ -164,6 +163,9 @@ export default function createSynth(config: SynthConfig) {
     dispose,
     setOnChangeListener,
     ready,
+    get state() {
+      return state;
+    }
   };
 }
 

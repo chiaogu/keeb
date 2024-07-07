@@ -1,19 +1,11 @@
-import createSynth, {
-  Synth,
-  SynthConfig,
-  SynthFxNodeState,
-  SynthSrcNodeState,
-} from '@src/synth';
-import { FxNodeType } from '@src/synth/config';
-import parseNodeData, {
-  parseFxNodeState,
-  parseSrcNodeState,
-} from '@src/synth/parseNodeData';
+import createSynth, { Synth, SynthConfig } from '@src/synth';
+import { parseFxNodeState, parseSrcNodeState } from '@src/synth/parseNodeData';
+import { castDraft } from 'immer';
 import { useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import { v4 as uuid } from 'uuid';
 
-export type SynthState = {
+type SynthState = {
   synth: Synth;
   state: SynthConfig;
 };
@@ -39,9 +31,22 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
 
   // TODO: Dispose when unmounted
 
-  return useMemo(
-    () => ({
-      synthStates,
+  return useMemo(() => {
+    function wrapStateUpdater<
+      FuncName extends 'setSrcState' | 'setFxState' | 'removeFx' | 'addFx',
+      Func extends Synth[FuncName] & ((...args: unknown[]) => unknown),
+    >(funcName: FuncName) {
+      return (index: number, ...args: Parameters<Func>) => {
+        setSynthStates((states) => {
+          (states[index].synth[funcName] as Func)(...args);
+          states[index].state = states[index].synth.state;
+        });
+      };
+    }
+
+    return {
+      states: synthStates.map((s) => s.state),
+      synths: synthStates.map((s) => s.synth),
       removeLayer(index: number) {
         synthStates[index].synth.dispose();
         setSynthStates((states) => states.filter((_, i) => i !== index));
@@ -49,52 +54,27 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
       addLayer() {
         setSynthStates((states) => {
           states.push(
-            createSynthState({
-              id: uuid(),
-              src: {
-                type: 'noise',
-                data: {},
-              },
-              fxs: [],
-            }),
+            castDraft(
+              createSynthState({
+                id: uuid(),
+                src: {
+                  type: 'noise',
+                  data: {},
+                },
+                fxs: [],
+              }),
+            ),
           );
-        });
-      },
-      setSrcState(index: number, src: SynthSrcNodeState) {
-        const parsed = parseSrcNodeState(src);
-        synthStates[index].synth.setSrcState(parsed);
-
-        setSynthStates((states) => {
-          states[index].state.src = parsed;
-        });
-      },
-      setFxState(synthIndex: number, fxIndex: number, fx: SynthFxNodeState) {
-        const parsed = parseFxNodeState(fx);
-        synthStates[synthIndex].synth.setFxState(fxIndex, parsed);
-        setSynthStates((states) => {
-          states[synthIndex].state.fxs[fxIndex] = parsed;
-        });
-      },
-      removeFx(synthIndex: number, fxIndex: number) {
-        synthStates[synthIndex].synth.removeFx(fxIndex);
-        setSynthStates((states) => {
-          states[synthIndex].state.fxs.splice(fxIndex, 1);
-        });
-      },
-      addFx(synthIndex: number, fxIndex: number, type: FxNodeType) {
-        synthStates[synthIndex].synth.addFx(fxIndex, type);
-        setSynthStates((states) => {
-          states[synthIndex].state.fxs.splice(fxIndex, 0, {
-            type,
-            data: parseNodeData(type, {}),
-          });
         });
       },
       reset(newSynths: SynthConfig[]) {
         synthStates.forEach((s) => s.synth.dispose());
         setSynthStates(newSynths.map(createSynthState));
-      }
-    }),
-    [setSynthStates, synthStates],
-  );
+      },
+      setSrcState: wrapStateUpdater('setSrcState'),
+      setFxState: wrapStateUpdater('setFxState'),
+      removeFx: wrapStateUpdater('removeFx'),
+      addFx: wrapStateUpdater('addFx'),
+    };
+  }, [setSynthStates, synthStates]);
 }
