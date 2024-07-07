@@ -1,11 +1,12 @@
 import * as Tone from '@src/tone';
 import { z } from 'zod';
-import { SynthNodeConfig } from '.';
-import withToneDefaults from '../withToneDefaults';
+import createConfig from '../createConfig';
+import triggerSrcNode from '../triggerSrcNode';
 import { zEnvelope } from './envelope';
 import { zBaseSynthSrc, zFrequency, zHarmonicity } from './shared';
 
-const zMetalSynth = withToneDefaults(
+export const metalSynthConfig = createConfig(
+  Tone.MetalSynth,
   zBaseSynthSrc.extend({
     frequency: zFrequency,
     harmonicity: zHarmonicity,
@@ -14,18 +15,5 @@ const zMetalSynth = withToneDefaults(
     resonance: z.number().min(0).max(7000),
     envelope: zEnvelope,
   }),
-  Tone.MetalSynth,
+  { trigger: triggerSrcNode },
 );
-
-export const metalSynthConfig: SynthNodeConfig<
-  Tone.MetalSynth,
-  typeof zMetalSynth
-> = {
-  schema: zMetalSynth,
-  createNode: () => new Tone.MetalSynth(),
-  trigger(node, state) {
-    let frequency = state.frequency;
-    frequency += Math.random() * 100;
-    node.triggerAttackRelease(frequency, state.duration, `+${state.delay}`);
-  },
-};

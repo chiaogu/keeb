@@ -1,12 +1,13 @@
 import * as Tone from '@src/tone';
-import { SynthNodeConfig } from '.';
-import withToneDefaults from '../withToneDefaults';
+import createConfig from '../createConfig';
+import triggerSrcNode from '../triggerSrcNode';
 import { zEnvelope } from './envelope';
 import { zFilter } from './filter';
 import { zOmniOscillator } from './omniOscillator';
 import { zBaseSynthSrc, zFrequency } from './shared';
 
-const zMonoSynth = withToneDefaults(
+export const monoSynthConfig = createConfig(
+  Tone.MonoSynth,
   zBaseSynthSrc.extend({
     frequency: zFrequency,
     oscillator: zOmniOscillator,
@@ -14,18 +15,7 @@ const zMonoSynth = withToneDefaults(
     filter: zFilter,
     filterEnvelope: zEnvelope,
   }),
-  Tone.AMOscillator,
-);
-
-export const monoSynthConfig: SynthNodeConfig<
-  Tone.MonoSynth,
-  typeof zMonoSynth
-> = {
-  schema: zMonoSynth,
-  createNode: () => new Tone.MonoSynth(),
-  trigger(node, state) {
-    let frequency = state.frequency;
-    frequency += Math.random() * 100;
-    node.triggerAttackRelease(frequency, state.duration, `+${state.delay}`);
+  {
+    trigger: triggerSrcNode,
   },
-};
+);

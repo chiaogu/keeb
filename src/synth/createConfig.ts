@@ -13,6 +13,7 @@ export default function createConfig<
   override?: Partial<SynthNodeConfig<T, Z>>,
 ): SynthNodeConfig<T, Z> {
   return {
+    ToneClass,
     schema: withToneDefaults(schema, ToneClass),
     createNode: () => new ToneClass(),
     ...override,

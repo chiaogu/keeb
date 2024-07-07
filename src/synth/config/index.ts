@@ -31,6 +31,7 @@ import { pluchSynthConfig } from './pluckSynth';
 import { reverbConfig } from './reverb';
 import { tremoloConfig } from './tremolo';
 import { vibratoConfig } from './vibrato';
+import { ToneClass } from '@src/types';
 
 export type NodeControlConfig = {
   label?: string | null;
@@ -50,6 +51,7 @@ export type SynthNodeConfig<
     src: { duration: number; delay: number },
   ) => void;
   ready?: (node: T) => Promise<void>;
+  ToneClass: ToneClass<T>;
 };
 
 export const srcNodeConfig = {
