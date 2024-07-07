@@ -51,10 +51,6 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
         synths[index].synth.setSrcState(src);
         setSynths((synths) => synths[index].state.src = src);
       },
-      setFxs(index: number, fxs: Immutable<SynthFxNodeState[]>) {
-        synths[index].synth.setFxs(fxs);
-        setSynths((synths) => synths[index].state.fxs = castDraft(fxs));
-      },
       setFxState(synthIndex: number, fxIndex: number, fx: SynthFxNodeState) {
         synths[synthIndex].synth.setFxState(fxIndex, fx);
       },

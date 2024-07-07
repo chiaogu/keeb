@@ -8,15 +8,23 @@ import SrcNodeControl from './SrcNodeControl';
 type SynthControlProps = {
   name: string;
   synth: Synth;
-  onRemove: () => void;
   removable: boolean;
+  onRemove: () => void;
+  onSrcChange: Synth['setSrcState'];
+  onFxChange: Synth['setFxState'];
+  onAddFx: Synth['addFx'];
+  onRemoveFx: Synth['removeFx'];
 };
 
 export default function SynthControl({
   synth,
   name,
-  onRemove,
   removable,
+  onRemove,
+  onSrcChange,
+  onFxChange,
+  onAddFx,
+  onRemoveFx,
 }: SynthControlProps) {
   const synthState = useSynthState(synth);
 
@@ -26,14 +34,26 @@ export default function SynthControl({
         {removable && <IconButton icon='remove' onClick={onRemove} />}
       </SectionHeader>
       <SrcNodeControl
-        synthSrc={synthState.state.src}
-        setSrcState={synthState.setSrcState}
+        src={synthState.state.src}
+        onChange={(...args) => {
+          synthState.setSrcState(...args);
+          onSrcChange(...args);
+        }}
       />
       <FxsControl
-        synthFxs={synthState.state.fxs}
-        addFx={synthState.addFx}
-        removeFx={synthState.removeFx}
-        setFxState={synthState.setFxState}
+        fxs={synthState.state.fxs}
+        onAdd={(...args) => {
+          synthState.addFx(...args);
+          onAddFx(...args);
+        }}
+        onRemove={(...args) => {
+          synthState.removeFx(...args);
+          onRemoveFx(...args);
+        }}
+        onChange={(...args) => {
+          synthState.setFxState(...args);
+          onFxChange(...args);
+        }}
       />
     </div>
   );

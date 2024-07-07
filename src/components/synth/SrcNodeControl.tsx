@@ -7,24 +7,24 @@ import SectionHeader from '../shared/SectionHeader';
 import Controls from './Controls';
 
 type SrcNodeControlProps = {
-  synthSrc: SynthSrcNodeState;
-  setSrcState: Synth['setSrcState'];
+  src: SynthSrcNodeState;
+  onChange: Synth['setSrcState'];
 };
 
 const srcTypeOptions = Object.keys(srcNodeConfig) as SrcNodeType[];
 
 export default function SrcNodeControl({
-  synthSrc,
-  setSrcState,
+  src,
+  onChange,
 }: SrcNodeControlProps) {
   return (
     <div className='flex w-full flex-col items-center'>
       <Controls
         schema={zBaseSynthSrc}
-        value={synthSrc.data}
+        value={src.data}
         onChange={(data) =>
-          setSrcState({
-            ...synthSrc,
+          onChange({
+            ...src,
             data: data,
           })
         }
@@ -32,20 +32,20 @@ export default function SrcNodeControl({
       <RadioGroup
         label='type'
         options={srcTypeOptions}
-        value={synthSrc.type}
-        onChange={(type) => setSrcState({ type, data: {} })}
+        value={src.type}
+        onChange={(type) => onChange({ type, data: {} })}
       />
-      <SectionHeader className='mt-4 font-bold' label={synthSrc.type} />
+      <SectionHeader className='mt-4 font-bold' label={src.type} />
       <Controls
         schema={omit(
-          nodeConfig[synthSrc.type].schema,
+          nodeConfig[src.type].schema,
           Object.keys(zBaseSynthSrc.shape),
         )}
-        controls={nodeConfig[synthSrc.type].controls}
-        value={synthSrc.data}
+        controls={nodeConfig[src.type].controls}
+        value={src.data}
         onChange={(data) =>
-          setSrcState({
-            ...synthSrc,
+          onChange({
+            ...src,
             data: data,
           })
         }

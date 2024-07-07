@@ -21,7 +21,15 @@ function Main() {
           />
         </div>
       </div>
-      <SoundControl sound={keyEvent === 'down' ? keyboard.down : keyboard.up} />
+      <SoundControl
+        sound={keyEvent === 'down' ? keyboard.down : keyboard.up}
+        onRemoveLayer={console.log}
+        onAddLayer={console.log}
+        onSrcChange={console.log}
+        onFxChange={console.log}
+        onRemoveFx={console.log}
+        onAddFx={console.log}
+      />
     </div>
   );
 }

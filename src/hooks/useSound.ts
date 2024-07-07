@@ -5,6 +5,7 @@ import { Immutable } from 'immer';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import useSoundCache from './useSoundCache';
+import useSynths from './useSynths';
 
 export type UseSoundProps = {
   config: SoundConfig;
@@ -12,6 +13,8 @@ export type UseSoundProps = {
 };
 
 export default function useSound({ config, onChange }: UseSoundProps) {
+  const synthStates = useSynths(config.synths);
+  
   const [synths, setSynths] = useState<Synth[]>([]);
   const soundCache = useSoundCache();
 
@@ -40,6 +43,7 @@ export default function useSound({ config, onChange }: UseSoundProps) {
   return useMemo(
     () => ({
       id: config.id,
+      ...synthStates,
       synths,
       trigger(key: string) {
         soundCache.trigger(key, synths);
@@ -58,7 +62,7 @@ export default function useSound({ config, onChange }: UseSoundProps) {
         ]);
       },
     }),
-    [soundCache, synths, config],
+    [soundCache, synths, config, synthStates],
   );
 }
 
