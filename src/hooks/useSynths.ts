@@ -58,6 +58,7 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
               createSynthState({
                 id: uuid(),
                 src: {
+                  id: uuid(),
                   type: 'noise',
                   data: {},
                 },

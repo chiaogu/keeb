@@ -12,10 +12,10 @@ export default function parseNodeData(type: SynthNodeType, data: unknown) {
   return prased;
 }
 
-export function parseSrcNodeState({ type, data }: SynthSrcNodeState) {
-  return { type, data: parseNodeData(type, data) };
+export function parseSrcNodeState(node: SynthSrcNodeState) {
+  return { ...node, data: parseNodeData(node.type, node.data) };
 }
 
-export function parseFxNodeState({ type, data }: SynthFxNodeState) {
-  return { type, data: parseNodeData(type, data) };
+export function parseFxNodeState(node: SynthFxNodeState) {
+  return { ...node, data: parseNodeData(node.type, node.data) };
 }
