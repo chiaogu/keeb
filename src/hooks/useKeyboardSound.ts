@@ -1,22 +1,30 @@
-import { SoundConfig } from '@src/types';
+import { KeySoundConfig } from '@src/types';
+import { useEffect, useMemo } from 'react';
+import { useImmer } from 'use-immer';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
-import { useEffect } from 'react';
-import { keyModifier } from '@src/keyboard/keySoundModifier';
 
-export default function useKeyboardSound(config: SoundConfig) {
+export default function useKeyboardSound(keySound: KeySoundConfig) {
   const soundCache = useSoundCache();
-  const { synths, states, ...rest } = useSound(config);
+  const { synths, states, ...rest } = useSound(keySound.config);
+  const [modifier, setModifier] = useImmer(keySound.modifier);
 
   useEffect(() => {
     soundCache.clear();
-  }, [soundCache, config.id, states]);
-  
-  return {
-    ...rest,
-    synths: states,
-    trigger(key: string) {
-      soundCache.trigger(key, synths, keyModifier[key]);
-    },
-  };
+  }, [soundCache, states]);
+
+  return useMemo(
+    () => ({
+      sound: {
+        ...rest,
+        synths: states,
+        trigger(key: string) {
+          soundCache.trigger(key, synths, modifier[key]);
+        },
+      },
+      modifier,
+      setModifier,
+    }),
+    [modifier, rest, setModifier, soundCache, states, synths],
+  );
 }

@@ -1,3 +1,4 @@
+import { getDefaultSynth } from '@src/presets/defaults';
 import createSynth, { Synth, SynthConfig } from '@src/synth';
 import { parseFxNodeState, parseSrcNodeState } from '@src/synth/parseNodeData';
 import { castDraft } from 'immer';
@@ -55,15 +56,7 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
         setSynthStates((states) => {
           states.push(
             castDraft(
-              createSynthState({
-                id: uuid(),
-                src: {
-                  id: uuid(),
-                  type: 'noise',
-                  data: {},
-                },
-                fxs: [],
-              }),
+              createSynthState(getDefaultSynth()),
             ),
           );
         });

@@ -7,7 +7,7 @@ import RadioGroup from '../shared/RadioGroup';
 function Main() {
   const [keyEvent, setKeyEvent] = useState<KeyEvent>('down');
   const keyboard = useKeyboard();
-  const sound = useMemo(
+  const { sound } = useMemo(
     () => (keyEvent === 'down' ? keyboard.down : keyboard.up),
     [keyEvent, keyboard],
   );

@@ -1,5 +1,6 @@
 import * as Tone from '@src/tone';
 import { SynthConfig } from './synth';
+import { KeySoundModifier } from './keyboard/keySoundModifier';
 
 export type SoundConfig = {
   id: string;
@@ -7,10 +8,15 @@ export type SoundConfig = {
   synths: SynthConfig[];
 };
 
+export type KeySoundConfig = {
+  config: SoundConfig;
+  modifier: KeySoundModifier;
+};
+
 export type KeyboardConfig = {
   sound: {
-    up: SoundConfig;
-    down: SoundConfig;
+    up: KeySoundConfig;
+    down: KeySoundConfig;
   };
 };
 
