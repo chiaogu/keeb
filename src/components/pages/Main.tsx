@@ -1,12 +1,12 @@
 import Keys from '@src/components/synth/Keys';
-import useKeyboardSound, { KeyEvent } from '@src/hooks/useKeyboardSound';
+import useKeyboard, { KeyEvent } from '@src/hooks/useKeyboard';
 import { useMemo, useState } from 'react';
 import SoundControl from '../SoundControl';
 import RadioGroup from '../shared/RadioGroup';
 
 function Main() {
   const [keyEvent, setKeyEvent] = useState<KeyEvent>('down');
-  const keyboard = useKeyboardSound();
+  const keyboard = useKeyboard();
   const sound = useMemo(
     () => (keyEvent === 'down' ? keyboard.down : keyboard.up),
     [keyEvent, keyboard],

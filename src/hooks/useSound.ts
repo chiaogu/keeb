@@ -1,33 +1,25 @@
 import { SoundConfig } from '@src/types';
-import { useEffect, useMemo, useState } from 'react';
-import useSoundCache from './useSoundCache';
+import { useMemo, useState } from 'react';
 import useSynths from './useSynths';
 
 export default function useSound(config: SoundConfig) {
-  const soundCache = useSoundCache();
   const { states, synths, reset, ...methods } = useSynths(config.synths);
-  const [name, setName] = useState(config.name ?? 'untitled');
-
-  useEffect(() => {
-    soundCache.clear();
-  }, [soundCache, config.id, states]);
+  const [name, setName] = useState(config.name);
 
   return useMemo(
     () => ({
       id: config.id,
       name,
       setName,
-      synths: states,
-      trigger(key: string) {
-        soundCache.trigger(key, synths);
-      },
+      synths,
+      states,
       loadConfig(config: SoundConfig) {
         setName(config.name);
         reset(config.synths);
       },
       ...methods,
     }),
-    [config.id, name, states, methods, soundCache, synths, reset],
+    [config.id, name, states, methods, synths, reset],
   );
 }
 

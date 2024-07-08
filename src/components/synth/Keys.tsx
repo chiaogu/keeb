@@ -34,8 +34,12 @@ function useKeyEventLog() {
         if (e.key === 'Enter') logs.splice(0, logs.length);
         if (e.key === 'Backspace') logs.pop();
         if (e.key.length === 1) logs.push(e.key);
-        if (logs.length > 10) logs.shift();
       });
+      setTimeout(() => {
+        setLogs((logs) => {
+          logs.shift();
+        });
+      }, 2000);
     },
     [setLogs],
   );
