@@ -65,7 +65,7 @@ export const envelopeFrequencyShifterConfig = createConfig(
     envelope: zEnvelope,
   }),
   {
-    trigger(node, _state, { duration, delay }) {
+    trigger(node, { duration, delay }) {
       node.triggerAttackRelease(duration, `+${delay}`);
     },
   },

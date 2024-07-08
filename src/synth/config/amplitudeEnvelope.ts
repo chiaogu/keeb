@@ -10,7 +10,7 @@ export const amplitudeEnvelopeConfig = createConfig(
   createFxClass(Tone.AmplitudeEnvelope),
   zBaseSynthFx.merge(removeDefault(zEnvelope) as z.AnyZodObject),
   {
-    trigger(node, _state, src) {
+    trigger(node, src) {
       node.triggerAttackRelease(src.duration, src.delay);
     },
   },

@@ -1,7 +1,9 @@
 import * as Tone from '@src/tone';
 import { castDraft, Immutable, produce } from 'immer';
+import { v4 as uuid } from 'uuid';
 import { FxNodeType, nodeConfig, SrcNodeType, SynthNodeType } from './config';
 import parseNodeData from './parseNodeData';
+import { getModifiedNodeData, SynthModifier } from '@src/keyboard/keySoundModifier';
 
 type SupportedSrcToneNode = ReturnType<
   (typeof nodeConfig)[SrcNodeType]['createNode']
@@ -11,11 +13,13 @@ type SupportedFxToneNode = ReturnType<
 >;
 
 export type SynthSrcNodeState = {
+  id: string;
   type: SrcNodeType;
   data: Record<string, unknown>;
 };
 
 export type SynthFxNodeState = {
+  id: string;
   type: FxNodeType;
   data: Record<string, unknown>;
 };
@@ -58,6 +62,7 @@ export default function createSynth(config: Immutable<SynthConfig>) {
   }
 
   function setSrcState(newSrc: SynthConfig['src']) {
+    const id = newSrc.id ?? uuid();
     const type = newSrc.type;
     const data = parseNodeData(type, newSrc.data);
 
@@ -70,7 +75,7 @@ export default function createSynth(config: Immutable<SynthConfig>) {
     setToneState(type, srcNode, data);
 
     state = produce(state, (draft) => {
-      draft.src = { type, data };
+      draft.src = { id, type, data };
     });
     handleChange?.();
   }
@@ -89,13 +94,14 @@ export default function createSynth(config: Immutable<SynthConfig>) {
   }
 
   function setFxState(index: number, fxState: SynthConfig['fxs'][number]) {
+    const id = fxState.id ?? uuid();
     const type = fxState.type;
     const data = parseNodeData(type, fxState.data);
 
     setToneState(fxState.type, fxNodes[index], data);
 
     state = produce(state, (draft) => {
-      draft.fxs[index] = { type, data };
+      draft.fxs[index] = { id, type, data };
     });
     handleChange?.();
   }
@@ -110,24 +116,27 @@ export default function createSynth(config: Immutable<SynthConfig>) {
   function addFx(index: number, type: FxNodeType) {
     state = produce(state, (draft) => {
       const data = parseNodeData(type, {});
-      draft.fxs.splice(index, 0, { type, data });
+      draft.fxs.splice(index, 0, { id: uuid(), type, data });
     });
     setFxs(state.fxs);
   }
 
-  function trigger() {
+  function trigger(modifier?: SynthModifier) {
     if (!srcNode) throw new Error('synth is not initialized yet');
+    
+    const modifiedSrcData = getModifiedNodeData(state.src, modifier);
+    setToneState(state.src.type, srcNode, modifiedSrcData);
     nodeConfig[state.src.type].trigger?.(
       srcNode as never,
-      state.src.data as never,
-      state.src.data as never,
+      modifiedSrcData as never,
     );
 
     state.fxs.forEach((fx, index) => {
+      const modifiedFxData = getModifiedNodeData(fx, modifier);
+      setToneState(fx.type, fxNodes[index], modifiedFxData);
       nodeConfig[fx.type].trigger?.(
         fxNodes[index] as never,
-        fx.data as never,
-        state.src.data as never,
+        modifiedSrcData as never,
       );
     });
   }
@@ -165,7 +174,7 @@ export default function createSynth(config: Immutable<SynthConfig>) {
     ready,
     get state() {
       return state;
-    }
+    },
   };
 }
 

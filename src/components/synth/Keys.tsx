@@ -1,5 +1,5 @@
 import { useKeyEvents } from '@src/hooks/useKeyEvents';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useImmer } from 'use-immer';
 
 const KEY_LABEL: Record<string, string> = {
@@ -62,8 +62,16 @@ function useKeyEventLog() {
 
 export default function Keys() {
   const logs = useKeyEventLog();
+  const elementRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    if (elementRef.current) {
+      elementRef.current.scrollLeft = elementRef.current.scrollWidth;
+    }
+  });
+  
   return (
-    <div className='min-h-32'>
+    <div ref={elementRef} className='min-h-32 max-w-[500px] overflow-hidden text-end'>
       <pre>
         <h1 className='text-[72px] font-bold'>
           {logs}

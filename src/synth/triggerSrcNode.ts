@@ -13,7 +13,5 @@ type Node = {
 };
 
 export default function triggerSrcNode(node: Node, state: State) {
-  let frequency = state.frequency;
-  frequency += Math.random() * 100;
-  node.triggerAttackRelease(frequency, state.duration, `+${state.delay}`);
+  node.triggerAttackRelease(state.frequency, state.duration, `+${state.delay}`);
 }

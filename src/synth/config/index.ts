@@ -47,8 +47,7 @@ export type SynthNodeConfig<
   setState?: (node: T, state: z.infer<Z>) => void;
   trigger?: (
     node: T,
-    state: z.infer<Z>,
-    src: { duration: number; delay: number },
+    src: { duration: number; delay: number; frequency: number; },
   ) => void;
   ready?: (node: T) => Promise<void>;
   ToneClass: ToneClass<T>;
