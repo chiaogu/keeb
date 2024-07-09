@@ -1,25 +1,35 @@
 import { useKeyEvents } from '@src/hooks/useKeyEvents';
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useImmer } from 'use-immer';
 
 function useKeyEventLog() {
   const [logs, setLogs] = useImmer<string[]>([]);
 
-  const onKeydown = useCallback(
-    (e: KeyboardEvent) => {
+  const onKeydown = useMemo(() => {
+    const timeouts: NodeJS.Timeout[] = [];
+    return (e: KeyboardEvent) => {
       setLogs((logs) => {
-        if (e.key === 'Enter') logs.splice(0, logs.length);
-        if (e.key === 'Backspace') logs.pop();
-        if (e.key.length === 1) logs.push(e.key);
+        if (e.key === 'Enter') {
+          logs.splice(0, logs.length);
+          timeouts.splice(0, timeouts.length).forEach(clearTimeout);
+        }
+        if (e.key === 'Backspace') {
+          logs.pop();
+          clearTimeout(timeouts.pop());
+        }
+        if (e.key.length === 1) {
+          logs.push(e.key);
+          timeouts.push(
+            setTimeout(() => {
+              setLogs((logs) => {
+                logs.shift();
+              });
+            }, 4000),
+          );
+        }
       });
-      setTimeout(() => {
-        setLogs((logs) => {
-          logs.shift();
-        });
-      }, 2000);
-    },
-    [setLogs],
-  );
+    };
+  }, [setLogs]);
 
   // Prevent scrolling when pressing space
   useEffect(() => {
@@ -40,19 +50,17 @@ function useKeyEventLog() {
 export default function Keys() {
   const logs = useKeyEventLog();
   const elementRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     if (elementRef.current) {
       elementRef.current.scrollLeft = elementRef.current.scrollWidth;
     }
   });
-  
+
   return (
-    <div ref={elementRef} className='min-h-32 max-w-[500px] overflow-hidden text-end'>
+    <div ref={elementRef} className='h-20 max-w-full overflow-hidden text-end'>
       <pre>
-        <h1 className='text-[72px] font-bold'>
-          {logs}
-        </h1>
+        <h1 className='text-[48px]'>{logs}</h1>
       </pre>
     </div>
   );

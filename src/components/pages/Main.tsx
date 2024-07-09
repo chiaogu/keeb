@@ -2,8 +2,9 @@ import Keys from '@src/components/synth/Keys';
 import useKeyboard, { KeyEvent } from '@src/hooks/useKeyboard';
 import { useMemo, useState } from 'react';
 import SoundControl from '../SoundControl';
-import RadioGroup from '../shared/RadioGroup';
 import KeySoundModifier from '../keyboard/KeySoundModifier';
+import Keyboard from '../keyboard/Keyboard';
+import RadioGroup from '../shared/RadioGroup';
 
 function Main() {
   const [keyEvent, setKeyEvent] = useState<KeyEvent>('down');
@@ -16,9 +17,14 @@ function Main() {
   );
 
   return (
-    <div className='flex flex-col items-center space-y-5'>
+    <div className='flex flex-col items-center'>
       <Keys />
-      <div className='flex w-full max-w-[500px] flex-col items-center space-y-5'>
+      <Keyboard
+        className='mb-12'
+        onPress={keyboard.down.sound.trigger}
+        onRelease={keyboard.up.sound.trigger}
+      />
+      <div className='mb-4 flex w-full max-w-[500px] flex-col items-center'>
         <div className='flex w-full flex-col items-center border-2 border-black p-8'>
           <RadioGroup
             label='key event'
@@ -47,9 +53,7 @@ function Main() {
           onLoadSound={sound.loadConfig}
         />
       )}
-      {tab === 'modifier' && (
-        <KeySoundModifier />
-      )}
+      {tab === 'modifier' && <KeySoundModifier />}
     </div>
   );
 }
