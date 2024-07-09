@@ -1,4 +1,4 @@
-const keys = [
+export const keys = [
   [
     'Escape',
     'F1',
@@ -13,6 +13,9 @@ const keys = [
     'F10',
     'F11',
     'F12',
+    '',
+    '',
+    ''
   ],
   [
     'Backquote',
@@ -29,6 +32,7 @@ const keys = [
     'Minus',
     'Equal',
     'Backspace',
+    '',
   ],
   [
     'Tab',
@@ -45,6 +49,7 @@ const keys = [
     'BracketLeft',
     'BracketRight',
     'Backslash',
+    '',
   ],
   [
     'CapsLock',
@@ -60,6 +65,7 @@ const keys = [
     'Semicolon',
     'Quote',
     'Enter',
+    '',
   ],
   [
     'ShiftLeft',
@@ -75,6 +81,7 @@ const keys = [
     'Slash',
     'ShiftRight',
     'ArrowUp',
+    '',
   ],
   [
     'ControlLeft',
@@ -83,6 +90,7 @@ const keys = [
     'Space',
     'MetaRight',
     'AltRight',
+    '',
     'ArrowLeft',
     'ArrowDown',
     'ArrowRight',

@@ -1,29 +1,6 @@
 import { useKeyEvents } from '@src/hooks/useKeyEvents';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useImmer } from 'use-immer';
-
-const KEY_LABEL: Record<string, string> = {
-  ' ': 'Space',
-};
-
-function usePressedKeys() {
-  const [pressedKeys, setPressedKeys] = useState<string[]>([]);
-
-  const onKeydown = useCallback((e: KeyboardEvent) => {
-    const label = KEY_LABEL[e.key] ?? e.key;
-    if (!e.repeat)
-      setPressedKeys((keys) => Array.from(new Set([...keys, label])));
-  }, []);
-
-  const onKeyUp = useCallback((e: KeyboardEvent) => {
-    const label = KEY_LABEL[e.key] ?? e.key;
-    setPressedKeys((keys) => keys.filter((key) => key !== label));
-  }, []);
-
-  useKeyEvents({ onKeydown, onKeyUp });
-
-  return pressedKeys;
-}
 
 function useKeyEventLog() {
   const [logs, setLogs] = useImmer<string[]>([]);
