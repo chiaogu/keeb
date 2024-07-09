@@ -1,4 +1,4 @@
-import { keyModifier, KeySoundModifier } from '@src/keyboard/keySoundModifier';
+import { KeySoundModifier } from '@src/keyboard/keySoundModifier';
 import { SynthConfig } from '@src/synth';
 import { KeyboardConfig, KeySoundConfig, SoundConfig } from '@src/types';
 import { v4 as uuid } from 'uuid';
@@ -47,7 +47,7 @@ export function getDefaultKeyboard(): KeyboardConfig {
   return {
     sound: {
       up: getDefaultKeySound(),
-      down: getDefaultKeySound()
+      down: getDefaultKeySound(),
     },
   };
 }

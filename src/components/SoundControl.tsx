@@ -29,7 +29,7 @@ export default function SoundControl({
   onNameChange,
   onLoadSound,
 }: SoundControlProps) {
-  const { load, loading } = useUploadSound(onLoadSound);
+  const { load } = useUploadSound(onLoadSound);
   
   return (
     <div className='flex w-full max-w-[500px] flex-col items-center space-y-5'>

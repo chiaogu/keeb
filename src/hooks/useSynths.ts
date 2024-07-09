@@ -1,10 +1,9 @@
-import { getDefaultSynth } from '@src/presets/defaults';
+import { getDefaultSynth } from '@src/keyboard/defaults';
 import createSynth, { Synth, SynthConfig } from '@src/synth';
 import { parseFxNodeState, parseSrcNodeState } from '@src/synth/parseNodeData';
 import { castDraft } from 'immer';
 import { useMemo } from 'react';
 import { useImmer } from 'use-immer';
-import { v4 as uuid } from 'uuid';
 
 type SynthState = {
   synth: Synth;
@@ -54,11 +53,7 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
       },
       addLayer() {
         setSynthStates((states) => {
-          states.push(
-            castDraft(
-              createSynthState(getDefaultSynth()),
-            ),
-          );
+          states.push(castDraft(createSynthState(getDefaultSynth())));
         });
       },
       reset(newSynths: SynthConfig[]) {

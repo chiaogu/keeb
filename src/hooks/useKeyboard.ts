@@ -1,4 +1,4 @@
-import { getDefaultKeyboard } from '@src/presets/defaults';
+import { getDefaultKeyboard } from '@src/keyboard/defaults';
 import * as storage from '@src/utils/localstorage';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useKeyEvents } from './useKeyEvents';

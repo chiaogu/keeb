@@ -3,9 +3,12 @@ import useKeyboard, { KeyEvent } from '@src/hooks/useKeyboard';
 import { useMemo, useState } from 'react';
 import SoundControl from '../SoundControl';
 import RadioGroup from '../shared/RadioGroup';
+import KeySoundModifier from '../keyboard/KeySoundModifier';
 
 function Main() {
   const [keyEvent, setKeyEvent] = useState<KeyEvent>('down');
+  const [tab, setTab] = useState<'config' | 'modifier'>('config');
+
   const keyboard = useKeyboard();
   const { sound } = useMemo(
     () => (keyEvent === 'down' ? keyboard.down : keyboard.up),
@@ -23,19 +26,30 @@ function Main() {
             onChange={setKeyEvent}
             options={['down', 'up']}
           />
+          <RadioGroup
+            label='tab'
+            value={tab}
+            onChange={setTab}
+            options={['config', 'modifier']}
+          />
         </div>
       </div>
-      <SoundControl
-        sound={sound}
-        onRemoveLayer={sound.removeLayer}
-        onAddLayer={sound.addLayer}
-        onSrcChange={sound.setSrcState}
-        onFxChange={sound.setFxState}
-        onRemoveFx={sound.removeFx}
-        onAddFx={sound.addFx}
-        onNameChange={sound.setName}
-        onLoadSound={sound.loadConfig}
-      />
+      {tab === 'config' && (
+        <SoundControl
+          sound={sound}
+          onRemoveLayer={sound.removeLayer}
+          onAddLayer={sound.addLayer}
+          onSrcChange={sound.setSrcState}
+          onFxChange={sound.setFxState}
+          onRemoveFx={sound.removeFx}
+          onAddFx={sound.addFx}
+          onNameChange={sound.setName}
+          onLoadSound={sound.loadConfig}
+        />
+      )}
+      {tab === 'modifier' && (
+        <KeySoundModifier />
+      )}
     </div>
   );
 }
