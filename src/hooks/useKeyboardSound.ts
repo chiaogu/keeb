@@ -1,13 +1,14 @@
-import { KeySoundConfig } from '@src/types';
+import { KeySoundConfig, ModifierLayer } from '@src/types';
 import { useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
+import { getDefaultModifierLayer } from '@src/keyboard/defaults';
 
 export default function useKeyboardSound(keySound: KeySoundConfig) {
   const soundCache = useSoundCache();
   const { synths, states, ...rest } = useSound(keySound.config);
-  const [modifier, setModifier] = useImmer(keySound.modifier);
+  const [modifiers, setModifiers] = useImmer(keySound.modifiers);
 
   useEffect(() => {
     soundCache.clear();
@@ -19,12 +20,24 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
         ...rest,
         synths: states,
         trigger(key: string) {
-          soundCache.trigger(key, synths, modifier[key]);
+          // TODO: Apply multiple layers
+          soundCache.trigger(key, synths, modifiers[0].keys[key]);
         },
       },
-      modifier,
-      setModifier,
+      modifiers,
+      addModifierLayer() {
+        setModifiers((draft) => {
+          draft.push(getDefaultModifierLayer(synths[0].state));
+        });
+      },
+      removeModifierLayer(index: number) {
+        setModifiers((draft) => {
+          draft.splice(index, 1);
+        });
+      },
     }),
-    [modifier, rest, setModifier, soundCache, states, synths],
+    [modifiers, rest, setModifiers, soundCache, states, synths],
   );
 }
+
+export type KeyboardSound = ReturnType<typeof useKeyboardSound>;

@@ -21,11 +21,11 @@ export default function useKeyboard() {
       sound: {
         down: {
           config: down.sound,
-          modifier: down.modifier,
+          modifiers: down.modifiers,
         },
         up: {
           config: up.sound,
-          modifier: up.modifier,
+          modifiers: up.modifiers,
         },
       },
     });
@@ -49,3 +49,5 @@ export default function useKeyboard() {
 
   return useMemo(() => ({ down, up }), [down, up]);
 }
+
+export type Keyboard = ReturnType<typeof useKeyboard>;

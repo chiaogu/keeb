@@ -8,9 +8,15 @@ export type SoundConfig = {
   synths: SynthConfig[];
 };
 
+export type ModifierLayer = {
+  id: string;
+  name: string;
+  keys: KeySoundModifier;
+};
+
 export type KeySoundConfig = {
   config: SoundConfig;
-  modifier: KeySoundModifier;
+  modifiers: ModifierLayer[];
 };
 
 export type KeyboardConfig = {
@@ -24,3 +30,5 @@ export type ToneClass<T extends Tone.ToneAudioNode> = {
   new (): T;
   getDefaults: (...args: unknown[]) => unknown;
 };
+
+export type Tab = 'config' | 'modifier';

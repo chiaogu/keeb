@@ -1,7 +1,8 @@
-import { KeySoundModifier } from '@src/keyboard/keySoundModifier';
 import { SynthConfig } from '@src/synth';
 import { KeyboardConfig, KeySoundConfig, SoundConfig } from '@src/types';
 import { v4 as uuid } from 'uuid';
+import { KeySoundModifier } from './keySoundModifier';
+import { Immutable } from 'immer';
 
 export function getDefaultSynth(): SynthConfig {
   return {
@@ -19,27 +20,38 @@ export function getDefaultSound(): SoundConfig {
   };
 }
 
+export function getDefaultModifierLayer(synth: Immutable<SynthConfig>) {
+  return {
+    id: uuid(),
+    name: 'layer 0',
+    keys: {
+      KeyQ: {
+        [synth.id]: {
+          [synth.src.id]: {
+            frequency: ['add', 300],
+          },
+        },
+      },
+      KeyW: {
+        [synth.id]: {
+          [synth.src.id]: {
+            frequency: ['add', -300],
+          },
+        },
+      },
+    } as KeySoundModifier,
+  };
+}
+
 function getDefaultKeySound(): KeySoundConfig {
   const config = getDefaultSound();
-  const modifier: KeySoundModifier = {
-    KeyQ: {
-      [config.synths[0].id]: {
-        [config.synths[0].src.id]: {
-          frequency: ['add', 300],
-        },
-      },
-    },
-    KeyW: {
-      [config.synths[0].id]: {
-        [config.synths[0].src.id]: {
-          frequency: ['add', -300],
-        },
-      },
-    },
-  };
+
   return {
     config,
-    modifier,
+    modifiers: [
+      getDefaultModifierLayer(config.synths[0]),
+      getDefaultModifierLayer(config.synths[0]),
+    ],
   };
 }
 

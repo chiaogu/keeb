@@ -8,7 +8,7 @@ type ReadOnlyProps = {
 export default function ReadOnly({ label, value }: ReadOnlyProps) {
   return (
     <LabelField label={label}>
-      <div className='flex flex-auto items-center justify-end'>{value}</div>
+      <div className='flex flex-auto items-center justify-start'>{value}</div>
     </LabelField>
   );
 }

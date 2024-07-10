@@ -3,13 +3,12 @@ import useKeyboard, { KeyEvent } from '@src/hooks/useKeyboard';
 import { useMemo, useState } from 'react';
 import SoundControl from '../SoundControl';
 import KeySoundModifier from '../keyboard/KeySoundModifier';
-import Keyboard from '../keyboard/Keyboard';
 import RadioGroup from '../shared/RadioGroup';
+import { Tab } from '@src/types';
 
 function Main() {
   const [keyEvent, setKeyEvent] = useState<KeyEvent>('down');
-  const [tab, setTab] = useState<'config' | 'modifier'>('config');
-  const [selectedKey, setSelectedKey] = useState<string>();
+  const [tab, setTab] = useState<Tab>('config');
 
   const keyboard = useKeyboard();
   const { sound } = useMemo(
@@ -20,15 +19,6 @@ function Main() {
   return (
     <div className='flex flex-col items-center'>
       <Keys />
-      <Keyboard
-        className='mb-12'
-        onPress={keyboard.down.sound.trigger}
-        onRelease={keyboard.up.sound.trigger}
-        onClick={(code) =>
-          setSelectedKey(code === selectedKey ? undefined : code)
-        }
-        selectedKey={selectedKey}
-      />
       <div className='mb-4 flex w-full max-w-[500px] flex-col items-center'>
         <div className='flex w-full flex-col items-center border-2 border-black p-8'>
           <RadioGroup
@@ -58,7 +48,7 @@ function Main() {
           onLoadSound={sound.loadConfig}
         />
       )}
-      {tab === 'modifier' && <KeySoundModifier />}
+      {tab === 'modifier' && <KeySoundModifier keyboard={keyboard} keyEvent={keyEvent}/>}
     </div>
   );
 }
