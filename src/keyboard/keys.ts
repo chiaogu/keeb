@@ -13,9 +13,9 @@ export const keys = [
     'F10',
     'F11',
     'F12',
-    '',
-    '',
-    ''
+    'Undefined1',
+    'Undefined2',
+    'Undefined3'
   ],
   [
     'Backquote',
@@ -32,7 +32,7 @@ export const keys = [
     'Minus',
     'Equal',
     'Backspace',
-    '',
+    'Undefined4',
   ],
   [
     'Tab',
@@ -49,7 +49,7 @@ export const keys = [
     'BracketLeft',
     'BracketRight',
     'Backslash',
-    '',
+    'Undefined5',
   ],
   [
     'CapsLock',
@@ -65,7 +65,7 @@ export const keys = [
     'Semicolon',
     'Quote',
     'Enter',
-    '',
+    'Undefined6',
   ],
   [
     'ShiftLeft',
@@ -81,7 +81,7 @@ export const keys = [
     'Slash',
     'ShiftRight',
     'ArrowUp',
-    '',
+    'Undefined7',
   ],
   [
     'ControlLeft',
@@ -90,7 +90,7 @@ export const keys = [
     'Space',
     'MetaRight',
     'AltRight',
-    '',
+    'Undefined8',
     'ArrowLeft',
     'ArrowDown',
     'ArrowRight',

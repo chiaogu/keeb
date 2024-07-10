@@ -9,6 +9,7 @@ import RadioGroup from '../shared/RadioGroup';
 function Main() {
   const [keyEvent, setKeyEvent] = useState<KeyEvent>('down');
   const [tab, setTab] = useState<'config' | 'modifier'>('config');
+  const [selectedKey, setSelectedKey] = useState<string>();
 
   const keyboard = useKeyboard();
   const { sound } = useMemo(
@@ -23,6 +24,10 @@ function Main() {
         className='mb-12'
         onPress={keyboard.down.sound.trigger}
         onRelease={keyboard.up.sound.trigger}
+        onClick={(code) =>
+          setSelectedKey(code === selectedKey ? undefined : code)
+        }
+        selectedKey={selectedKey}
       />
       <div className='mb-4 flex w-full max-w-[500px] flex-col items-center'>
         <div className='flex w-full flex-col items-center border-2 border-black p-8'>

@@ -4,22 +4,24 @@ import { useImmer } from 'use-immer';
 
 function useKeyEventLog() {
   const [logs, setLogs] = useImmer<string[]>([]);
+  const timeouts = useRef<NodeJS.Timeout[]>([]);
 
   const onKeydown = useMemo(() => {
-    const timeouts: NodeJS.Timeout[] = [];
     return (e: KeyboardEvent) => {
       setLogs((logs) => {
         if (e.key === 'Enter') {
           logs.splice(0, logs.length);
-          timeouts.splice(0, timeouts.length).forEach(clearTimeout);
+          timeouts.current
+            .splice(0, timeouts.current.length)
+            .forEach(clearTimeout);
         }
         if (e.key === 'Backspace') {
           logs.pop();
-          clearTimeout(timeouts.pop());
+          clearTimeout(timeouts.current.pop());
         }
         if (e.key.length === 1) {
           logs.push(e.key);
-          timeouts.push(
+          timeouts.current.push(
             setTimeout(() => {
               setLogs((logs) => {
                 logs.shift();
@@ -30,6 +32,12 @@ function useKeyEventLog() {
       });
     };
   }, [setLogs]);
+
+  useEffect(() => {
+    if (logs.length === 0) {
+      timeouts.current.splice(0, timeouts.current.length).forEach(clearTimeout);
+    }
+  }, [logs]);
 
   // Prevent scrolling when pressing space
   useEffect(() => {

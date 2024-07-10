@@ -9,24 +9,24 @@ type KeyboardProps = {
   className?: string;
   onPress?: (code: string) => void;
   onRelease?: (code: string) => void;
+  onClick?: (code: string) => void;
+  selectedKey?: string;
 };
 
 export default function Keyboard({
   className,
   onPress,
   onRelease,
+  onClick,
+  selectedKey,
 }: KeyboardProps) {
   const { pressedKeys, press, release } = usePressedKeys();
 
   return (
-    <div
-      className={`flex flex-col items-start border border-black ${className}`}
-    >
+    <div className={`relative flex flex-col items-start ${className}`}>
+      <div className='pointer-events-none absolute size-full border-2 border-black'></div>
       {keys.map((row, rowIndex) => (
-        <div
-          key={`row-${rowIndex}`}
-          className='flex border-black last:border-b'
-        >
+        <div key={`row-${rowIndex}`} className='flex'>
           {row.map((key, keyIndex) => {
             const handlePress = () => {
               press(key);
@@ -36,23 +36,30 @@ export default function Keyboard({
               release(key);
               onRelease?.(key);
             };
-
             return (
               <div
                 key={`${key}-${keyIndex}`}
                 style={{
+                  filter: selectedKey === key ? 'invert(1)' : undefined,
                   height: keySize,
-                  width: `${keySize * getKeyWidth(key)}px`,
+                  width: keySize * getKeyWidth(key),
+                  border: pressedKeys.includes(key)
+                    ? '3px solid black'
+                    : selectedKey === key
+                      ? undefined
+                      : '0.5px solid black',
                 }}
-                className='border-l border-t border-black last:border-r'
+                className='flex size-full select-none items-center justify-center bg-white'
+                onMouseDown={handlePress}
+                onMouseUp={handleRelease}
+                onClick={() => onClick?.(key)}
               >
                 <div
                   style={{
-                    filter: pressedKeys.includes(key) ? 'invert(1)' : undefined,
+                    width: keySize * getKeyWidth(key) - 10,
+                    height: keySize - 10,
                   }}
-                  className='flex size-full select-none items-center justify-center bg-white'
-                  onMouseDown={handlePress}
-                  onMouseUp={handleRelease}
+                  className='flex items-center justify-center'
                   onMouseEnter={(e) => e.buttons > 0 && handlePress()}
                   onMouseLeave={(e) => e.buttons > 0 && handleRelease()}
                 >
