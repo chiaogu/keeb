@@ -1,5 +1,7 @@
 const labelMap: Record<string, string> = {
-  Escape: 'Esc',
+  Escape: 'esc',
+  Backspace: 'delete',
+  CapsLock: 'caps',
   Backquote: '`',
   Minus: '-',
   Equal: '=',

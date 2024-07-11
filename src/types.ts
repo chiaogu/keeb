@@ -11,6 +11,7 @@ export type SoundConfig = {
 export type ModifierLayer = {
   id: string;
   name: string;
+  type: 'custom';
   keys: KeySoundModifier;
 };
 

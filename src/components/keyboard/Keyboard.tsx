@@ -11,6 +11,7 @@ type KeyboardProps = {
   onRelease?: (code: string) => void;
   onClick?: (code: string) => void;
   selectedKey?: string;
+  highlightedKeys?: string[];
 };
 
 export default function Keyboard({
@@ -19,6 +20,7 @@ export default function Keyboard({
   onRelease,
   onClick,
   selectedKey,
+  highlightedKeys,
 }: KeyboardProps) {
   const { pressedKeys, press, release } = usePressedKeys();
 
@@ -36,34 +38,39 @@ export default function Keyboard({
               release(key);
               onRelease?.(key);
             };
+            const pressed = pressedKeys.includes(key);
+            const highlighted = highlightedKeys?.includes(key);
+            const selected = selectedKey === key;
             return (
               <div
                 key={`${key}-${keyIndex}`}
                 style={{
-                  filter: selectedKey === key ? 'invert(1)' : undefined,
                   height: keySize,
-                  width: keySize * getKeyWidth(key),
-                  border: pressedKeys.includes(key)
-                    ? '3px solid black'
-                    : selectedKey === key
-                      ? undefined
-                      : '0.5px solid black',
+                  width: `${keySize * getKeyWidth(key)}px`,
+                  border: selectedKey ? undefined : '0.5px solid black',
                 }}
-                className='flex size-full select-none items-center justify-center bg-white'
-                onMouseDown={handlePress}
-                onMouseUp={handleRelease}
-                onClick={() => onClick?.(key)}
               >
                 <div
                   style={{
-                    width: keySize * getKeyWidth(key) - 10,
-                    height: keySize - 10,
+                    filter: pressed ? 'invert(1)' : undefined,
+                    background: highlighted ? 'black' : 'white',
+                    color: highlighted ? 'white' : 'black',
                   }}
-                  className='flex items-center justify-center'
-                  onMouseEnter={(e) => e.buttons > 0 && handlePress()}
-                  onMouseLeave={(e) => e.buttons > 0 && handleRelease()}
+                  className='flex size-full select-none items-center justify-center'
+                  onMouseDown={handlePress}
+                  onMouseUp={handleRelease}
+                  onClick={() => onClick?.(key)}
                 >
-                  {getKeyCodeLabel(key).toLowerCase()}
+                  <div
+                    style={{
+                      border: selected ? `2px solid ${highlighted ? 'white' : 'black'}` : undefined,
+                    }}
+                    className='flex size-4/5 items-center justify-center'
+                    onMouseEnter={(e) => e.buttons > 0 && handlePress()}
+                    onMouseLeave={(e) => e.buttons > 0 && handleRelease()}
+                  >
+                    {getKeyCodeLabel(key).toLowerCase()}
+                  </div>
                 </div>
               </div>
             );

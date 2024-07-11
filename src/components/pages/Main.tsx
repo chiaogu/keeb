@@ -8,7 +8,7 @@ import { Tab } from '@src/types';
 
 function Main() {
   const [keyEvent, setKeyEvent] = useState<KeyEvent>('down');
-  const [tab, setTab] = useState<Tab>('config');
+  const [tab, setTab] = useState<Tab>('modifier');
 
   const keyboard = useKeyboard();
   const { sound } = useMemo(
@@ -24,13 +24,13 @@ function Main() {
           <RadioGroup
             label='key event'
             value={keyEvent}
-            onChange={setKeyEvent}
+            onChange={(value) => setKeyEvent(value as KeyEvent)}
             options={['down', 'up']}
           />
           <RadioGroup
             label='tab'
             value={tab}
-            onChange={setTab}
+            onChange={(value) => setTab(value as Tab)}
             options={['config', 'modifier']}
           />
         </div>

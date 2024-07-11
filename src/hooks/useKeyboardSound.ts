@@ -1,9 +1,9 @@
+import { getDefaultModifierLayer } from '@src/keyboard/defaults';
 import { KeySoundConfig, ModifierLayer } from '@src/types';
 import { useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
-import { getDefaultModifierLayer } from '@src/keyboard/defaults';
 
 export default function useKeyboardSound(keySound: KeySoundConfig) {
   const soundCache = useSoundCache();
@@ -25,14 +25,25 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
         },
       },
       modifiers,
-      addModifierLayer() {
+      addModifierLayer(name: string) {
         setModifiers((draft) => {
-          draft.push(getDefaultModifierLayer(synths[0].state));
+          draft.push({
+            ...getDefaultModifierLayer(synths[0].state),
+            name,
+          });
         });
       },
       removeModifierLayer(index: number) {
         setModifiers((draft) => {
           draft.splice(index, 1);
+        });
+      },
+      updateModiferLayer(
+        index: number,
+        updater: (modifer: ModifierLayer) => void,
+      ) {
+        setModifiers((draft) => {
+          updater(draft[index]);
         });
       },
     }),

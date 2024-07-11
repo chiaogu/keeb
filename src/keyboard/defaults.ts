@@ -24,6 +24,7 @@ export function getDefaultModifierLayer(synth: Immutable<SynthConfig>) {
   return {
     id: uuid(),
     name: 'layer 0',
+    type: 'custom' as const,
     keys: {
       KeyQ: {
         [synth.id]: {
@@ -49,7 +50,6 @@ function getDefaultKeySound(): KeySoundConfig {
   return {
     config,
     modifiers: [
-      getDefaultModifierLayer(config.synths[0]),
       getDefaultModifierLayer(config.synths[0]),
     ],
   };
