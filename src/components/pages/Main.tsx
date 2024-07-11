@@ -1,10 +1,10 @@
 import Keys from '@src/components/synth/Keys';
 import useKeyboard, { KeyEvent } from '@src/hooks/useKeyboard';
+import { Tab } from '@src/types';
 import { useMemo, useState } from 'react';
 import SoundControl from '../SoundControl';
 import KeySoundModifier from '../keyboard/KeySoundModifier';
 import RadioGroup from '../shared/RadioGroup';
-import { Tab } from '@src/types';
 
 function Main() {
   const [keyEvent, setKeyEvent] = useState<KeyEvent>('down');
@@ -46,9 +46,14 @@ function Main() {
           onAddFx={sound.addFx}
           onNameChange={sound.setName}
           onLoadSound={sound.loadConfig}
+          onSynthNameChange={(index, name) =>
+            sound.updateLayer(index, { name })
+          }
         />
       )}
-      {tab === 'modifier' && <KeySoundModifier keyboard={keyboard} keyEvent={keyEvent}/>}
+      {tab === 'modifier' && (
+        <KeySoundModifier keyboard={keyboard} keyEvent={keyEvent} />
+      )}
     </div>
   );
 }

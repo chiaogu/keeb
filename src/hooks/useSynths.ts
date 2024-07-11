@@ -12,7 +12,7 @@ type SynthState = {
 
 function createSynthState(config: SynthConfig) {
   const parsed = {
-    id: config.id,
+    ...config,
     src: parseSrcNodeState(config.src),
     fxs: config.fxs.map(parseFxNodeState),
   };
@@ -53,7 +53,22 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
       },
       addLayer() {
         setSynthStates((states) => {
-          states.push(castDraft(createSynthState(getDefaultSynth())));
+          states.push(
+            castDraft(
+              createSynthState({
+                ...getDefaultSynth(),
+                name: `layer ${states.length}`,
+              }),
+            ),
+          );
+        });
+      },
+      updateLayer(index: number, updates: Pick<SynthConfig, 'name'>) {
+        setSynthStates((states) => {
+          states[index].state = {
+            ...states[index].state,
+            ...updates,
+          };
         });
       },
       reset(newSynths: SynthConfig[]) {

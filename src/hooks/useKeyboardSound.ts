@@ -40,10 +40,13 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
       },
       updateModiferLayer(
         index: number,
-        updater: (modifer: ModifierLayer) => void,
+        updates: Pick<ModifierLayer, 'name'>
       ) {
         setModifiers((draft) => {
-          updater(draft[index]);
+          draft[index] = {
+            ...draft[index],
+            ...updates,
+          };
         });
       },
     }),

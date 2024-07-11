@@ -39,7 +39,10 @@ export default function KeySoundModifier({
         modifiers={modifiers}
         selectedLayer={selectedLayer}
         setSelectedLayerIndex={setSelectedLayerIndex}
-        addModifierLayer={addModifierLayer}
+        addModifierLayer={(name) => {
+          addModifierLayer(name);
+          setSelectedLayerIndex(modifiers.length);
+        }}
         removeModifierLayer={(index) => {
           removeModifierLayer(index);
           setSelectedLayerIndex(Math.min(index, modifiers.length - 2));

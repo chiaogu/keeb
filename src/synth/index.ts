@@ -28,6 +28,7 @@ export type SynthNodeState = SynthSrcNodeState | SynthFxNodeState;
 
 export type SynthConfig = {
   id: string;
+  name: string;
   src: SynthSrcNodeState;
   fxs: SynthFxNodeState[];
 };

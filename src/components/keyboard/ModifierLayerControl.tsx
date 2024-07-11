@@ -55,11 +55,7 @@ export default function ModifierLayerControl({
           <SectionHeader
             className='font-bold'
             label={selectedLayer.name}
-            onLabelChange={(value) =>
-              updateModiferLayer(layerIndex, (draft) => {
-                draft.name = value;
-              })
-            }
+            onLabelChange={(name) => updateModiferLayer(layerIndex, { name })}
           >
             {modifiers.length > 1 && (
               <IconButton

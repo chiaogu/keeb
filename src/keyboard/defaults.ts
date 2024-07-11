@@ -7,6 +7,7 @@ import { Immutable } from 'immer';
 export function getDefaultSynth(): SynthConfig {
   return {
     id: uuid(),
+    name: 'layer 0',
     src: { id: uuid(), type: 'mono', data: {} },
     fxs: [],
   };

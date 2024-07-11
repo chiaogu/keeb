@@ -16,6 +16,7 @@ type SoundControlProps = {
   onAddFx: Sound['addFx'];
   onNameChange: Sound['setName'];
   onLoadSound: (sound: SoundConfig) => void;
+  onSynthNameChange: (index: number, name: string) => void;
 };
 
 export default function SoundControl({
@@ -28,6 +29,7 @@ export default function SoundControl({
   onAddFx,
   onNameChange,
   onLoadSound,
+  onSynthNameChange,
 }: SoundControlProps) {
   const { load } = useUploadSound(onLoadSound);
   
@@ -46,7 +48,6 @@ export default function SoundControl({
       {sound.synths.map((synth, index) => (
         <SynthControl
           key={synth.id}
-          name={`layer ${index}`}
           synth={synth}
           removable={sound.synths.length > 1}
           onRemove={() => onRemoveLayer(index)}
@@ -54,6 +55,7 @@ export default function SoundControl({
           onFxChange={(fxIndex, fx) => onFxChange(index, fxIndex, fx)}
           onRemoveFx={(fxIndex) => onRemoveFx(index, fxIndex)}
           onAddFx={(fxIndex, fxType) => onAddFx(index, fxIndex, fxType)}
+          onNameChange={(name) => onSynthNameChange(index, name)}
         />
       ))}
       <div className='flex w-full flex-col items-center border-2 border-black p-8'>
