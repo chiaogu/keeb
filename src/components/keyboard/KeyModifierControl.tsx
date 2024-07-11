@@ -1,48 +1,73 @@
-import { ModifierLayer } from '@src/types';
-import { useMemo } from 'react';
+import { ModifierLayer, SoundConfig } from '@src/types';
+import IconButton from '../shared/IconButton';
 import ReadOnly from '../shared/ReadOnly';
 import SectionHeader from '../shared/SectionHeader';
-import IconButton from '../shared/IconButton';
 
 type KeyModifierProps = {
   selectedKey?: string;
-  selectedLayer?: ModifierLayer;
+  selectedLayer: ModifierLayer;
+  sound: SoundConfig;
 };
 
 export default function KeyModifierControl({
   selectedKey,
   selectedLayer,
+  sound,
 }: KeyModifierProps) {
-  const selectedKeyModifier = useMemo(() => {
-    if (!selectedKey || !selectedLayer) return null;
-    const modifiedOptions: { key: string; value: string }[] = [];
-    Object.values(selectedLayer.keys[selectedKey] ?? {}).forEach((synth) => {
-      Object.entries(synth).forEach(([_nodeId, options]) => {
-        Object.entries(options).forEach(([option, [operation, value]]) => {
-          modifiedOptions.push({
-            key: `${option}`,
-            value: `${operation} ${value}`,
-          });
-        });
-      });
-    });
-    return modifiedOptions;
-  }, [selectedKey, selectedLayer]);
-
   return (
     <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
       {!selectedKey && 'select a key'}
+      {/* TODO: Memoize */}
       {selectedKey && (
         <>
           <SectionHeader className='font-bold' label={selectedKey} />
-          {selectedKeyModifier?.map(({ key, value }) => (
-            <ReadOnly key={key} label={key} value={value} />
-          ))}
+          {Object.entries(selectedLayer.keys[selectedKey]).map(
+            ([synthId, nodes]) => {
+              const synth = sound.synths.find(({ id }) => id === synthId);
+              return (
+                <div key={synthId} className='w-full'>
+                  <SectionHeader
+                    key={synthId}
+                    label={synth?.name ?? 'missing sound layer'}
+                  />
+                  {Object.entries(nodes).map(([nodeId, properties]) => {
+                    const synthNodes = !synth
+                      ? null
+                      : [synth.src, ...synth.fxs];
+                    const node = synthNodes?.find(({ id }) => id === nodeId);
+                    return (
+                      <div
+                        key={nodeId}
+                        className='border-l-2 border-dotted border-l-black'
+                      >
+                        <ReadOnly
+                          indent={2}
+                          label={node?.type ?? 'missing synth node'}
+                          value=''
+                        />
+                        {Object.entries(properties).map(
+                          ([property, [operation, value]]) => {
+                            const valid = node?.data?.[property] != undefined;
+                            return (
+                              <ReadOnly
+                                className='border-l-2 border-dotted border-l-black'
+                                key={property}
+                                indent={3}
+                                label={`${valid ? '' : '[invalid]'} ${property}`}
+                                value={`${operation} ${value}`}
+                              />
+                            );
+                          },
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            },
+          )}
           <SectionHeader label='new'>
-            <IconButton
-              icon='add'
-              onClick={() => {}}
-            />
+            <IconButton icon='add' onClick={() => {}} />
           </SectionHeader>
         </>
       )}

@@ -15,6 +15,7 @@ export default function KeySoundModifier({
 }: KeySoundModifierProps) {
   const [selectedKey, setSelectedKey] = useState<string>();
   const {
+    sound,
     modifiers,
     addModifierLayer,
     removeModifierLayer,
@@ -50,6 +51,7 @@ export default function KeySoundModifier({
         updateModiferLayer={updateModiferLayer}
       />
       <KeyModifierControl
+        sound={sound}
         selectedKey={selectedKey}
         selectedLayer={selectedLayer}
       />
