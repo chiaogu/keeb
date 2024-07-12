@@ -1,10 +1,14 @@
 import { SynthNodeState } from '@src/synth';
 import { produce } from 'immer';
 
+export type ModifierOp = ['add', number] | ['set', unknown];
+
+export type SynthNodeModifier = {
+  [option: string]: ModifierOp;
+};
+
 export type SynthModifier = {
-  [nodeId: string]: {
-    [option: string]: ['add', number] | ['set', unknown];
-  };
+  [nodeId: string]: SynthNodeModifier;
 };
 
 export type SoundModifier = {

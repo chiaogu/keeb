@@ -43,7 +43,7 @@ export default function ModifierLayerControl({
           }
           options={layers}
         />
-        <SectionHeader label='new'>
+        <SectionHeader className='mt-4' label='new'>
           <IconButton
             icon='add'
             onClick={() => addModifierLayer(`layer ${modifiers.length}`)}
