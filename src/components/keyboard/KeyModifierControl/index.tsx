@@ -7,12 +7,19 @@ type KeyModifierProps = {
   selectedKey?: string;
   selectedLayer: ModifierLayer;
   sound: SoundConfig;
+  onChange: (args: {
+    synthId: string;
+    nodeId: string;
+    field: string;
+    value: unknown;
+  }) => void;
 };
 
 export default function KeyModifierControl({
   selectedKey,
   selectedLayer,
   sound,
+  onChange,
 }: KeyModifierProps) {
   return (
     <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
@@ -27,6 +34,7 @@ export default function KeyModifierControl({
                 synthId={synthId}
                 synths={sound.synths}
                 nodes={nodes}
+                onChange={(args) => onChange({ ...args, synthId })}
               />
             ),
           )}

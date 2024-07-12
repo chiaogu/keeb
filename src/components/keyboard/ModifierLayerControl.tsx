@@ -57,12 +57,10 @@ export default function ModifierLayerControl({
             label={selectedLayer.name}
             onLabelChange={(name) => updateModiferLayer(layerIndex, { name })}
           >
-            {modifiers.length > 1 && (
-              <IconButton
-                icon='remove'
-                onClick={() => removeModifierLayer(layerIndex)}
-              />
-            )}
+            <IconButton
+              icon='remove'
+              onClick={() => removeModifierLayer(layerIndex)}
+            />
           </SectionHeader>
           <ReadOnly label='type' value={selectedLayer.type} />
         </div>

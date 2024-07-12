@@ -7,12 +7,14 @@ type SynthNodeModifierProps = {
   nodeId: string;
   synth?: SynthConfig;
   fields: SynthNodeModifier;
+  onChange: (field: string, value: unknown) => void;
 };
 
 export default function SynthNodeModifierControl({
   nodeId,
   synth,
   fields,
+  onChange,
 }: SynthNodeModifierProps) {
   const synthNodes = !synth ? null : [synth.src, ...synth.fxs];
   const node = synthNodes?.find(({ id }) => id === nodeId);
@@ -29,6 +31,7 @@ export default function SynthNodeModifierControl({
           field={field}
           modifier={modifier}
           node={node}
+          onChange={(value) => onChange(field, value)}
         />
       ))}
     </div>

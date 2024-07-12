@@ -5,6 +5,15 @@ import { useImmer } from 'use-immer';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
 
+type UpdateModifierArgs = {
+  layerIndex: number;
+  key: string;
+  synthId: string;
+  nodeId: string;
+  field: string;
+  value: unknown;
+};
+
 export default function useKeyboardSound(keySound: KeySoundConfig) {
   const soundCache = useSoundCache();
   const { synths, states, ...rest } = useSound(keySound.config);
@@ -12,7 +21,7 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
 
   useEffect(() => {
     soundCache.clear();
-  }, [soundCache, states]);
+  }, [soundCache, states, modifiers]);
 
   return useMemo(
     () => ({
@@ -21,7 +30,7 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
         synths: states,
         trigger(key: string) {
           // TODO: Apply multiple layers
-          soundCache.trigger(key, synths, modifiers[0].keys[key]);
+          soundCache.trigger(key, synths, modifiers[0]?.keys?.[key]);
         },
       },
       modifiers,
@@ -38,15 +47,24 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
           draft.splice(index, 1);
         });
       },
-      updateModiferLayer(
-        index: number,
-        updates: Pick<ModifierLayer, 'name'>
-      ) {
+      updateModiferLayer(index: number, updates: Pick<ModifierLayer, 'name'>) {
         setModifiers((draft) => {
           draft[index] = {
             ...draft[index],
             ...updates,
           };
+        });
+      },
+      updateModifier({
+        layerIndex,
+        key,
+        synthId,
+        nodeId,
+        field,
+        value,
+      }: UpdateModifierArgs) {
+        setModifiers((draft) => {
+          draft[layerIndex].keys[key][synthId][nodeId][field] = ['add', value as number];
         });
       },
     }),

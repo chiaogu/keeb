@@ -20,6 +20,7 @@ export default function KeySoundModifier({
     addModifierLayer,
     removeModifierLayer,
     updateModiferLayer,
+    updateModifier,
   } = useMemo(
     () => (keyEvent === 'down' ? keyboard.down : keyboard.up),
     [keyEvent, keyboard],
@@ -50,11 +51,21 @@ export default function KeySoundModifier({
         }}
         updateModiferLayer={updateModiferLayer}
       />
-      <KeyModifierControl
-        sound={sound}
-        selectedKey={selectedKey}
-        selectedLayer={selectedLayer}
-      />
+      {selectedLayer && (
+        <KeyModifierControl
+          sound={sound}
+          selectedKey={selectedKey}
+          selectedLayer={selectedLayer}
+          onChange={(args) =>
+            selectedKey &&
+            updateModifier({
+              ...args,
+              key: selectedKey,
+              layerIndex: selectedLayerIndex,
+            })
+          }
+        />
+      )}
       <KeyboardUI
         onPress={keyboard.down.sound.trigger}
         onRelease={keyboard.up.sound.trigger}
