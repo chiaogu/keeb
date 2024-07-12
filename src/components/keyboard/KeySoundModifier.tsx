@@ -1,7 +1,10 @@
 import { Keyboard, KeyEvent } from '@src/hooks/useKeyboard';
-import { useMemo, useState } from 'react';
 import KeyboardUI from './Keyboard';
 import KeyModifierControl from './KeyModifierControl';
+import {
+  ModifierContextProvider,
+  useModiferContext,
+} from './KeyModifierControl/ModifierContext';
 import ModifierLayerControl from './ModifierLayerControl';
 
 type KeySoundModifierProps = {
@@ -9,31 +12,24 @@ type KeySoundModifierProps = {
   keyEvent: KeyEvent;
 };
 
-export default function KeySoundModifier({
-  keyboard,
-  keyEvent,
-}: KeySoundModifierProps) {
-  const [selectedKey, setSelectedKey] = useState<string>();
+function Content({ keyboard }: { keyboard: Keyboard }) {
   const {
-    sound,
+    synths,
     modifiers,
+
+    selectedKey,
+    setSelectedKey,
+    highlightedKeys,
+
+    selectedLayerIndex,
+    setSelectedLayerIndex,
+    selectedLayer,
+
     addModifierLayer,
     removeModifierLayer,
     updateModiferLayer,
     updateModifier,
-  } = useMemo(
-    () => (keyEvent === 'down' ? keyboard.down : keyboard.up),
-    [keyEvent, keyboard],
-  );
-  const [selectedLayerIndex, setSelectedLayerIndex] = useState(0);
-  const selectedLayer = useMemo(
-    () => modifiers[selectedLayerIndex],
-    [modifiers, selectedLayerIndex],
-  );
-  const highlightedKeys = useMemo(() => {
-    if (!selectedLayer) return [];
-    return Object.keys(selectedLayer.keys);
-  }, [selectedLayer]);
+  } = useModiferContext();
 
   return (
     <div className='flex  w-full flex-col items-center space-y-5'>
@@ -53,7 +49,7 @@ export default function KeySoundModifier({
       />
       {selectedLayer && (
         <KeyModifierControl
-          sound={sound}
+          synths={synths}
           selectedKey={selectedKey}
           selectedLayer={selectedLayer}
           onChange={(args) =>
@@ -76,5 +72,16 @@ export default function KeySoundModifier({
         highlightedKeys={highlightedKeys}
       />
     </div>
+  );
+}
+
+export default function KeySoundModifier({
+  keyboard,
+  keyEvent,
+}: KeySoundModifierProps) {
+  return (
+    <ModifierContextProvider keyboard={keyboard} keyEvent={keyEvent}>
+      <Content keyboard={keyboard} />
+    </ModifierContextProvider>
   );
 }

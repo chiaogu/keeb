@@ -2,11 +2,12 @@ import { ModifierLayer, SoundConfig } from '@src/types';
 import IconButton from '../../shared/IconButton';
 import SectionHeader from '../../shared/SectionHeader';
 import SynthModifierControl from './SynthModifier';
+import { SynthConfig } from '@src/synth';
 
 type KeyModifierProps = {
   selectedKey?: string;
   selectedLayer: ModifierLayer;
-  sound: SoundConfig;
+  synths: SynthConfig[];
   onChange: (args: {
     synthId: string;
     nodeId: string;
@@ -18,7 +19,7 @@ type KeyModifierProps = {
 export default function KeyModifierControl({
   selectedKey,
   selectedLayer,
-  sound,
+  synths,
   onChange,
 }: KeyModifierProps) {
   return (
@@ -32,7 +33,7 @@ export default function KeyModifierControl({
               <SynthModifierControl
                 key={synthId}
                 synthId={synthId}
-                synths={sound.synths}
+                synths={synths}
                 nodes={nodes}
                 onChange={(args) => onChange({ ...args, synthId })}
               />
@@ -43,8 +44,8 @@ export default function KeyModifierControl({
               icon='add'
               onClick={() =>
                 onChange({
-                  synthId: sound.synths[0].id,
-                  nodeId: sound.synths[0].src.id,
+                  synthId: synths[0].id,
+                  nodeId: synths[0].src.id,
                   field: 'frequency',
                   value: 0,
                 })
