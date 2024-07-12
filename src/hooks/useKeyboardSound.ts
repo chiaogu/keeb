@@ -1,7 +1,7 @@
-import { getDefaultModifierLayer } from '@src/keyboard/defaults';
 import { KeySoundConfig, ModifierLayer } from '@src/types';
 import { useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
+import { v4 as uuid } from 'uuid';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
 
@@ -34,11 +34,12 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
         },
       },
       modifiers,
-      addModifierLayer(name: string) {
+      addModifierLayer(config: Pick<ModifierLayer, 'name' | 'type'>) {
         setModifiers((draft) => {
           draft.push({
-            ...getDefaultModifierLayer(synths[0].state),
-            name,
+            id: uuid(),
+            keys: {},
+            ...config,
           });
         });
       },
@@ -64,7 +65,19 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
         value,
       }: UpdateModifierArgs) {
         setModifiers((draft) => {
-          draft[layerIndex].keys[key][synthId][nodeId][field] = ['add', value as number];
+          draft[layerIndex].keys = {
+            ...draft[layerIndex].keys,
+            [key]: {
+              ...draft[layerIndex].keys[key],
+              [synthId]: {
+                ...draft[layerIndex].keys[key]?.[synthId],
+                [nodeId]: {
+                  ...draft[layerIndex].keys[key]?.[synthId]?.[nodeId],
+                  [field]: ['add', value as number],
+                }
+              }
+            }
+          };
         });
       },
     }),

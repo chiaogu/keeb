@@ -1,10 +1,35 @@
 import { KeyboardSound } from '@src/hooks/useKeyboardSound';
-import { ModifierLayer } from '@src/types';
-import { useMemo } from 'react';
+import { ModifierLayer, ModifierLayerType } from '@src/types';
+import { useMemo, useState } from 'react';
 import IconButton from '../shared/IconButton';
 import RadioGroup from '../shared/RadioGroup';
 import ReadOnly from '../shared/ReadOnly';
 import SectionHeader from '../shared/SectionHeader';
+
+const layerTypes: ModifierLayerType[] = ['custom', 'batch', 'random'];
+
+function AddLayer({
+  onSelect,
+}: {
+  onSelect: (type: ModifierLayerType) => void;
+}) {
+  return (
+    <div className='flex w-full'>
+      <label className='w-32 shrink-0'>type</label>
+      <div className='inline-block w-full'>
+        {layerTypes.map((type) => (
+          <button
+            className='mr-5 underline'
+            key={type}
+            onClick={() => onSelect(type)}
+          >
+            {type}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 type ModifierLayerProps = {
   modifiers: ModifierLayer[];
@@ -31,6 +56,7 @@ export default function ModifierLayerControl({
     () => (selectedLayer ? modifiers.indexOf(selectedLayer) : -1),
     [modifiers, selectedLayer],
   );
+  const [addingLayer, setAddingLayer] = useState(false);
 
   return (
     <>
@@ -44,11 +70,16 @@ export default function ModifierLayerControl({
           options={layers}
         />
         <SectionHeader className='mt-4' label='new'>
-          <IconButton
-            icon='add'
-            onClick={() => addModifierLayer(`layer ${modifiers.length}`)}
-          />
+          <IconButton icon={addingLayer ? 'close' : 'add' } onClick={() => setAddingLayer(!addingLayer)} />
         </SectionHeader>
+        {addingLayer && (
+          <AddLayer
+            onSelect={(type) => {
+              setAddingLayer(false);
+              addModifierLayer({ name: `layer ${modifiers.length}`, type });
+            }}
+          />
+        )}
       </div>
       {selectedLayer && (
         <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>

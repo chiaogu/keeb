@@ -39,7 +39,17 @@ export default function KeyModifierControl({
             ),
           )}
           <SectionHeader className='mt-4' label='new'>
-            <IconButton icon='add' onClick={() => {}} />
+            <IconButton
+              icon='add'
+              onClick={() =>
+                onChange({
+                  synthId: sound.synths[0].id,
+                  nodeId: sound.synths[0].src.id,
+                  field: 'frequency',
+                  value: 0,
+                })
+              }
+            />
           </SectionHeader>
         </>
       )}

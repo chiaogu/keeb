@@ -2,6 +2,8 @@ import * as Tone from '@src/tone';
 import { SynthConfig } from './synth';
 import { KeySoundModifier } from './keyboard/keySoundModifier';
 
+export type ModifierLayerType = 'custom' | 'batch' | 'random';
+
 export type SoundConfig = {
   id: string;
   name: string;
@@ -11,7 +13,7 @@ export type SoundConfig = {
 export type ModifierLayer = {
   id: string;
   name: string;
-  type: 'custom';
+  type: ModifierLayerType;
   keys: KeySoundModifier;
 };
 
