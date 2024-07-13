@@ -1,6 +1,7 @@
 import * as Tone from '@src/tone';
-import { SynthConfig } from './synth';
+import { SoundStructure } from './components/SoundStructureTree/SoundStructure';
 import { KeySoundModifier } from './keyboard/keySoundModifier';
+import { SynthConfig } from './synth';
 
 export type SoundConfig = {
   id: string;
@@ -9,12 +10,19 @@ export type SoundConfig = {
 };
 
 type CustomModifierLayer = {
-  type: 'custom',
-}
+  type: 'custom';
+};
+
+export type RandomizationConfig = SoundStructure<{
+  min?: number;
+  max?: number;
+  options?: string[];
+}>;
 
 type RandomModifierLayer = {
-  type: 'random',
-}
+  type: 'random';
+  config?: RandomizationConfig;
+};
 
 export type ModifierLayer = {
   id: string;

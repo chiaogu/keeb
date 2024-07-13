@@ -19,6 +19,7 @@ export type KeySoundModifier = {
   [key: string]: SoundModifier;
 };
 
+// TODO: Percentage instead of absolute value
 export function getModifiedNodeData(
   node: SynthNodeState,
   modifier: SynthModifier = {},

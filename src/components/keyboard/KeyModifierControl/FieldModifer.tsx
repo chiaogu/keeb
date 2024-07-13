@@ -39,6 +39,7 @@ export default function FieldModifier({
     nodeConfig[node.type].schema.shape[field as never],
   );
 
+  // TODO: Percentage instead of absolute value
   if (schema instanceof z.ZodNumber) {
     const { min, max, step } = getNumberDef(schema);
     const range = (max - min) / 2;

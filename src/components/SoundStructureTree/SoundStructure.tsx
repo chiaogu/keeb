@@ -1,4 +1,4 @@
-type SoundStructure<T> = {
+export type SoundStructure<T> = {
   [synthId: string]: {
     [nodId: string]: {
       [field: string]: T;

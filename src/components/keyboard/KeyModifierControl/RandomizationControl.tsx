@@ -5,16 +5,16 @@ import SoundStructure, {
   RenderFieldProps,
   SoundStructureProps,
 } from '@src/components/SoundStructureTree/SoundStructure';
-import { UpdateModifierArgs } from '@src/hooks/useKeyboardSound';
 import useModifierStructure from '@src/hooks/useModifierStructure';
-import { ModifierOp, SoundModifier } from '@src/keyboard/keySoundModifier';
+import { ModifierOp } from '@src/keyboard/keySoundModifier';
 import { useCallback } from 'react';
 import FieldModifier from './FieldModifer';
 import { useModiferContext } from './ModifierContext';
+import { RandomizationConfig } from '@src/types';
 
 type ModifierControlProps = {
-  modifier: SoundModifier;
-  onChange: (args: Omit<UpdateModifierArgs, 'keys' | 'layerIndex'>) => void;
+  radomConfig: RandomizationConfig;
+  onChange: () => void;
 };
 
 type ModifierStructure = SoundStructureProps<ModifierOp>;
@@ -42,37 +42,18 @@ function Field(
   },
 ) {
   const { node } = useModifierStructure(props);
-  return (
-    <FieldModifier
-      field={props.field}
-      modifier={props.value}
-      node={node}
-      onChange={(value) => {
-        props.onChange({
-          ...props,
-          value,
-        });
-      }}
-    />
-  );
+
 }
 
-export default function ModifierControl({
-  modifier,
+export default function RandomizationControl({
+  radomConfig,
   onChange,
 }: ModifierControlProps) {
   const { synths } = useModiferContext();
 
-  const renderField = useCallback(
-    (props: RenderFieldProps<ModifierOp>) => (
-      <Field {...props} onChange={onChange} />
-    ),
-    [onChange],
-  );
-
   return (
     <>
-      <SoundStructure
+      {/* <SoundStructure
         structure={modifier}
         synthHeader={SynthHeader}
         nodeHeader={NodeHeader}
@@ -89,7 +70,7 @@ export default function ModifierControl({
             value: 0,
           })
         }
-      />
+      /> */}
     </>
   );
 }
