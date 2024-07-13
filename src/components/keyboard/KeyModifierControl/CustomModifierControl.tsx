@@ -60,6 +60,7 @@ export default function CustomModifierControl() {
                 updateModifier({
                   ...args,
                   keys: [selectedKey],
+                  layerIndex: selectedLayerIndex,
                 })
               }
             />
