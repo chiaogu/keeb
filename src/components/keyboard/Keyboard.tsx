@@ -10,7 +10,7 @@ type KeyboardProps = {
   onPress?: (code: string) => void;
   onRelease?: (code: string) => void;
   onClick?: (code: string) => void;
-  selectedKey?: string;
+  selectedKeys?: string[];
   highlightedKeys?: string[];
 };
 
@@ -19,8 +19,8 @@ export default function Keyboard({
   onPress,
   onRelease,
   onClick,
-  selectedKey,
-  highlightedKeys,
+  selectedKeys = [],
+  highlightedKeys = [],
 }: KeyboardProps) {
   const { pressedKeys, press, release } = usePressedKeys();
 
@@ -39,15 +39,15 @@ export default function Keyboard({
               onRelease?.(key);
             };
             const pressed = pressedKeys.includes(key);
-            const highlighted = highlightedKeys?.includes(key);
-            const selected = selectedKey === key;
+            const highlighted = highlightedKeys.includes(key);
+            const selected = selectedKeys.includes(key);
             return (
               <div
                 key={`${key}-${keyIndex}`}
                 style={{
                   height: keySize,
                   width: `${keySize * getKeyWidth(key)}px`,
-                  border: selectedKey ? undefined : '0.5px solid black',
+                  border: selectedKeys.length > 0 ? undefined : '0.5px solid black',
                 }}
               >
                 <div

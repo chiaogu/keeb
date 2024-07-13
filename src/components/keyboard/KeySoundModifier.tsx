@@ -14,25 +14,27 @@ type KeySoundModifierProps = {
 
 function Content({ keyboard }: { keyboard: Keyboard }) {
   const {
-    selectedKey,
-    setSelectedKey,
+    selectedKeys,
+    toggleKey,
     highlightedKeys,
     selectedLayer,
   } = useModiferContext();
 
   return (
-    <div className='flex  w-full flex-col items-center space-y-5'>
+    <div className='flex  w-full flex-col items-center space-y-5 pb-[50vh]'>
       <ModifierLayerControl />
-      {selectedLayer && <KeyModifierControl />}
       <KeyboardUI
-        onPress={keyboard.down.sound.trigger}
-        onRelease={keyboard.up.sound.trigger}
-        onClick={(code) =>
-          setSelectedKey(code === selectedKey ? undefined : code)
-        }
-        selectedKey={selectedKey}
+        onRelease={(key) => {
+          keyboard.up.sound.trigger(key);
+        }}
+        onPress={(key) => {
+          keyboard.down.sound.trigger(key);
+          toggleKey(key);
+        }}
+        selectedKeys={selectedKeys}
         highlightedKeys={highlightedKeys}
       />
+      {selectedLayer?.type === 'custom' && <KeyModifierControl />}
     </div>
   );
 }

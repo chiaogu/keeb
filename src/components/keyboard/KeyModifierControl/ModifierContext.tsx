@@ -1,8 +1,9 @@
 import { Keyboard, KeyEvent } from '@src/hooks/useKeyboard';
 import { createContext, useContext, useMemo, useState } from 'react';
+import { useImmer } from 'use-immer';
 
 function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
-  const [selectedKey, setSelectedKey] = useState<string>();
+  const [selectedKeys, setSelectedKeys] = useImmer<string[]>([]);
   const {
     sound: { synths },
     modifiers,
@@ -10,6 +11,7 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     removeModifierLayer,
     updateModiferLayer,
     updateModifier,
+    removeModifier,
   } = useMemo(
     () => (keyEvent === 'down' ? keyboard.down : keyboard.up),
     [keyEvent, keyboard],
@@ -28,14 +30,23 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     synths,
     modifiers,
 
-    selectedKey,
-    setSelectedKey,
+    selectedKeys,
+    toggleKey(key: string) {
+      setSelectedKeys((draft) => {
+        const index = draft.indexOf(key);
+        if (index === -1) {
+          draft.push(key);
+        } else {
+          draft.splice(index, 1);
+        }
+      });
+    },
     highlightedKeys,
 
     selectedLayerIndex,
     setSelectedLayerIndex(index: number) {
       setSelectedLayerIndex(index);
-      setSelectedKey(undefined);
+      setSelectedKeys([]);
     },
     selectedLayer,
 
@@ -49,6 +60,7 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     },
     updateModiferLayer,
     updateModifier,
+    removeModifier,
   };
 }
 

@@ -19,7 +19,7 @@ export default function Title({ onStart }: TitleProps) {
   }, [handleStart]);
 
   return (
-    <div className='flex h-screen w-screen cursor-pointer items-center justify-center'>
+    <div className='flex h-screen w-full cursor-pointer items-center justify-center'>
       <div>start</div>
     </div>
   );

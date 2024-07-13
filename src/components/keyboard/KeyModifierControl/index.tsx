@@ -1,58 +1,44 @@
-import IconButton from '../../shared/IconButton';
+import IconButton from '@src/components/shared/IconButton';
+import { Fragment } from 'react/jsx-runtime';
 import SectionHeader from '../../shared/SectionHeader';
 import { useModiferContext } from './ModifierContext';
-import SynthModifierControl from './SynthModifier';
+import ModifierControl from './ModifierControl';
 
 export default function KeyModifierControl() {
   const {
-    synths,
-    selectedKey,
+    selectedKeys,
     selectedLayer,
-    updateModifier,
     selectedLayerIndex,
+    updateModifier,
+    removeModifier,
+    toggleKey,
   } = useModiferContext();
 
   return (
     <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
-      {!selectedKey && 'select a key'}
-      {selectedKey && (
-        <>
-          <SectionHeader className='font-bold' label={selectedKey} />
-          {Object.entries(selectedLayer.keys[selectedKey] ?? {}).map(
-            ([synthId, nodes]) => (
-              <SynthModifierControl
-                key={synthId}
-                synthId={synthId}
-                synths={synths}
-                nodes={nodes}
-                onChange={(args) =>
-                  updateModifier({
-                    ...args,
-                    key: selectedKey,
-                    layerIndex: selectedLayerIndex,
-                    synthId,
-                  })
-                }
-              />
-            ),
-          )}
-          <SectionHeader className='mt-4' label='new'>
+      {selectedKeys.length === 0 && 'select a key'}
+      {selectedKeys.map((selectedKey) => (
+        <Fragment key={selectedKey}>
+          <SectionHeader className='font-bold' label={selectedKey}>
             <IconButton
-              icon='add'
-              onClick={() =>
-                updateModifier({
-                  synthId: synths[0].id,
-                  nodeId: synths[0].src.id,
-                  field: 'frequency',
-                  value: 0,
-                  key: selectedKey,
-                  layerIndex: selectedLayerIndex,
-                })
-              }
+              icon='remove'
+              onClick={() => {
+                removeModifier(selectedLayerIndex, selectedKey);
+                toggleKey(selectedKey);
+              }}
             />
           </SectionHeader>
-        </>
-      )}
+          <ModifierControl
+            modifier={selectedLayer.keys[selectedKey] ?? {}}
+            onChange={(args) =>
+              updateModifier({
+                ...args,
+                key: selectedKey,
+              })
+            }
+          />
+        </Fragment>
+      ))}
     </div>
   );
 }

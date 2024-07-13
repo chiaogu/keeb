@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
 
-type UpdateModifierArgs = {
+export type UpdateModifierArgs = {
   layerIndex: number;
   key: string;
   synthId: string;
@@ -78,6 +78,11 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
               }
             }
           };
+        });
+      },
+      removeModifier(layerIndex: number, key: string) {
+        setModifiers((draft) => {
+          delete draft[layerIndex].keys[key];
         });
       },
     }),
