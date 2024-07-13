@@ -3,7 +3,6 @@ import { createContext, useContext, useMemo, useState } from 'react';
 import { useImmer } from 'use-immer';
 
 function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
-  const [selectedKeys, setSelectedKeys] = useImmer<string[]>([]);
   const {
     sound: { synths },
     modifiers,
@@ -21,33 +20,13 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     () => modifiers[selectedLayerIndex],
     [modifiers, selectedLayerIndex],
   );
-  const highlightedKeys = useMemo(() => {
-    if (!selectedLayer) return [];
-    return Object.keys(selectedLayer.keys);
-  }, [selectedLayer]);
 
   return {
     synths,
     modifiers,
 
-    selectedKeys,
-    toggleKey(key: string) {
-      setSelectedKeys((draft) => {
-        const index = draft.indexOf(key);
-        if (index === -1) {
-          draft.push(key);
-        } else {
-          draft.splice(index, 1);
-        }
-      });
-    },
-    highlightedKeys,
-
     selectedLayerIndex,
-    setSelectedLayerIndex(index: number) {
-      setSelectedLayerIndex(index);
-      setSelectedKeys([]);
-    },
+    setSelectedLayerIndex,
     selectedLayer,
 
     addModifierLayer(...args: Parameters<typeof addModifierLayer>) {
@@ -61,6 +40,13 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     updateModiferLayer,
     updateModifier,
     removeModifier,
+    
+    triggerUp(key: string) {
+      keyboard.up.sound.trigger(key);
+    },
+    triggerDown(key: string) {
+      keyboard.down.sound.trigger(key);
+    },
   };
 }
 

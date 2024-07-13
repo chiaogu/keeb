@@ -1,12 +1,9 @@
-import { KeySoundModifier } from '@src/keyboard/keySoundModifier';
-import { KeySoundConfig, ModifierLayer, ModifierLayerType } from '@src/types';
-import { useCallback, useEffect, useMemo } from 'react';
+import { KeySoundConfig, ModifierLayer } from '@src/types';
+import { useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import { v4 as uuid } from 'uuid';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
-
-export const DATA_KEY = 'KeyData';
 
 export type UpdateModifierArgs = {
   layerIndex: number;
@@ -16,15 +13,6 @@ export type UpdateModifierArgs = {
   field: string;
   value: unknown;
 };
-
-function getDefaultKeys(type: ModifierLayerType): KeySoundModifier {
-  if (type === 'random') {
-    return {
-      [DATA_KEY]: {},
-    };
-  }
-  return {};
-}
 
 export default function useKeyboardSound(keySound: KeySoundConfig) {
   const soundCache = useSoundCache();
@@ -50,7 +38,7 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
         setModifiers((draft) => {
           draft.push({
             id: uuid(),
-            keys: getDefaultKeys(config.type),
+            keys: {},
             ...config,
           });
         });

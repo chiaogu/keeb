@@ -5,7 +5,7 @@ import { keys } from '@src/keyboard/keys';
 
 const keySize = 48;
 
-type KeyboardProps = {
+export type KeyboardProps = {
   className?: string;
   onPress?: (code: string) => void;
   onRelease?: (code: string) => void;
