@@ -1,11 +1,12 @@
 import { Keyboard, KeyEvent } from '@src/hooks/useKeyboard';
 import KeyboardUI from './Keyboard';
-import KeyModifierControl from './KeyModifierControl';
+import CustomModifierControl from './KeyModifierControl/CustomModifierControl';
 import {
   ModifierContextProvider,
   useModiferContext,
 } from './KeyModifierControl/ModifierContext';
 import ModifierLayerControl from './ModifierLayerControl';
+import RandomModifierControl from './KeyModifierControl/RandomModifierControl';
 
 type KeySoundModifierProps = {
   keyboard: Keyboard;
@@ -34,7 +35,8 @@ function Content({ keyboard }: { keyboard: Keyboard }) {
         selectedKeys={selectedKeys}
         highlightedKeys={highlightedKeys}
       />
-      {selectedLayer?.type === 'custom' && <KeyModifierControl />}
+      {selectedLayer?.type === 'custom' && <CustomModifierControl />}
+      {selectedLayer?.type === 'random' && <RandomModifierControl />}
     </div>
   );
 }

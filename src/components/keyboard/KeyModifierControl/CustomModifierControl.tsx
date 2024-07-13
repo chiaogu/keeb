@@ -4,7 +4,7 @@ import SectionHeader from '../../shared/SectionHeader';
 import { useModiferContext } from './ModifierContext';
 import ModifierControl from './ModifierControl';
 
-export default function KeyModifierControl() {
+export default function CustomModifierControl() {
   const {
     selectedKeys,
     selectedLayer,
@@ -33,7 +33,7 @@ export default function KeyModifierControl() {
             onChange={(args) =>
               updateModifier({
                 ...args,
-                key: selectedKey,
+                keys: [selectedKey],
               })
             }
           />
