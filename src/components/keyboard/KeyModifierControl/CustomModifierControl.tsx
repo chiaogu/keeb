@@ -16,17 +16,20 @@ export default function CustomModifierControl() {
     return Object.keys(selectedLayer.keys);
   }, [selectedLayer]);
 
-  const toggleKey = useCallback((key: string) => {
-    setSelectedKeys((draft) => {
-      const index = draft.indexOf(key);
-      if (index === -1) {
-        draft.push(key);
-      } else {
-        draft.splice(index, 1);
-      }
-    });
-  }, [setSelectedKeys]);
-  
+  const toggleKey = useCallback(
+    (key: string) => {
+      setSelectedKeys((draft) => {
+        const index = draft.indexOf(key);
+        if (index === -1) {
+          draft.push(key);
+        } else {
+          draft.splice(index, 1);
+        }
+      });
+    },
+    [setSelectedKeys],
+  );
+
   useEffect(() => {
     setSelectedKeys([]);
   }, [selectedLayer.id, setSelectedKeys]);

@@ -6,7 +6,7 @@ import SynthModifierControl from './SynthModifier';
 
 type ModifierControlProps = {
   modifier: SoundModifier;
-  onChange: (args: Omit<UpdateModifierArgs, 'key'>) => void;
+  onChange: (args: Omit<UpdateModifierArgs, 'keys'>) => void;
 };
 
 export default function ModifierControl({

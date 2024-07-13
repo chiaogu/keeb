@@ -7,10 +7,10 @@ import ModifierKeyboard from './ModifierKeyboard';
 export default function RandomModifierControl() {
   const { selectedLayer, updateModifier } = useModiferContext();
 
-  const modifiedKeys = useMemo(
-    () => Object.keys(selectedLayer.keys),
-    [selectedLayer.keys],
-  );
+  // const modifiedKeys = useMemo(
+  //   () => Object.keys(selectedLayer.keys),
+  //   [selectedLayer.keys],
+  // );
 
   return (
     <>
@@ -20,10 +20,10 @@ export default function RandomModifierControl() {
         // onPress={toggleKey}
       />
       <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
-        <SectionHeader
+        {/* <SectionHeader
           className='font-bold'
           label={`${modifiedKeys.length} selected`}
-        />
+        /> */}
         {/* <ModifierControl
           modifier={modifier}
           onChange={(args) =>
