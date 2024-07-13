@@ -14,54 +14,16 @@ type KeySoundModifierProps = {
 
 function Content({ keyboard }: { keyboard: Keyboard }) {
   const {
-    synths,
-    modifiers,
-
     selectedKey,
     setSelectedKey,
     highlightedKeys,
-
-    selectedLayerIndex,
-    setSelectedLayerIndex,
     selectedLayer,
-
-    addModifierLayer,
-    removeModifierLayer,
-    updateModiferLayer,
-    updateModifier,
   } = useModiferContext();
 
   return (
     <div className='flex  w-full flex-col items-center space-y-5'>
-      <ModifierLayerControl
-        modifiers={modifiers}
-        selectedLayer={selectedLayer}
-        setSelectedLayerIndex={setSelectedLayerIndex}
-        addModifierLayer={(name) => {
-          addModifierLayer(name);
-          setSelectedLayerIndex(modifiers.length);
-        }}
-        removeModifierLayer={(index) => {
-          removeModifierLayer(index);
-          setSelectedLayerIndex(Math.min(index, modifiers.length - 2));
-        }}
-        updateModiferLayer={updateModiferLayer}
-      />
-      {selectedLayer && (
-        <KeyModifierControl
-          synths={synths}
-          selectedKey={selectedKey}
-          selectedLayer={selectedLayer}
-          onChange={(args) =>
-            selectedKey &&
-            updateModifier({
-              ...args,
-              key: selectedKey,
-              layerIndex: selectedLayerIndex,
-            })
-          }
-        />
-      )}
+      <ModifierLayerControl />
+      {selectedLayer && <KeyModifierControl />}
       <KeyboardUI
         onPress={keyboard.down.sound.trigger}
         onRelease={keyboard.up.sound.trigger}

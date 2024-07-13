@@ -1,10 +1,10 @@
-import { KeyboardSound } from '@src/hooks/useKeyboardSound';
-import { ModifierLayer, ModifierLayerType } from '@src/types';
+import { ModifierLayerType } from '@src/types';
 import { useMemo, useState } from 'react';
 import IconButton from '../shared/IconButton';
 import RadioGroup from '../shared/RadioGroup';
 import ReadOnly from '../shared/ReadOnly';
 import SectionHeader from '../shared/SectionHeader';
+import { useModiferContext } from './KeyModifierControl/ModifierContext';
 
 const layerTypes: ModifierLayerType[] = ['custom', 'batch', 'random'];
 
@@ -31,23 +31,15 @@ function AddLayer({
   );
 }
 
-type ModifierLayerProps = {
-  modifiers: ModifierLayer[];
-  selectedLayer?: ModifierLayer;
-  setSelectedLayerIndex: (index: number) => void;
-  addModifierLayer: KeyboardSound['addModifierLayer'];
-  removeModifierLayer: KeyboardSound['removeModifierLayer'];
-  updateModiferLayer: KeyboardSound['updateModiferLayer'];
-};
-
-export default function ModifierLayerControl({
-  modifiers,
-  selectedLayer,
-  setSelectedLayerIndex,
-  addModifierLayer,
-  removeModifierLayer,
-  updateModiferLayer,
-}: ModifierLayerProps) {
+export default function ModifierLayerControl() {
+  const {
+    modifiers,
+    setSelectedLayerIndex,
+    selectedLayer,
+    addModifierLayer,
+    removeModifierLayer,
+    updateModiferLayer,
+  } = useModiferContext();
   const layers = useMemo(
     () => modifiers.map(({ id, name }) => ({ label: name, key: id })),
     [modifiers],
@@ -70,7 +62,10 @@ export default function ModifierLayerControl({
           options={layers}
         />
         <SectionHeader className='mt-4' label='new'>
-          <IconButton icon={addingLayer ? 'close' : 'add' } onClick={() => setAddingLayer(!addingLayer)} />
+          <IconButton
+            icon={addingLayer ? 'close' : 'add'}
+            onClick={() => setAddingLayer(!addingLayer)}
+          />
         </SectionHeader>
         {addingLayer && (
           <AddLayer

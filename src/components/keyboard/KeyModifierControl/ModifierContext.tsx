@@ -33,11 +33,20 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     highlightedKeys,
 
     selectedLayerIndex,
-    setSelectedLayerIndex,
+    setSelectedLayerIndex(index: number) {
+      setSelectedLayerIndex(index);
+      setSelectedKey(undefined);
+    },
     selectedLayer,
 
-    addModifierLayer,
-    removeModifierLayer,
+    addModifierLayer(...args: Parameters<typeof addModifierLayer>) {
+      addModifierLayer(...args);
+      setSelectedLayerIndex(modifiers.length);
+    },
+    removeModifierLayer(index: number) {
+      removeModifierLayer(index);
+      setSelectedLayerIndex(Math.min(index, modifiers.length - 2));
+    },
     updateModiferLayer,
     updateModifier,
   };
