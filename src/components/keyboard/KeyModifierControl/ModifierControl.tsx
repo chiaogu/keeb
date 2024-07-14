@@ -1,14 +1,9 @@
 import IconButton from '@src/components/shared/IconButton';
 import ReadOnly from '@src/components/shared/ReadOnly';
 import SectionHeader from '@src/components/shared/SectionHeader';
-import SoundStructure, {
-  RenderFieldProps,
-  SoundStructureProps,
-} from '@src/components/SoundStructureTree/SoundStructure';
+import SoundStructure from '@src/components/SoundStructureTree/SoundStructure';
 import { UpdateModifierArgs } from '@src/hooks/useKeyboardSound';
-import useModifierStructure from '@src/hooks/useModifierStructure';
-import { ModifierOp, SoundModifier } from '@src/keyboard/keySoundModifier';
-import { useCallback } from 'react';
+import { SoundModifier } from '@src/keyboard/keySoundModifier';
 import FieldModifier from './FieldModifer';
 import { useModiferContext } from './ModifierContext';
 
@@ -17,66 +12,41 @@ type ModifierControlProps = {
   onChange: (args: Omit<UpdateModifierArgs, 'keys' | 'layerIndex'>) => void;
 };
 
-type ModifierStructure = SoundStructureProps<ModifierOp>;
-
-const SynthHeader: ModifierStructure['synthHeader'] = (props) => {
-  const { synth } = useModifierStructure(props);
-  return (
-    <SectionHeader
-      key={props.synthId}
-      label={synth?.name ?? 'missing sound layer'}
-    />
-  );
-};
-
-const NodeHeader: ModifierStructure['nodeHeader'] = (props) => {
-  const { node } = useModifierStructure(props);
-  return (
-    <ReadOnly indent={2} label={node?.type ?? 'missing synth node'} value='' />
-  );
-};
-
-function Field(
-  props: RenderFieldProps<ModifierOp> & {
-    onChange: ModifierControlProps['onChange'];
-  },
-) {
-  const { node } = useModifierStructure(props);
-  return (
-    <FieldModifier
-      field={props.field}
-      modifier={props.value}
-      node={node}
-      onChange={(value) => {
-        props.onChange({
-          ...props,
-          value,
-        });
-      }}
-    />
-  );
-}
-
 export default function ModifierControl({
   modifier,
   onChange,
 }: ModifierControlProps) {
   const { synths } = useModiferContext();
-
-  const renderField = useCallback(
-    (props: RenderFieldProps<ModifierOp>) => (
-      <Field {...props} onChange={onChange} />
-    ),
-    [onChange],
-  );
-
   return (
     <>
       <SoundStructure
+        synths={synths}
         structure={modifier}
-        synthHeader={SynthHeader}
-        nodeHeader={NodeHeader}
-        renderField={renderField}
+        renderSynthHeader={({ synth }) => (
+          <SectionHeader label={synth?.name ?? 'missing sound layer'} />
+        )}
+        renderNodeHeader={({ node }) => (
+          <ReadOnly
+            indent={2}
+            label={node?.type ?? 'missing synth node'}
+            value=''
+          />
+        )}
+        renderField={(props) => (
+          <FieldModifier
+            field={props.field}
+            modifier={props.value}
+            node={props.node}
+            onChange={(value) => {
+              onChange({
+                ...props,
+                synthId: props.synth.id,
+                nodeId: props.node.id,
+                value,
+              });
+            }}
+          />
+        )}
       />
       <IconButton
         className='mb-4 ml-[-11px] self-start'
