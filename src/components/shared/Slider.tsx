@@ -8,6 +8,7 @@ type SliderProps = {
   min: number;
   step?: number;
   onChange: (v: number) => void;
+  renderValue?: (normalizedValue: number) => React.ReactNode
 } & Omit<LabelFieldProps, 'children'>;
 
 const RESOLUTION = 100000;
@@ -18,6 +19,7 @@ export default function Slider({
   step,
   max,
   min,
+  renderValue = (v) => `${(v * 100).toFixed()}%`,
   ...labelFields
 }: SliderProps) {
   const handleChange = useCallback(
@@ -51,7 +53,7 @@ export default function Slider({
           onChange={handleChange}
         />
         <div className='w-1/5 text-end'>
-          {(normalizedValue * 100).toFixed()}%
+          {renderValue(normalizedValue)}
         </div>
       </div>
     </LabelField>

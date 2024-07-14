@@ -31,12 +31,20 @@ export default function RandomizationControl({
             value=''
           />
         )}
-        renderField={({ field, value, node }) => (
+        renderField={({ synth, field, value, node }) => (
           <FieldRandomControl
             node={node}
             field={field}
             randomConfig={value}
-            onChange={() => {}}
+            onChange={(config) => {
+              onChange({
+                [synth.id]: {
+                  [node.id]: {
+                    [field]: config,
+                  },
+                },
+              });
+            }}
           />
         )}
       />

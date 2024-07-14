@@ -30,22 +30,26 @@ export default function FieldRandomControl({
   );
 
   if (schema instanceof z.ZodNumber) {
+    const min = randomConfig.min ?? -0.3;
+    const max = randomConfig.max ?? 0.3;
     return (
       <div className='flex w-full flex-col items-center'>
         <ReadOnly label={field} />
         <Slider
           label='min'
-          value={randomConfig.min ?? -0.3}
-          onChange={() => {}}
-          min={-1}
-          max={1}
+          value={min}
+          onChange={(v) => onChange({ max, min: Math.min(v, max) })}
+          min={-0.5}
+          max={0.5}
+          renderValue={(v) => `${((v - 0.5) * 100).toFixed()}%`}
         />
         <Slider
           label='max'
-          value={randomConfig.max ?? 0.3}
-          onChange={() => {}}
-          min={-1}
-          max={1}
+          value={max}
+          onChange={(v) => onChange({ min, max: Math.max(v, min) })}
+          min={-0.5}
+          max={0.5}
+          renderValue={(v) => `${((v - 0.5) * 100).toFixed()}%`}
         />
       </div>
     );

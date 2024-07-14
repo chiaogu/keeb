@@ -3,7 +3,7 @@ import Slider from '@src/components/shared/Slider';
 import { ModifierOp } from '@src/keyboard/keySoundModifier';
 import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
-import { getNumberDef, removeDefault } from '@src/utils/schema';
+import { removeDefault } from '@src/utils/schema';
 import { z } from 'zod';
 
 type FieldModifierProps = {
@@ -35,18 +35,15 @@ export default function FieldModifier({
     nodeConfig[node.type].schema.shape[field as never],
   );
 
-  // TODO: Percentage instead of absolute value
   if (schema instanceof z.ZodNumber) {
-    const { min, max, step } = getNumberDef(schema);
-    const range = (max - min) / 2;
     return (
       <Slider
         label={field}
         value={value as number}
         onChange={onChange}
-        min={-range}
-        max={range}
-        step={step}
+        min={-0.5}
+        max={0.5}
+        renderValue={(v) => `${((v - 0.5) * 100).toFixed()}%`}
       />
     );
   }
