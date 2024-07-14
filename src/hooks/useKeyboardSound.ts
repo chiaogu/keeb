@@ -1,4 +1,5 @@
-import { KeySoundConfig, ModifierLayer } from '@src/types';
+import { ModifierOp } from '@src/keyboard/keySoundModifier';
+import { KeySoundConfig, ModifierLayer, RandomizationConfig } from '@src/types';
 import { useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import { v4 as uuid } from 'uuid';
@@ -39,6 +40,7 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
           draft.push({
             id: uuid(),
             keys: {},
+            config: {},
             ...config,
           });
         });
@@ -87,6 +89,57 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
           delete draft[layerIndex].keys[key];
         });
       },
+      randomizeModifier(
+        layerIndex: number,
+        keys: string[],
+        randomConfig: RandomizationConfig,
+      ) {
+        setModifiers((draft) => {
+          keys.forEach((key) => {
+            Object.entries(randomConfig).forEach(([synthId, nodes]) => {
+              Object.entries(nodes).forEach(([nodeId, fields]) => {
+                Object.entries(fields).forEach(
+                  ([field, { max, min, options }]) => {
+                    let modifier: ModifierOp | null = null;
+                    if (min != null && max != null) {
+                      modifier = ['add', min + Math.random() * (max - min)];
+                    } else if (options != null) {
+                      modifier = [
+                        'set',
+                        options[
+                          Math.round(Math.random() * (options.length - 1))
+                        ],
+                      ];
+                    }
+
+                    if (!modifier) return;
+
+                    draft[layerIndex].keys = {
+                      ...draft[layerIndex].keys,
+                      [key]: {
+                        ...draft[layerIndex].keys[key],
+                        [synthId]: {
+                          ...draft[layerIndex].keys[key]?.[synthId],
+                          [nodeId]: {
+                            ...draft[layerIndex].keys[key]?.[synthId]?.[nodeId],
+                            [field]: modifier,
+                          },
+                        },
+                      },
+                    };
+                  },
+                );
+              });
+            });
+          });
+        });
+      },
+      updateRandomConfig(layerIndex: number, config: RandomizationConfig) {
+        setModifiers((draft) => {
+          if (draft[layerIndex].type !== 'random') return;
+          draft[layerIndex].config = config;
+        });
+      }
     }),
     [modifiers, rest, setModifiers, soundCache, states, synths],
   );

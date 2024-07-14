@@ -1,36 +1,61 @@
-import { SoundStructureProps } from '@src/components/SoundStructureTree/SoundStructure';
-import { ModifierOp } from '@src/keyboard/keySoundModifier';
+import IconButton from '@src/components/shared/IconButton';
+import ReadOnly from '@src/components/shared/ReadOnly';
+import SectionHeader from '@src/components/shared/SectionHeader';
+import SoundStructure from '@src/components/SoundStructureTree/SoundStructure';
 import { RandomizationConfig } from '@src/types';
+import FieldRandomControl from './FieldRandomControl';
+import { useModiferContext } from './ModifierContext';
 
-type ModifierControlProps = {
+type RandomizationControlProps = {
   radomConfig: RandomizationConfig;
-  onChange: () => void;
+  onChange: (randomConfig: RandomizationConfig) => void;
 };
 
 export default function RandomizationControl({
   radomConfig,
   onChange,
-}: ModifierControlProps) {
+}: RandomizationControlProps) {
+  const { synths } = useModiferContext();
   return (
     <>
-      {/* <SoundStructure
-        structure={modifier}
-        synthHeader={SynthHeader}
-        nodeHeader={NodeHeader}
-        renderField={renderField}
+      <SoundStructure
+        synths={synths}
+        structure={radomConfig}
+        renderSynthHeader={({ synth }) => (
+          <SectionHeader label={synth?.name ?? 'missing sound layer'} />
+        )}
+        renderNodeHeader={({ node }) => (
+          <ReadOnly
+            indent={2}
+            label={node?.type ?? 'missing synth node'}
+            value=''
+          />
+        )}
+        renderField={({ field, value, node }) => (
+          <FieldRandomControl
+            node={node}
+            field={field}
+            randomConfig={value}
+            onChange={() => {}}
+          />
+        )}
       />
       <IconButton
         className='mb-4 ml-[-11px] self-start'
         icon='add'
-        onClick={() =>
+        onClick={() => {
           onChange({
-            synthId: synths[0].id,
-            nodeId: synths[0].src.id,
-            field: 'frequency',
-            value: 0,
-          })
-        }
-      /> */}
+            [synths[0].id]: {
+              [synths[0].src.id]: {
+                frequency: {
+                  min: -0.3,
+                  max: 0.3,
+                },
+              },
+            },
+          });
+        }}
+      />
     </>
   );
 }

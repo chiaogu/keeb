@@ -1,6 +1,5 @@
 import { Keyboard, KeyEvent } from '@src/hooks/useKeyboard';
 import { createContext, useContext, useMemo, useState } from 'react';
-import { useImmer } from 'use-immer';
 
 function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
   const {
@@ -11,6 +10,8 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     updateModiferLayer,
     updateModifier,
     removeModifier,
+    randomizeModifier,
+    updateRandomConfig,
   } = useMemo(
     () => (keyEvent === 'down' ? keyboard.down : keyboard.up),
     [keyEvent, keyboard],
@@ -40,7 +41,9 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     updateModiferLayer,
     updateModifier,
     removeModifier,
-    
+    randomizeModifier,
+    updateRandomConfig,
+
     triggerUp(key: string) {
       keyboard.up.sound.trigger(key);
     },

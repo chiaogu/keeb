@@ -2,7 +2,7 @@ import LabelField, { LabelFieldProps } from './LabelField';
 
 type ReadOnlyProps = {
   label: string;
-  value: string;
+  value?: string;
 } & Omit<LabelFieldProps, 'children'>;
 
 export default function ReadOnly({
@@ -12,7 +12,7 @@ export default function ReadOnly({
 }: ReadOnlyProps) {
   return (
     <LabelField label={label} {...labelFieldProps}>
-      <div className='flex flex-auto items-center justify-start'>{value}</div>
+      {value && <div className='flex flex-auto items-center justify-start'>{value}</div>}
     </LabelField>
   );
 }

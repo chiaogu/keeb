@@ -1,38 +1,57 @@
-import { useMemo } from 'react';
-import SectionHeader from '../../shared/SectionHeader';
+import { useCallback, useMemo } from 'react';
 import { useModiferContext } from './ModifierContext';
-import ModifierControl from './ModifierControl';
 import ModifierKeyboard from './ModifierKeyboard';
+import RandomizationControl from './RandomizationControl';
+
+function useSelectedLayer() {
+  const { selectedLayer } = useModiferContext();
+  if (selectedLayer.type !== 'random') {
+    throw new Error(
+      `${selectedLayer.type} is not supported in RandomModifierControl`,
+    );
+  }
+  return selectedLayer;
+}
 
 export default function RandomModifierControl() {
-  const { selectedLayer, updateModifier } = useModiferContext();
+  const selectedLayer = useSelectedLayer();
+  const {
+    randomizeModifier,
+    selectedLayerIndex,
+    updateRandomConfig,
+    removeModifier,
+  } = useModiferContext();
 
-  // const modifiedKeys = useMemo(
-  //   () => Object.keys(selectedLayer.keys),
-  //   [selectedLayer.keys],
-  // );
+  const modifiedKeys = useMemo(
+    () => Object.keys(selectedLayer.keys),
+    [selectedLayer.keys],
+  );
+
+  const toggleKey = useCallback(
+    (key: string) => {
+      if (modifiedKeys.includes(key)) {
+        removeModifier(selectedLayerIndex, key);
+      } else {
+        randomizeModifier(selectedLayerIndex, [key], selectedLayer.config);
+      }
+    },
+    [
+      modifiedKeys,
+      randomizeModifier,
+      removeModifier,
+      selectedLayer.config,
+      selectedLayerIndex,
+    ],
+  );
 
   return (
     <>
-      <ModifierKeyboard
-        // selectedKeys={selectedKeys}
-        // highlightedKeys={highlightedKeys}
-        // onPress={toggleKey}
-      />
+      <ModifierKeyboard highlightedKeys={modifiedKeys} onPress={toggleKey} />
       <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
-        {/* <SectionHeader
-          className='font-bold'
-          label={`${modifiedKeys.length} selected`}
-        /> */}
-        {/* <ModifierControl
-          modifier={modifier}
-          onChange={(args) =>
-            updateModifier({
-              ...args,
-              keys: [DATA_KEY, ...selectedKeys],
-            })
-          }
-        /> */}
+        <RandomizationControl
+          radomConfig={selectedLayer.config}
+          onChange={(config) => updateRandomConfig(selectedLayerIndex, config)}
+        />
       </div>
     </>
   );

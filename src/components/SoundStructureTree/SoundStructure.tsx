@@ -77,7 +77,7 @@ export default function SoundStructure<T>({
                   {Object.entries(fields).map(([field, value]) => (
                     <div
                       key={`${synthId}-${nodeId}-${field}`}
-                      className='ml-[16px] border-l-2 border-dotted border-l-black pl-[8px]'
+                      className='ml-[16px] border-l-2 border-dotted border-l-black pl-[14px]'
                     >
                       {renderField({ synth, node, field, value })}
                     </div>

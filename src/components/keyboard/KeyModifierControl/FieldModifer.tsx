@@ -13,8 +13,6 @@ type FieldModifierProps = {
   onChange: (value: unknown) => void;
 };
 
-const INDENT = 3;
-
 export default function FieldModifier({
   field,
   modifier: [operation, value],
@@ -26,9 +24,7 @@ export default function FieldModifier({
   if (!valid) {
     return (
       <ReadOnly
-        className='border-l-2 border-dotted border-l-black'
         key={field}
-        indent={INDENT}
         label={`[invalid] ${field}`}
         value={`${operation} ${value}`}
       />
@@ -45,8 +41,6 @@ export default function FieldModifier({
     const range = (max - min) / 2;
     return (
       <Slider
-        className='border-l-2 border-dotted border-l-black'
-        indent={INDENT}
         label={field}
         value={value as number}
         onChange={onChange}

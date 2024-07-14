@@ -13,15 +13,17 @@ type CustomModifierLayer = {
   type: 'custom';
 };
 
-export type RandomizationConfig = SoundStructure<{
+export type FieldRandomConfig = {
   min?: number;
   max?: number;
   options?: string[];
-}>;
+};
+
+export type RandomizationConfig = SoundStructure<FieldRandomConfig>;
 
 type RandomModifierLayer = {
   type: 'random';
-  config?: RandomizationConfig;
+  config: RandomizationConfig;
 };
 
 export type ModifierLayer = {
