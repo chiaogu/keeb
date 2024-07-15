@@ -49,7 +49,7 @@ export default function CustomModifierControl() {
               <IconButton
                 icon='remove'
                 onClick={() => {
-                  removeModifier(selectedLayerIndex, selectedKey);
+                  removeModifier(selectedLayerIndex, [selectedKey]);
                   toggleKey(selectedKey);
                 }}
               />

@@ -1,5 +1,6 @@
 import { SynthConfig, SynthNodeState } from '@src/synth';
-import { useMemo } from 'react';
+import { typedMemo } from '@src/utils/utils';
+import { memo, useEffect, useMemo } from 'react';
 
 export type SoundStructure<T> = {
   [synthId: string]: {
@@ -27,13 +28,13 @@ export type SoundStructureProps<T> = {
   renderField: (props: RenderFieldProps<T>) => React.ReactNode;
 };
 
-export default function SoundStructure<T>({
+const SoundStructure = typedMemo(<T,>({
   synths,
   structure,
   renderSynthHeader,
   renderNodeHeader,
   renderField,
-}: SoundStructureProps<T>) {
+}: SoundStructureProps<T>) => {
   const synthMap = useMemo(() => {
     const result: Record<string, SynthConfig> = {};
     return synths.reduce(
@@ -90,4 +91,6 @@ export default function SoundStructure<T>({
       })}
     </>
   );
-}
+});
+
+export default SoundStructure;
