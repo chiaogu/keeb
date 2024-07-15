@@ -1,5 +1,6 @@
-import { ModifierOp } from '@src/keyboard/keySoundModifier';
+import { getFieldRandomSeed, ModifierOp } from '@src/keyboard/keySoundModifier';
 import { KeySoundConfig, ModifierLayer, RandomizationConfig } from '@src/types';
+import { RANDOM_SEED_ID } from '@src/utils/constants';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import { v4 as uuid } from 'uuid';
@@ -113,43 +114,68 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
   );
 
   const randomizeModifier = useCallback(
-    (layerIndex: number, keys: string[], randomConfig: RandomizationConfig) => {
+    (layerIndex: number, keys: string[]) => {
       setModifiers((draft) => {
         keys.forEach((key) => {
-          const seed = Math.random();
-          Object.entries(randomConfig).forEach(([synthId, nodes]) => {
-            Object.entries(nodes).forEach(([nodeId, fields]) => {
-              Object.entries(fields).forEach(
-                ([field, { max, min, options }]) => {
-                  let modifier: ModifierOp | null = null;
-                  if (min != null && max != null) {
-                    modifier = ['add', min + seed * (max - min)];
-                  } else if (options != null) {
-                    modifier = [
-                      'set',
-                      options[Math.round(seed * (options.length - 1))],
-                    ];
-                  }
+          if (draft[layerIndex].type !== 'random') return;
 
-                  if (!modifier) return;
+          if (Object.keys(draft[layerIndex].config).length === 0) {
+            draft[layerIndex].keys = {
+              ...draft[layerIndex].keys,
+              [key]: {
+                [RANDOM_SEED_ID]: {
+                  [RANDOM_SEED_ID]: {
+                    [RANDOM_SEED_ID]: ['add', Math.random()],
+                  },
+                },
+              },
+            };
+            return;
+          }
 
-                  draft[layerIndex].keys = {
-                    ...draft[layerIndex].keys,
-                    [key]: {
-                      ...draft[layerIndex].keys[key],
-                      [synthId]: {
-                        ...draft[layerIndex].keys[key]?.[synthId],
-                        [nodeId]: {
-                          ...draft[layerIndex].keys[key]?.[synthId]?.[nodeId],
-                          [field]: modifier,
+          const seed =
+            getFieldRandomSeed(draft[layerIndex].keys[key]) ?? Math.random();
+
+          Object.entries(draft[layerIndex].config).forEach(
+            ([synthId, nodes]) => {
+              Object.entries(nodes).forEach(([nodeId, fields]) => {
+                Object.entries(fields).forEach(
+                  ([field, { max, min, options }]) => {
+                    let modifier: ModifierOp | null = null;
+                    if (min != null && max != null) {
+                      modifier = ['add', min + seed * (max - min)];
+                    } else if (options != null) {
+                      modifier = [
+                        'set',
+                        options[Math.round(seed * (options.length - 1))],
+                      ];
+                    }
+
+                    if (!modifier) return;
+
+                    draft[layerIndex].keys = {
+                      ...draft[layerIndex].keys,
+                      [key]: {
+                        ...draft[layerIndex].keys[key],
+                        [synthId]: {
+                          ...draft[layerIndex].keys[key]?.[synthId],
+                          [nodeId]: {
+                            ...draft[layerIndex].keys[key]?.[synthId]?.[nodeId],
+                            [field]: modifier,
+                          },
+                        },
+                        [RANDOM_SEED_ID]: {
+                          [RANDOM_SEED_ID]: {
+                            [RANDOM_SEED_ID]: ['add', seed],
+                          },
                         },
                       },
-                    },
-                  };
-                },
-              );
-            });
-          });
+                    };
+                  },
+                );
+              });
+            },
+          );
         });
       });
     },

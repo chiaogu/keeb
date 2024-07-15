@@ -1,3 +1,4 @@
+import { SoundStructure } from '@src/components/SoundStructureTree/SoundStructure';
 import * as Tone from '@src/tone';
 import React from 'react';
 
@@ -14,3 +15,27 @@ interface IdentityFunction {
   <T>(fn: T): T;
 }
 export const typedMemo: IdentityFunction = React.memo;
+
+export function findFirstField<T>(
+  obj: SoundStructure<T>,
+): { synthId: string; nodeId: string; field: string; value: T } | undefined {
+  const firstLayer = Object.entries(obj);
+  if (firstLayer.length === 0) return undefined;
+
+  const [synthId, nodes] = firstLayer[0];
+  const secondLayer = Object.entries(nodes);
+  if (secondLayer.length === 0) return undefined;
+
+  const [nodeId, fields] = secondLayer[0];
+  const thirdLayer = Object.entries(fields);
+  if (thirdLayer.length === 0) return undefined;
+
+  const [field, value] = thirdLayer[0];
+
+  return {
+    synthId,
+    nodeId,
+    field,
+    value,
+  };
+}

@@ -30,14 +30,14 @@ export function getDefaultModifierLayer(synth: Immutable<SynthConfig>) {
       KeyQ: {
         [synth.id]: {
           [synth.src.id]: {
-            frequency: ['add', 300],
+            frequency: ['add', -0.1],
           },
         },
       },
       KeyW: {
         [synth.id]: {
           [synth.src.id]: {
-            frequency: ['add', -300],
+            frequency: ['add', 0.1],
           },
         },
       },

@@ -4,9 +4,10 @@ import { useCallback } from 'react';
 
 type KeysSelectProps = {
   onSelect: (keys: string[]) => void;
+  className?: string;
 };
 
-export function KeysSelect({ onSelect }: KeysSelectProps) {
+export function KeysSelect({ onSelect, className }: KeysSelectProps) {
   const KeyGroupButton = useCallback(
     ({ label, keys }: { label: string; keys: string[] }) => (
       <button className='mr-5 underline' onClick={() => onSelect(keys)}>
@@ -17,8 +18,8 @@ export function KeysSelect({ onSelect }: KeysSelectProps) {
   );
 
   return (
-    <LabelField label='select'>
-      <div className='inline-block w-full'>
+    <LabelField label='keys'>
+      <div className={`inline-block w-full ${className}`}>
         <KeyGroupButton label='none' keys={[]} />
         <KeyGroupButton label='all' keys={keys.flat()} />
         {keys.map((row, index) => (

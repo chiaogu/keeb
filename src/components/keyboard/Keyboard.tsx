@@ -11,7 +11,7 @@ export type KeyboardProps = {
   onRelease?: (code: string) => void;
   onClick?: (code: string) => void;
   selectedKeys?: string[];
-  highlightedKeys?: string[];
+  highlightedKeys?: { [key: string]: number };
 };
 
 export default function Keyboard({
@@ -20,7 +20,7 @@ export default function Keyboard({
   onRelease,
   onClick,
   selectedKeys = [],
-  highlightedKeys = [],
+  highlightedKeys = {},
 }: KeyboardProps) {
   const { pressedKeys, press, release } = usePressedKeys();
 
@@ -39,22 +39,28 @@ export default function Keyboard({
               onRelease?.(key);
             };
             const pressed = pressedKeys.includes(key);
-            const highlighted = highlightedKeys.includes(key);
             const selected = selectedKeys.includes(key);
+            const bgValue =
+              highlightedKeys[key] == null ? 1 : 0.7 - highlightedKeys[key];
+            const bg = `rgb(${Array(3)
+              .fill(bgValue * 255)
+              .join(',')})`;
+            const color = bgValue > 0.5 ? 'black' : 'white';
             return (
               <div
                 key={`${key}-${keyIndex}`}
                 style={{
                   height: keySize,
                   width: `${keySize * getKeyWidth(key)}px`,
-                  border: selectedKeys.length > 0 ? undefined : '0.5px solid black',
+                  border:
+                    selectedKeys.length > 0 ? undefined : '0.5px solid black',
                 }}
               >
                 <div
                   style={{
                     filter: pressed ? 'invert(1)' : undefined,
-                    background: highlighted ? 'black' : 'white',
-                    color: highlighted ? 'white' : 'black',
+                    background: bg,
+                    color: color,
                   }}
                   className='flex size-full select-none items-center justify-center'
                   onMouseDown={handlePress}
@@ -63,7 +69,7 @@ export default function Keyboard({
                 >
                   <div
                     style={{
-                      border: selected ? `2px solid ${highlighted ? 'white' : 'black'}` : undefined,
+                      border: selected ? `2px solid ${color}` : undefined,
                     }}
                     className='flex size-4/5 items-center justify-center'
                     onMouseEnter={(e) => e.buttons > 0 && handlePress()}

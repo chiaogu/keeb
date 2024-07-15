@@ -1,10 +1,11 @@
 import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
+import { RANDOM_SEED_ID } from '@src/utils/constants';
 import { getNumberDef, removeDefault } from '@src/utils/schema';
 import { produce, WritableDraft } from 'immer';
 import { z } from 'zod';
 
-export type ModifierOp = ['add', number] | ['set', unknown];
+export type ModifierOp = ['add', number] | ['set', string];
 
 export type SynthNodeModifier = {
   [option: string]: ModifierOp;
@@ -56,4 +57,10 @@ export function getModifiedNodeData(
       },
     );
   }).data;
+}
+
+export function getFieldRandomSeed(modifier: SoundModifier) {
+  return modifier?.[RANDOM_SEED_ID]?.[RANDOM_SEED_ID]?.[
+    RANDOM_SEED_ID
+  ]?.[1] as number | undefined;
 }

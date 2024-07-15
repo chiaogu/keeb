@@ -68,7 +68,7 @@ const SoundStructure = typedMemo(<T,>({
           <div key={synthId} className='w-full'>
             {renderSynthHeader({ synth })}
             {Object.entries(nodes).map(([nodeId, fields]) => {
-              const node = nodeMap[synthId][nodeId];
+              const node = nodeMap[synthId]?.[nodeId];
               return (
                 <div
                   key={nodeId}

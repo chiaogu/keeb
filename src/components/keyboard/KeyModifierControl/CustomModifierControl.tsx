@@ -12,8 +12,10 @@ export default function CustomModifierControl() {
     useModiferContext();
   const [selectedKeys, setSelectedKeys] = useImmer<string[]>([]);
   const highlightedKeys = useMemo(() => {
-    if (!selectedLayer) return [];
-    return Object.keys(selectedLayer.keys);
+    if (!selectedLayer) return {};
+    return Object.fromEntries(
+      Object.keys(selectedLayer.keys).map((key) => [key, 1]),
+    );
   }, [selectedLayer]);
 
   const toggleKey = useCallback(
