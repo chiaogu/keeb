@@ -1,6 +1,7 @@
 import { SynthConfig, SynthNodeState } from '@src/synth';
 import { typedMemo } from '@src/utils/utils';
 import { useMemo } from 'react';
+import SectionHeader from '../shared/SectionHeader';
 
 export type SoundStructure<T> = {
   [synthId: string]: {
@@ -22,20 +23,37 @@ export type RenderFieldProps<T> = {
 export type SoundStructureProps<T> = {
   synths: SynthConfig[];
   structure: SoundStructure<T>;
-  renderSynthHeader: (props: { synth?: SynthConfig }) => React.ReactNode;
-  renderNodeHeader: (props: {
+  renderSynthHeader?: (props: { synth?: SynthConfig }) => React.ReactNode;
+  renderNodeHeader?: (props: {
     synth?: SynthConfig;
     node?: SynthNodeState;
   }) => React.ReactNode;
   renderField: (props: RenderFieldProps<T>) => React.ReactNode;
 };
 
+const SynthHeader = ({ synth }: { synth?: SynthConfig }) => (
+  <SectionHeader
+    label={synth?.name ?? 'unknown'}
+    labelClassName={synth ? undefined : 'invert px-2'}
+  />
+);
+
+function NodeHeader({ node }: { node?: SynthNodeState }): React.ReactNode {
+  return (
+    <SectionHeader
+      className='ml-[16px]'
+      labelClassName={node ? '' : 'invert px-2'}
+      label={node?.type ?? 'unknown'}
+    />
+  );
+}
+
 const SoundStructure = typedMemo(
   <T,>({
     synths,
     structure,
-    renderSynthHeader,
-    renderNodeHeader,
+    renderSynthHeader = SynthHeader,
+    renderNodeHeader = NodeHeader,
     renderField,
   }: SoundStructureProps<T>) => {
     const synthMap = useMemo(() => {

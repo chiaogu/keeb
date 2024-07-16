@@ -3,28 +3,10 @@ import SectionHeader from '@src/components/shared/SectionHeader';
 import SoundStructure, {
   RenderFieldProps,
 } from '@src/components/SoundStructureTree/SoundStructure';
-import { SynthConfig, SynthNodeState } from '@src/synth';
 import { FieldRandomConfig, RandomizationConfig } from '@src/types';
 import { useCallback } from 'react';
 import FieldRandomControl from './FieldRandomControl';
 import { useModiferContext } from './ModifierContext';
-
-const SynthHeader = ({ synth }: { synth?: SynthConfig }) => (
-  <SectionHeader
-    label={synth?.name ?? 'unknown'}
-    labelClassName={synth ? undefined : 'invert px-2'}
-  />
-);
-
-function NodeHeader({ node }: { node?: SynthNodeState }): React.ReactNode {
-  return (
-    <SectionHeader
-      className='ml-[16px]'
-      labelClassName={node ? '' : 'invert px-2'}
-      label={node?.type ?? 'unknown'}
-    />
-  );
-}
 
 export type OnClickInvalidFieldArgs = {
   synthId: string;
@@ -79,8 +61,6 @@ export default function RandomizationControl({
       <SoundStructure
         synths={synths}
         structure={radomConfig}
-        renderSynthHeader={SynthHeader}
-        renderNodeHeader={NodeHeader}
         renderField={renderField}
       />
       <SectionHeader label='new'>

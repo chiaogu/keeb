@@ -47,7 +47,9 @@ function useSelectedLayer() {
 
 export default function RandomModifierControl() {
   const [fixingField, setFixingField] = useState<OnClickInvalidFieldArgs>();
-  const [selectingField, setSelectingField] = useState<'add' | 'fix' | false>(false);
+  const [selectingField, setSelectingField] = useState<'add' | 'fix' | false>(
+    false,
+  );
   const selectedLayer = useSelectedLayer();
   const {
     randomizeModifier,
@@ -100,7 +102,7 @@ export default function RandomModifierControl() {
             randomizeModifier(selectedLayerIndex, selectedKeys);
           }}
         />
-        <SectionHeader label='randomize' className='my-4'>
+        <SectionHeader label='modifier' className='mt-4 font-bold'>
           <IconButton
             icon='ifl'
             onClick={() => {
@@ -120,7 +122,20 @@ export default function RandomModifierControl() {
             setFixingField(args);
           }}
         />
-        {selectingField && <SoundFieldPicker />}
+        {selectingField && (
+          <>
+            <SectionHeader label='select a field' className='mt-4 font-bold'>
+              <IconButton
+                icon='close'
+                onClick={() => {
+                  setSelectingField(false);
+                  setFixingField(undefined);
+                }}
+              />
+            </SectionHeader>
+            <SoundFieldPicker />
+          </>
+        )}
       </div>
       {/* TODO: Remove */}
       <KeysDebug

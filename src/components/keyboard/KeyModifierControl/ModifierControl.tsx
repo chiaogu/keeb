@@ -1,25 +1,13 @@
 import IconButton from '@src/components/shared/IconButton';
-import ReadOnly from '@src/components/shared/ReadOnly';
-import SectionHeader from '@src/components/shared/SectionHeader';
 import SoundStructure, {
   SoundStructureProps,
 } from '@src/components/SoundStructureTree/SoundStructure';
 import { UpdateModifierArgs } from '@src/hooks/useKeyboardSound';
 import { ModifierOp, SoundModifier } from '@src/keyboard/keySoundModifier';
-import { SynthConfig, SynthNodeState } from '@src/synth';
+import { SynthConfig } from '@src/synth';
 import { memo, useCallback } from 'react';
 import FieldModifier from './FieldModifer';
 import { useModiferContext } from './ModifierContext';
-
-const SynthHeader = ({ synth }: { synth?: SynthConfig }) => (
-  <SectionHeader label={synth?.name ?? 'unknown'} />
-);
-
-function NodeHeader({ node }: { node?: SynthNodeState }): React.ReactNode {
-  return (
-    <ReadOnly indent={2} label={node?.type ?? 'unknown'} value='' />
-  );
-}
 
 type ModifierControlProps = {
   modifier: SoundModifier;
@@ -41,8 +29,8 @@ const InnerModifierControl = memo(function ModifierControl({
           onChange={(value) => {
             onChange?.({
               ...props,
-              synthId: props.synth.id,
-              nodeId: props.node.id,
+              synthId: props.synthId,
+              nodeId: props.nodeId,
               value,
             });
           }}
@@ -56,8 +44,6 @@ const InnerModifierControl = memo(function ModifierControl({
       <SoundStructure
         synths={synths}
         structure={modifier}
-        renderSynthHeader={SynthHeader}
-        renderNodeHeader={NodeHeader}
         renderField={renderField}
       />
       <IconButton
