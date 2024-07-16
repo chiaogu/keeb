@@ -5,6 +5,7 @@ type SectionHeaderProps = {
   className?: string;
   children?: ReactNode;
   onLabelChange?: (value: string) => void;
+  labelClassName?: string;
 };
 
 export default function SectionHeader({
@@ -12,13 +13,16 @@ export default function SectionHeader({
   className,
   children,
   onLabelChange,
+  labelClassName,
 }: SectionHeaderProps) {
   return (
     <div className={`flex w-full items-end justify-between ${className}`}>
       {onLabelChange ? (
         <input value={label} onChange={(e) => onLabelChange(e.target.value)} />
       ) : (
-        <label className='shrink-0'>{label}</label>
+        <label className={`shrink-0 bg-white ${labelClassName}`}>
+          {label}
+        </label>
       )}
       <div className='flex space-x-4'>{children}</div>
     </div>

@@ -7,17 +7,17 @@ import SoundStructure, {
 import { UpdateModifierArgs } from '@src/hooks/useKeyboardSound';
 import { ModifierOp, SoundModifier } from '@src/keyboard/keySoundModifier';
 import { SynthConfig, SynthNodeState } from '@src/synth';
-import { memo, useCallback, useEffect } from 'react';
+import { memo, useCallback } from 'react';
 import FieldModifier from './FieldModifer';
 import { useModiferContext } from './ModifierContext';
 
 const SynthHeader = ({ synth }: { synth?: SynthConfig }) => (
-  <SectionHeader label={synth?.name ?? 'missing sound layer'} />
+  <SectionHeader label={synth?.name ?? 'unknown'} />
 );
 
 function NodeHeader({ node }: { node?: SynthNodeState }): React.ReactNode {
   return (
-    <ReadOnly indent={2} label={node?.type ?? 'missing synth node'} value='' />
+    <ReadOnly indent={2} label={node?.type ?? 'unknown'} value='' />
   );
 }
 

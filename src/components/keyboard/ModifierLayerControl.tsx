@@ -56,7 +56,7 @@ export default function ModifierLayerControl() {
   return (
     <>
       <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
-        <SectionHeader label='modifier' className='mb-4 font-bold'>
+        <SectionHeader label={`${soundName} modifier`} className='mb-4 font-bold'>
           <IconButton icon='upload' onClick={loadModifiers} />
           <IconButton icon='download' onClick={() => downloadModifierLayers(`${soundName}-modifier`, modifiers)} />
         </SectionHeader>

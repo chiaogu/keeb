@@ -6,12 +6,14 @@ import { FieldRandomConfig } from '@src/types';
 import { removeDefault } from '@src/utils/schema';
 import { formatModifierValue } from '@src/utils/utils';
 import { z } from 'zod';
+import InvalidFieldModifier from './InvalidFieldModifier';
 
 type FieldRandomControlProps = {
   field: string;
   randomConfig: FieldRandomConfig;
-  node: SynthNodeState;
+  node?: SynthNodeState;
   onChange: (randomConfig: FieldRandomConfig) => void;
+  onClickInvalidField: () => void;
 };
 
 export default function FieldRandomControl({
@@ -19,11 +21,12 @@ export default function FieldRandomControl({
   randomConfig,
   node,
   onChange,
+  onClickInvalidField,
 }: FieldRandomControlProps) {
   const valid = node?.data?.[field] != undefined;
 
   if (!valid) {
-    return <ReadOnly key={field} label={`[invalid] ${field}`} value='' />;
+    return <InvalidFieldModifier field={field} onClick={onClickInvalidField}/>;
   }
 
   const schema = removeDefault(

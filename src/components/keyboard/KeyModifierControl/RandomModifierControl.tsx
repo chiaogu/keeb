@@ -4,12 +4,15 @@ import SectionHeader from '@src/components/shared/SectionHeader';
 import { keys } from '@src/keyboard/keys';
 import { getFieldRandomSeed } from '@src/keyboard/keySoundModifier';
 import { ModifierLayer, RandomizationConfig } from '@src/types';
-import { Fragment, memo, useCallback, useMemo } from 'react';
+import { Fragment, memo, useCallback, useMemo, useState } from 'react';
 import { KeysSelect } from './KeysSelect';
 import { useModiferContext } from './ModifierContext';
 import ModifierControl from './ModifierControl';
 import ModifierKeyboard from './ModifierKeyboard';
-import RandomizationControl from './RandomizationControl';
+import RandomizationControl, {
+  OnClickInvalidFieldArgs,
+} from './RandomizationControl';
+import SoundFieldPicker from './SoundFieldPicker';
 
 const KeysDebug = memo(
   ({
@@ -43,6 +46,8 @@ function useSelectedLayer() {
 }
 
 export default function RandomModifierControl() {
+  const [fixingField, setFixingField] = useState<OnClickInvalidFieldArgs>();
+  const [selectingField, setSelectingField] = useState<'add' | 'fix' | false>(false);
   const selectedLayer = useSelectedLayer();
   const {
     randomizeModifier,
@@ -110,7 +115,12 @@ export default function RandomModifierControl() {
         <RandomizationControl
           radomConfig={selectedLayer.config}
           onChange={handleConfigChange}
+          onClickInvalidField={(args) => {
+            setSelectingField('fix');
+            setFixingField(args);
+          }}
         />
+        {selectingField && <SoundFieldPicker />}
       </div>
       {/* TODO: Remove */}
       <KeysDebug

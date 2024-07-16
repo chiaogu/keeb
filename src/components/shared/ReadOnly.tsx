@@ -2,7 +2,7 @@ import LabelField, { LabelFieldProps } from './LabelField';
 
 type ReadOnlyProps = {
   label: string;
-  value?: string;
+  value?: React.ReactNode;
 } & Omit<LabelFieldProps, 'children'>;
 
 export default function ReadOnly({
