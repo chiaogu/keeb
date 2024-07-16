@@ -1,5 +1,4 @@
 import IconButton from '@src/components/shared/IconButton';
-import ReadOnly from '@src/components/shared/ReadOnly';
 import SectionHeader from '@src/components/shared/SectionHeader';
 import SoundStructure, {
   RenderFieldProps,
@@ -16,7 +15,10 @@ const SynthHeader = ({ synth }: { synth?: SynthConfig }) => (
 
 function NodeHeader({ node }: { node?: SynthNodeState }): React.ReactNode {
   return (
-    <ReadOnly indent={2} label={node?.type ?? 'missing synth node'} value='' />
+    <SectionHeader
+      className='ml-[16px]'
+      label={node?.type ?? 'missing synth node'}
+    />
   );
 }
 

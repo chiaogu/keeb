@@ -4,6 +4,7 @@ import { ModifierOp } from '@src/keyboard/keySoundModifier';
 import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
 import { removeDefault } from '@src/utils/schema';
+import { formatModifierValue } from '@src/utils/utils';
 import { z } from 'zod';
 
 type FieldModifierProps = {
@@ -26,7 +27,7 @@ export default function FieldModifier({
       <ReadOnly
         key={field}
         label={`[invalid] ${field}`}
-        value={`${operation} ${value}`}
+        value={formatModifierValue(value)}
       />
     );
   }
@@ -43,7 +44,7 @@ export default function FieldModifier({
         onChange={onChange}
         min={-0.5}
         max={0.5}
-        renderValue={(v) => `${((v - 0.5) * 100).toFixed()}%`}
+        renderValue={formatModifierValue}
       />
     );
   }

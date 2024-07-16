@@ -39,3 +39,11 @@ export function findFirstField<T>(
     value,
   };
 }
+
+export function formatModifierValue(value: unknown) {
+  if (typeof value === 'number') {
+    return `${((value - 0.5) * 100).toFixed()}%`;
+  } else {
+    value;
+  }
+}

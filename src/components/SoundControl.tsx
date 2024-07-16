@@ -4,7 +4,7 @@ import { downloadSound } from '@src/utils/file';
 import IconButton from './shared/IconButton';
 import SectionHeader from './shared/SectionHeader';
 import SynthControl from './synth/SynthControl';
-import useUploadSound from '@src/hooks/useUplodaFile';
+import useUplodaFile from '@src/hooks/useUplodaFile';
 
 type SoundControlProps = {
   sound: SoundConfig;
@@ -31,7 +31,8 @@ export default function SoundControl({
   onLoadSound,
   onSynthNameChange,
 }: SoundControlProps) {
-  const { load } = useUploadSound(onLoadSound);
+  // TODO: Validation
+  const { load } = useUplodaFile(onLoadSound);
   
   return (
     <div className='flex w-full max-w-[500px] flex-col items-center space-y-5'>

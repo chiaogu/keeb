@@ -1,4 +1,4 @@
-import { SoundConfig } from '@src/types';
+import { ModifierLayer, SoundConfig } from '@src/types';
 
 function download(fileName: string, data: unknown) {
   const jsonData = JSON.stringify(data, null, 2);
@@ -15,6 +15,13 @@ function download(fileName: string, data: unknown) {
 
 export function downloadSound(sound: SoundConfig) {
   download(`${sound.name}.json`, sound);
+}
+
+export function downloadModifierLayers(
+  name: string,
+  modifiers: ModifierLayer[],
+) {
+  download(`${name}.json`, modifiers);
 }
 
 export function loadFile(): Promise<unknown> {

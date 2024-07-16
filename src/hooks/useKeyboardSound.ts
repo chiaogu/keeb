@@ -6,6 +6,7 @@ import { useImmer } from 'use-immer';
 import { v4 as uuid } from 'uuid';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
+import useUplodaFile from './useUplodaFile';
 
 export type UpdateModifierArgs = {
   layerIndex: number;
@@ -20,6 +21,8 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
   const soundCache = useSoundCache();
   const { synths, states, ...rest } = useSound(keySound.config);
   const [modifiers, setModifiers] = useImmer(keySound.modifiers);
+  // TODO: Validation
+  const { load } = useUplodaFile(setModifiers);
 
   useEffect(() => {
     soundCache.clear();
@@ -202,6 +205,7 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
     removeModifier,
     randomizeModifier,
     updateRandomConfig,
+    loadModifiers: load,
   };
 }
 

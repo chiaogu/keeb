@@ -4,6 +4,7 @@ import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
 import { FieldRandomConfig } from '@src/types';
 import { removeDefault } from '@src/utils/schema';
+import { formatModifierValue } from '@src/utils/utils';
 import { z } from 'zod';
 
 type FieldRandomControlProps = {
@@ -41,7 +42,7 @@ export default function FieldRandomControl({
           onChange={(v) => onChange({ max, min: Math.min(v, max) })}
           min={-0.5}
           max={0.5}
-          renderValue={(v) => `${((v - 0.5) * 100).toFixed()}%`}
+          renderValue={formatModifierValue}
         />
         <Slider
           label='max'
@@ -49,7 +50,7 @@ export default function FieldRandomControl({
           onChange={(v) => onChange({ min, max: Math.max(v, min) })}
           min={-0.5}
           max={0.5}
-          renderValue={(v) => `${((v - 0.5) * 100).toFixed()}%`}
+          renderValue={formatModifierValue}
         />
       </div>
     );

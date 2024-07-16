@@ -1,8 +1,7 @@
-import { SoundConfig } from '@src/types';
 import { loadFile } from '@src/utils/file';
 import { useCallback, useMemo, useState } from 'react';
 
-export default function useUploadSound(onLoad: (sound: SoundConfig) => void) {
+export default function useUplodaFile<T>(onLoad: (sound: T) => void) {
   const [loading, setLoading] = useState(false);
 
   const load = useCallback(async () => {
@@ -11,7 +10,7 @@ export default function useUploadSound(onLoad: (sound: SoundConfig) => void) {
     setLoading(false);
 
     // TODO: validate
-    onLoad(file as SoundConfig);
+    onLoad(file as T);
   }, [onLoad]);
 
   return useMemo(() => ({ loading, load }), [load, loading]);

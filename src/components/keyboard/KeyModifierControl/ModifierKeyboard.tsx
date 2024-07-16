@@ -5,6 +5,7 @@ export default function ModifierKeyboard(props: KeyboardProps) {
   const { triggerUp, triggerDown } = useModiferContext();
   return (
     <Keyboard
+      {...props}
       onRelease={(key) => {
         triggerUp(key);
         props.onRelease?.(key);
@@ -13,7 +14,6 @@ export default function ModifierKeyboard(props: KeyboardProps) {
         triggerDown(key);
         props.onPress?.(key);
       }}
-      {...props}
     />
   );
 }

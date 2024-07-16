@@ -5,8 +5,9 @@ import RadioGroup from '../shared/RadioGroup';
 import ReadOnly from '../shared/ReadOnly';
 import SectionHeader from '../shared/SectionHeader';
 import { useModiferContext } from './KeyModifierControl/ModifierContext';
+import { downloadModifierLayers } from '@src/utils/file';
 
-const layerTypes: ModifierLayerType[] = ['custom', 'batch', 'random'];
+const layerTypes: ModifierLayerType[] = ['custom', 'random'];
 
 function AddLayer({
   onSelect,
@@ -39,6 +40,8 @@ export default function ModifierLayerControl() {
     addModifierLayer,
     removeModifierLayer,
     updateModiferLayer,
+    soundName,
+    loadModifiers,
   } = useModiferContext();
   const layers = useMemo(
     () => modifiers.map(({ id, name }) => ({ label: name, key: id })),
@@ -53,6 +56,10 @@ export default function ModifierLayerControl() {
   return (
     <>
       <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
+        <SectionHeader label='modifier' className='mb-4 font-bold'>
+          <IconButton icon='upload' onClick={loadModifiers} />
+          <IconButton icon='download' onClick={() => downloadModifierLayers(`${soundName}-modifier`, modifiers)} />
+        </SectionHeader>
         <RadioGroup
           label='layers'
           value={selectedLayer?.id}
@@ -61,7 +68,7 @@ export default function ModifierLayerControl() {
           }
           options={layers}
         />
-        <SectionHeader className='mt-4' label='new'>
+        <SectionHeader label='new'>
           <IconButton
             icon={addingLayer ? 'close' : 'add'}
             onClick={() => setAddingLayer(!addingLayer)}

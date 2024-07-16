@@ -1,9 +1,9 @@
 import { Keyboard, KeyEvent } from '@src/hooks/useKeyboard';
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
 function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
   const {
-    sound: { synths },
+    sound: { synths, name },
     modifiers,
     addModifierLayer,
     removeModifierLayer,
@@ -12,6 +12,7 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     removeModifier,
     randomizeModifier,
     updateRandomConfig,
+    loadModifiers,
   } = useMemo(
     () => (keyEvent === 'down' ? keyboard.down : keyboard.up),
     [keyEvent, keyboard],
@@ -21,8 +22,9 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     () => modifiers[selectedLayerIndex],
     [modifiers, selectedLayerIndex],
   );
-
+  
   return {
+    soundName: name,
     synths,
     modifiers,
 
@@ -36,9 +38,11 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     },
     removeModifierLayer(index: number) {
       removeModifierLayer(index);
-      setSelectedLayerIndex(Math.min(index, modifiers.length - 2));
+      setSelectedLayerIndex(Math.max(Math.min(index, modifiers.length - 2), 0));
     },
     updateModiferLayer,
+    loadModifiers,
+    
     updateModifier,
     removeModifier,
     randomizeModifier,
