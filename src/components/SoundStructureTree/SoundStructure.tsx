@@ -3,10 +3,12 @@ import { typedMemo } from '@src/utils/utils';
 import { useMemo } from 'react';
 import SectionHeader from '../shared/SectionHeader';
 
+export type SoundStructureField<T> = T | { [nestedField: string]: T };
+
 export type SoundStructure<T> = {
   [synthId: string]: {
     [nodId: string]: {
-      [field: string]: T;
+      [field: string]: SoundStructureField<T>;
     };
   };
 };
@@ -14,10 +16,14 @@ export type SoundStructure<T> = {
 export type RenderFieldProps<T> = {
   synth?: SynthConfig;
   node?: SynthNodeState;
-  field: string;
+  fieldPath: string[];
   value: T;
   synthId: string;
   nodeId: string;
+};
+
+type RenderNestedFieldProps<T> = Omit<RenderFieldProps<T>, 'value'> & {
+  value: SoundStructureField<T>;
 };
 
 export type SoundStructureProps<T> = {
@@ -29,6 +35,7 @@ export type SoundStructureProps<T> = {
     node?: SynthNodeState;
   }) => React.ReactNode;
   renderField: (props: RenderFieldProps<T>) => React.ReactNode;
+  shouldRenderField: (field: SoundStructureField<T>) => field is T;
 };
 
 const SynthHeader = ({ synth }: { synth?: SynthConfig }) => (
@@ -55,6 +62,7 @@ const SoundStructure = typedMemo(
     renderSynthHeader = SynthHeader,
     renderNodeHeader = NodeHeader,
     renderField,
+    shouldRenderField,
   }: SoundStructureProps<T>) => {
     const synthMap = useMemo(() => {
       const result: Record<string, SynthConfig> = {};
@@ -81,6 +89,48 @@ const SoundStructure = typedMemo(
       );
     }, [synths]);
 
+    const renderNestedField = useMemo(() => {
+      const render = (
+        props: RenderNestedFieldProps<T> & {
+          level?: number;
+        },
+      ) => {
+        const { fieldPath, value, level = 0, node } = props;
+        return (
+          <div
+            key={fieldPath.join()}
+            style={{ paddingLeft: level * 16 }}
+            className={
+              level ? 'border-l-2 border-dotted border-l-black' : undefined
+            }
+          >
+            {shouldRenderField(value) && (
+              <>{renderField({ ...props, value })}</>
+            )}
+            {!shouldRenderField(value) && (
+              <>
+                <SectionHeader
+                  labelClassName={node ? '' : 'invert px-2'}
+                  label={fieldPath[fieldPath.length - 1]}
+                />
+                {
+                  Object.entries(value).map(([field, v]) =>
+                    render({
+                      ...props,
+                      value: v,
+                      level: level + 1,
+                      fieldPath: [...fieldPath, field],
+                    }),
+                  )
+                }
+              </>
+            )}
+          </div>
+        );
+      };
+      return render;
+    }, [renderField, shouldRenderField]);
+
     return (
       <>
         {Object.entries(structure).map(([synthId, nodes]) => {
@@ -101,10 +151,10 @@ const SoundStructure = typedMemo(
                         key={`${synthId}-${nodeId}-${field}`}
                         className='ml-[16px] border-l-2 border-dotted border-l-black pl-[14px]'
                       >
-                        {renderField({
+                        {renderNestedField({
                           synth,
                           node,
-                          field,
+                          fieldPath: [field],
                           value,
                           synthId,
                           nodeId,

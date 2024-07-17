@@ -2,22 +2,32 @@ import IconButton from '@src/components/shared/IconButton';
 import SectionHeader from '@src/components/shared/SectionHeader';
 import SoundStructure, {
   RenderFieldProps,
+  SoundStructureField,
 } from '@src/components/SoundStructureTree/SoundStructure';
 import { FieldRandomConfig, RandomizationConfig } from '@src/types';
 import { useCallback } from 'react';
 import FieldRandomControl from './FieldRandomControl';
 import { useModiferContext } from './ModifierContext';
 
-export type OnClickInvalidFieldArgs = {
+function shouldRenderField(
+  field: SoundStructureField<FieldRandomConfig>,
+): field is FieldRandomConfig {
+  return (
+    typeof field === 'object' &&
+    (field.max != null || field.min != null || field.options != null)
+  );
+}
+
+export type SoundFieldPath = {
   synthId: string;
   nodeId: string;
-  field: string;
+  fieldPath: string[];
 };
 
 type RandomizationControlProps = {
   radomConfig: RandomizationConfig;
   onChange: (randomConfig: RandomizationConfig) => void;
-  onClickInvalidField: (args: OnClickInvalidFieldArgs) => void;
+  onClickInvalidField: (args: SoundFieldPath) => void;
 };
 
 export default function RandomizationControl({
@@ -29,7 +39,7 @@ export default function RandomizationControl({
 
   const renderField = useCallback(
     ({
-      field,
+      fieldPath,
       value,
       node,
       synthId,
@@ -37,19 +47,19 @@ export default function RandomizationControl({
     }: RenderFieldProps<FieldRandomConfig>) => (
       <FieldRandomControl
         node={node}
-        field={field}
+        field={fieldPath[fieldPath.length - 1]}
         randomConfig={value}
         onChange={(config) => {
           onChange({
             [synthId]: {
               [nodeId]: {
-                [field]: config,
+                [fieldPath[fieldPath.length - 1]]: config,
               },
             },
           });
         }}
         onClickInvalidField={() =>
-          onClickInvalidField({ synthId, nodeId, field })
+          onClickInvalidField({ synthId, nodeId, fieldPath })
         }
       />
     ),
@@ -62,6 +72,7 @@ export default function RandomizationControl({
         synths={synths}
         structure={radomConfig}
         renderField={renderField}
+        shouldRenderField={shouldRenderField}
       />
       <SectionHeader label='new'>
         <IconButton

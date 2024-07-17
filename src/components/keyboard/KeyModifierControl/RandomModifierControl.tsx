@@ -10,7 +10,7 @@ import { useModiferContext } from './ModifierContext';
 import ModifierControl from './ModifierControl';
 import ModifierKeyboard from './ModifierKeyboard';
 import RandomizationControl, {
-  OnClickInvalidFieldArgs,
+  SoundFieldPath,
 } from './RandomizationControl';
 import SoundFieldPicker from './SoundFieldPicker';
 
@@ -46,7 +46,7 @@ function useSelectedLayer() {
 }
 
 export default function RandomModifierControl() {
-  const [fixingField, setFixingField] = useState<OnClickInvalidFieldArgs>();
+  const [fixingField, setFixingField] = useState<SoundFieldPath>();
   const [selectingField, setSelectingField] = useState<'add' | 'fix' | false>(
     false,
   );
@@ -56,6 +56,7 @@ export default function RandomModifierControl() {
     selectedLayerIndex,
     updateRandomConfig,
     removeModifier,
+    soundName,
   } = useModiferContext();
 
   const modifiedKeys = useMemo(
@@ -124,7 +125,7 @@ export default function RandomModifierControl() {
         />
         {selectingField && (
           <>
-            <SectionHeader label='select a field' className='mt-4 font-bold'>
+            <SectionHeader label={soundName} className='mt-4 font-bold'>
               <IconButton
                 icon='close'
                 onClick={() => {
@@ -133,7 +134,7 @@ export default function RandomModifierControl() {
                 }}
               />
             </SectionHeader>
-            <SoundFieldPicker />
+            <SoundFieldPicker onSelect={(a) => console.log(a)}/>
           </>
         )}
       </div>

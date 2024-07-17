@@ -1,26 +1,36 @@
-import SoundStructure from '@src/components/SoundStructureTree/SoundStructure';
+import SoundStructure, {
+  RenderFieldProps,
+  SoundStructureField,
+} from '@src/components/SoundStructureTree/SoundStructure';
 import { useMemo } from 'react';
 import { useModiferContext } from './ModifierContext';
 
-export default function SoundFieldPicker() {
+function shouldRenderField(
+  field: SoundStructureField<unknown>,
+): field is unknown {
+  return typeof field !== 'object';
+}
+
+type SoundFieldPickerProps = {
+  onSelect: (args: {
+    synthId: string;
+    nodeId: string;
+    fieldPath: string[];
+  }) => void;
+};
+
+export default function SoundFieldPicker({ onSelect }: SoundFieldPickerProps) {
   const { synths } = useModiferContext();
 
-  // TODO: Filter based on field name
   const nodeMap = useMemo(() => {
-    const result: Record<string, Record<string, Record<string, null>>> = {};
+    const result: Record<string, Record<string, Record<string, unknown>>> = {};
     return synths.reduce(
       (acc, synth) => ({
         ...acc,
         [synth.id]: [synth.src, ...synth.fxs].reduce(
           (nodeAcc, node) => ({
             ...nodeAcc,
-            [node.id]: Object.keys(node.data).reduce(
-              (fieldAcc, field) => ({
-                ...fieldAcc,
-                [field]: null,
-              }),
-              {},
-            ),
+            [node.id]: node.data,
           }),
           {},
         ),
@@ -29,15 +39,34 @@ export default function SoundFieldPicker() {
     );
   }, [synths]);
 
+  const renderField = useMemo(() => {
+    const render = (
+      props: RenderFieldProps<unknown> & {
+        level?: number;
+        path?: string[];
+      },
+    ) => {
+      const { fieldPath, synthId, nodeId } = props;
+      return (
+        <button
+          className='mr-5 underline'
+          onClick={() =>
+            onSelect({ synthId, nodeId, fieldPath })
+          }
+        >
+          {fieldPath[fieldPath.length - 1]}
+        </button>
+      );
+    };
+    return render;
+  }, [onSelect]);
+
   return (
     <SoundStructure
       synths={synths}
       structure={nodeMap}
-      renderField={({ field }) => (
-        <button className='mr-5 underline' onClick={() => {}}>
-          {field}
-        </button>
-      )}
+      renderField={renderField}
+      shouldRenderField={shouldRenderField}
     />
   );
 }

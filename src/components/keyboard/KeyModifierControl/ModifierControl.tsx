@@ -1,5 +1,6 @@
 import IconButton from '@src/components/shared/IconButton';
 import SoundStructure, {
+  SoundStructureField,
   SoundStructureProps,
 } from '@src/components/SoundStructureTree/SoundStructure';
 import { UpdateModifierArgs } from '@src/hooks/useKeyboardSound';
@@ -8,6 +9,12 @@ import { SynthConfig } from '@src/synth';
 import { memo, useCallback } from 'react';
 import FieldModifier from './FieldModifer';
 import { useModiferContext } from './ModifierContext';
+
+function shouldRenderField(
+  field: SoundStructureField<ModifierOp>,
+): field is ModifierOp {
+  return Array.isArray(field) && field.length === 2;
+}
 
 type ModifierControlProps = {
   modifier: SoundModifier;
@@ -21,21 +28,23 @@ const InnerModifierControl = memo(function ModifierControl({
 }: ModifierControlProps & { synths: SynthConfig[] }) {
   const renderField: SoundStructureProps<ModifierOp>['renderField'] =
     useCallback(
-      (props) => (
-        <FieldModifier
-          field={props.field}
-          modifier={props.value}
-          node={props.node}
-          onChange={(value) => {
-            onChange?.({
-              ...props,
-              synthId: props.synthId,
-              nodeId: props.nodeId,
-              value,
-            });
-          }}
-        />
-      ),
+      ({ node, fieldPath, value, synthId, nodeId }) => {
+        return (
+          <FieldModifier
+            field={fieldPath[fieldPath.length - 1]}
+            modifier={value}
+            node={node}
+            onChange={(value) => {
+              onChange?.({
+                synthId,
+                nodeId,
+                value,
+                field: fieldPath[fieldPath.length - 1],
+              });
+            }}
+          />
+        );
+      },
       [onChange],
     );
 
@@ -45,6 +54,7 @@ const InnerModifierControl = memo(function ModifierControl({
         synths={synths}
         structure={modifier}
         renderField={renderField}
+        shouldRenderField={shouldRenderField}
       />
       <IconButton
         className='mb-4 ml-[-11px] self-start'
