@@ -1,5 +1,7 @@
+import { SoundFieldPath } from '@src/components/keyboard/KeyModifierControl/RandomizationControl';
 import { SoundStructure } from '@src/components/SoundStructureTree/SoundStructure';
 import * as Tone from '@src/tone';
+import { get, isEmpty, unset } from 'lodash';
 import React from 'react';
 
 export function frequencyToHertz(value: Tone.Unit.Frequency): number {
@@ -16,34 +18,39 @@ interface IdentityFunction {
 }
 export const typedMemo: IdentityFunction = React.memo;
 
-export function findFirstField<T>(
-  obj: SoundStructure<T>,
-): { synthId: string; nodeId: string; field: string; value: T } | undefined {
-  const firstLayer = Object.entries(obj);
-  if (firstLayer.length === 0) return undefined;
-
-  const [synthId, nodes] = firstLayer[0];
-  const secondLayer = Object.entries(nodes);
-  if (secondLayer.length === 0) return undefined;
-
-  const [nodeId, fields] = secondLayer[0];
-  const thirdLayer = Object.entries(fields);
-  if (thirdLayer.length === 0) return undefined;
-
-  const [field, value] = thirdLayer[0];
-
-  return {
-    synthId,
-    nodeId,
-    field,
-    value,
-  };
-}
-
 export function formatModifierValue(value: unknown) {
   if (typeof value === 'number') {
     return `${((value - 0.5) * 100).toFixed()}%`;
   } else {
     value;
   }
+}
+
+export function getSoundStructureFieldPath({
+  synthId,
+  nodeId,
+  fieldPath,
+}: SoundFieldPath) {
+  return [synthId, nodeId, ...fieldPath];
+}
+
+export function getSoundStructureValue<T>(
+  structure: SoundStructure<T>,
+  field: SoundFieldPath,
+) {
+  return get(structure, getSoundStructureFieldPath(field));
+}
+
+export function removeSoundStructureField<T>(
+  structure: SoundStructure<T>,
+  field: SoundFieldPath,
+) {
+  const path = getSoundStructureFieldPath(field);
+  
+  do {
+    unset(structure, path);
+    path.pop();
+  } while (path.length > 0 && isEmpty(get(structure, path)));
+
+  return structure;
 }

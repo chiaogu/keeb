@@ -9,9 +9,7 @@ import { KeysSelect } from './KeysSelect';
 import { useModiferContext } from './ModifierContext';
 import ModifierControl from './ModifierControl';
 import ModifierKeyboard from './ModifierKeyboard';
-import RandomizationControl, {
-  SoundFieldPath,
-} from './RandomizationControl';
+import RandomizationControl, { SoundFieldPath } from './RandomizationControl';
 import SoundFieldPicker from './SoundFieldPicker';
 
 const KeysDebug = memo(
@@ -57,6 +55,7 @@ export default function RandomModifierControl() {
     updateRandomConfig,
     removeModifier,
     soundName,
+    fixRandomConfig,
   } = useModiferContext();
 
   const modifiedKeys = useMemo(
@@ -87,7 +86,7 @@ export default function RandomModifierControl() {
 
   const handleConfigChange = useCallback(
     (config: RandomizationConfig) => {
-      updateRandomConfig(selectedLayerIndex, config);
+      updateRandomConfig(selectedLayerIndex, () => config);
       randomizeAfterConfigChange();
     },
     [randomizeAfterConfigChange, selectedLayerIndex, updateRandomConfig],
@@ -134,15 +133,20 @@ export default function RandomModifierControl() {
                 }}
               />
             </SectionHeader>
-            <SoundFieldPicker onSelect={(a) => console.log(a)}/>
+            <SoundFieldPicker
+              onSelect={(newField) => {
+                fixingField && fixRandomConfig(fixingField, newField);
+                setSelectingField(false);
+                setFixingField(undefined);
+              }}
+            />
           </>
         )}
       </div>
-      {/* TODO: Remove */}
-      <KeysDebug
+      {/* <KeysDebug
         modifiedKeys={modifiedKeys}
         modifierKeys={selectedLayer.keys}
-      />
+      /> */}
     </>
   );
 }

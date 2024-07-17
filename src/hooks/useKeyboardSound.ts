@@ -139,6 +139,7 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
           const seed =
             getFieldRandomSeed(draft[layerIndex].keys[key]) ?? Math.random();
 
+          // TODO: Support nested fields
           Object.entries(draft[layerIndex].config).forEach(
             ([synthId, nodes]) => {
               Object.entries(nodes).forEach(([nodeId, fields]) => {
@@ -186,10 +187,13 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
   );
 
   const updateRandomConfig = useCallback(
-    (layerIndex: number, config: RandomizationConfig) => {
+    (
+      layerIndex: number,
+      updater: (config: RandomizationConfig) => RandomizationConfig,
+    ) => {
       setModifiers((draft) => {
         if (draft[layerIndex].type !== 'random') return;
-        draft[layerIndex].config = config;
+        draft[layerIndex].config = updater(draft[layerIndex].config);
       });
     },
     [setModifiers],

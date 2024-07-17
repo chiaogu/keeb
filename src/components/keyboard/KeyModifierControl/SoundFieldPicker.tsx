@@ -40,19 +40,12 @@ export default function SoundFieldPicker({ onSelect }: SoundFieldPickerProps) {
   }, [synths]);
 
   const renderField = useMemo(() => {
-    const render = (
-      props: RenderFieldProps<unknown> & {
-        level?: number;
-        path?: string[];
-      },
-    ) => {
+    const render = (props: RenderFieldProps<unknown>) => {
       const { fieldPath, synthId, nodeId } = props;
       return (
         <button
           className='mr-5 underline'
-          onClick={() =>
-            onSelect({ synthId, nodeId, fieldPath })
-          }
+          onClick={() => onSelect({ synthId, nodeId, fieldPath })}
         >
           {fieldPath[fieldPath.length - 1]}
         </button>

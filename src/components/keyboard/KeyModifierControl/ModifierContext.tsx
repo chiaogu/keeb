@@ -1,5 +1,12 @@
 import { Keyboard, KeyEvent } from '@src/hooks/useKeyboard';
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import {
+  getSoundStructureFieldPath,
+  getSoundStructureValue,
+  removeSoundStructureField,
+} from '@src/utils/utils';
+import { isEmpty, set, unset } from 'lodash';
+import { createContext, useContext, useMemo, useState } from 'react';
+import { SoundFieldPath } from './RandomizationControl';
 
 function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
   const {
@@ -22,7 +29,7 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     () => modifiers[selectedLayerIndex],
     [modifiers, selectedLayerIndex],
   );
-  
+
   return {
     soundName: name,
     synths,
@@ -42,11 +49,20 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     },
     updateModiferLayer,
     loadModifiers,
-    
+
     updateModifier,
     removeModifier,
     randomizeModifier,
     updateRandomConfig,
+    fixRandomConfig(oldField: SoundFieldPath, newField: SoundFieldPath) {
+      if (selectedLayer.type !== 'random') return;
+      updateRandomConfig(selectedLayerIndex, (draft) => {
+        const value = getSoundStructureValue(selectedLayer.config, oldField);
+        set(draft, getSoundStructureFieldPath(newField), value);
+        removeSoundStructureField(draft, oldField);
+        return draft;
+      });
+    },
 
     triggerUp(key: string) {
       keyboard.up.sound.trigger(key);
