@@ -7,6 +7,8 @@ import { removeDefault } from '@src/utils/schema';
 import { formatModifierValue } from '@src/utils/utils';
 import { z } from 'zod';
 import InvalidFieldModifier from './InvalidFieldModifier';
+import SectionHeader from '@src/components/shared/SectionHeader';
+import IconButton from '@src/components/shared/IconButton';
 
 type FieldRandomControlProps = {
   field: string;
@@ -26,7 +28,7 @@ export default function FieldRandomControl({
   const valid = node?.data?.[field] != undefined;
 
   if (!valid) {
-    return <InvalidFieldModifier field={field} onClick={onClickInvalidField}/>;
+    return <InvalidFieldModifier field={field} onClick={onClickInvalidField} />;
   }
 
   const schema = removeDefault(
@@ -37,25 +39,29 @@ export default function FieldRandomControl({
     const min = randomConfig.min ?? -0.3;
     const max = randomConfig.max ?? 0.3;
     return (
-      <div className='flex w-full flex-col items-center'>
-        <ReadOnly label={field} />
-        <Slider
-          label='min'
-          value={min}
-          onChange={(v) => onChange({ max, min: Math.min(v, max) })}
-          min={-0.5}
-          max={0.5}
-          renderValue={formatModifierValue}
-        />
-        <Slider
-          label='max'
-          value={max}
-          onChange={(v) => onChange({ min, max: Math.max(v, min) })}
-          min={-0.5}
-          max={0.5}
-          renderValue={formatModifierValue}
-        />
-      </div>
+      <>
+        <SectionHeader label={field}>
+          <IconButton icon="remove" />
+        </SectionHeader>
+        <div className='flex w-full flex-col items-center border-l-2 border-dotted border-l-black pl-[16px]'>
+          <Slider
+            label='min'
+            value={min}
+            onChange={(v) => onChange({ max, min: Math.min(v, max) })}
+            min={-0.5}
+            max={0.5}
+            renderValue={formatModifierValue}
+          />
+          <Slider
+            label='max'
+            value={max}
+            onChange={(v) => onChange({ min, max: Math.max(v, min) })}
+            min={-0.5}
+            max={0.5}
+            renderValue={formatModifierValue}
+          />
+        </div>
+      </>
     );
   }
 

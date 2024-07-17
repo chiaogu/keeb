@@ -1,3 +1,4 @@
+import { SoundFieldPath } from '@src/components/keyboard/KeyModifierControl/RandomizationControl';
 import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
 import { RANDOM_SEED_ID } from '@src/utils/constants';
@@ -60,7 +61,23 @@ export function getModifiedNodeData(
 }
 
 export function getFieldRandomSeed(modifier: SoundModifier) {
-  return modifier?.[RANDOM_SEED_ID]?.[RANDOM_SEED_ID]?.[
-    RANDOM_SEED_ID
-  ]?.[1] as number | undefined;
+  return modifier?.[RANDOM_SEED_ID]?.[RANDOM_SEED_ID]?.[RANDOM_SEED_ID]?.[1] as
+    | number
+    | undefined;
+}
+
+export function getDefaultRandomConfig(
+  { fieldPath }: SoundFieldPath,
+  node: SynthNodeState,
+) {
+  // TODO: Suppoer nested fields
+  const schema = removeDefault(
+    nodeConfig[node.type].schema.shape[
+      fieldPath[fieldPath.length - 1] as never
+    ],
+  );
+  console.log(node.type, nodeConfig[node.type], schema instanceof z.ZodNumber);
+  if (schema instanceof z.ZodNumber) {
+    return { min: -0.3, max: 0.3 };
+  }
 }

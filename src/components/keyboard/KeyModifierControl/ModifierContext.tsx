@@ -1,10 +1,12 @@
 import { Keyboard, KeyEvent } from '@src/hooks/useKeyboard';
+import { getDefaultRandomConfig } from '@src/keyboard/keySoundModifier';
+import { SynthNodeState } from '@src/synth';
 import {
   getSoundStructureFieldPath,
   getSoundStructureValue,
   removeSoundStructureField,
 } from '@src/utils/utils';
-import { isEmpty, set, unset } from 'lodash';
+import { set } from 'lodash';
 import { createContext, useContext, useMemo, useState } from 'react';
 import { SoundFieldPath } from './RandomizationControl';
 
@@ -60,6 +62,21 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
         const value = getSoundStructureValue(selectedLayer.config, oldField);
         set(draft, getSoundStructureFieldPath(newField), value);
         removeSoundStructureField(draft, oldField);
+        return draft;
+      });
+    },
+    addRandomConfig(field: SoundFieldPath, node: SynthNodeState) {
+      if (selectedLayer.type !== 'random') return;
+      console.log({
+        path: getSoundStructureFieldPath(field),
+        config: getDefaultRandomConfig(field, node),
+      });
+      updateRandomConfig(selectedLayerIndex, (draft) => {
+        set(
+          draft,
+          getSoundStructureFieldPath(field),
+          getDefaultRandomConfig(field, node),
+        );
         return draft;
       });
     },

@@ -28,12 +28,14 @@ type RandomizationControlProps = {
   radomConfig: RandomizationConfig;
   onChange: (randomConfig: RandomizationConfig) => void;
   onClickInvalidField: (args: SoundFieldPath) => void;
+  onClickAdd: () => void;
 };
 
 export default function RandomizationControl({
   radomConfig,
   onChange,
   onClickInvalidField,
+  onClickAdd,
 }: RandomizationControlProps) {
   const { synths } = useModiferContext();
 
@@ -50,6 +52,7 @@ export default function RandomizationControl({
         field={fieldPath[fieldPath.length - 1]}
         randomConfig={value}
         onChange={(config) => {
+          // TODO: Fix overwriting
           onChange({
             [synthId]: {
               [nodeId]: {
@@ -77,18 +80,7 @@ export default function RandomizationControl({
       <SectionHeader label='new'>
         <IconButton
           icon='add'
-          onClick={() => {
-            onChange({
-              [synths[0].id]: {
-                [synths[0].src.id]: {
-                  frequency: {
-                    min: -0.3,
-                    max: 0.3,
-                  },
-                },
-              },
-            });
-          }}
+          onClick={onClickAdd}
         />
       </SectionHeader>
     </>

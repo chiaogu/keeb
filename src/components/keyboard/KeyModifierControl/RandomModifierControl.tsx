@@ -56,6 +56,7 @@ export default function RandomModifierControl() {
     removeModifier,
     soundName,
     fixRandomConfig,
+    addRandomConfig,
   } = useModiferContext();
 
   const modifiedKeys = useMemo(
@@ -121,6 +122,9 @@ export default function RandomModifierControl() {
             setSelectingField('fix');
             setFixingField(args);
           }}
+          onClickAdd={() => {
+            setSelectingField('add');
+          }}
         />
         {selectingField && (
           <>
@@ -134,8 +138,12 @@ export default function RandomModifierControl() {
               />
             </SectionHeader>
             <SoundFieldPicker
-              onSelect={(newField) => {
-                fixingField && fixRandomConfig(fixingField, newField);
+              onSelect={(newField, node) => {
+                if (selectingField === 'fix' && fixingField) {
+                  fixRandomConfig(fixingField, newField);
+                } if (selectingField === 'add' && node) {
+                  addRandomConfig(newField, node);
+                }
                 setSelectingField(false);
                 setFixingField(undefined);
               }}

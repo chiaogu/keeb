@@ -2,8 +2,10 @@ import SoundStructure, {
   RenderFieldProps,
   SoundStructureField,
 } from '@src/components/SoundStructureTree/SoundStructure';
+import { SynthNodeState } from '@src/synth';
 import { useMemo } from 'react';
 import { useModiferContext } from './ModifierContext';
+import { SoundFieldPath } from './RandomizationControl';
 
 function shouldRenderField(
   field: SoundStructureField<unknown>,
@@ -12,11 +14,7 @@ function shouldRenderField(
 }
 
 type SoundFieldPickerProps = {
-  onSelect: (args: {
-    synthId: string;
-    nodeId: string;
-    fieldPath: string[];
-  }) => void;
+  onSelect: (args: SoundFieldPath, node?: SynthNodeState) => void;
 };
 
 export default function SoundFieldPicker({ onSelect }: SoundFieldPickerProps) {
@@ -41,11 +39,11 @@ export default function SoundFieldPicker({ onSelect }: SoundFieldPickerProps) {
 
   const renderField = useMemo(() => {
     const render = (props: RenderFieldProps<unknown>) => {
-      const { fieldPath, synthId, nodeId } = props;
+      const { fieldPath, synthId, nodeId, node } = props;
       return (
         <button
           className='mr-5 underline'
-          onClick={() => onSelect({ synthId, nodeId, fieldPath })}
+          onClick={() => onSelect({ synthId, nodeId, fieldPath }, node)}
         >
           {fieldPath[fieldPath.length - 1]}
         </button>
