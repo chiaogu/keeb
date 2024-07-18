@@ -1,6 +1,11 @@
 import { SoundFieldPath } from '@src/components/keyboard/KeyModifierControl/RandomizationControl';
+import {
+  SoundStructure,
+  SoundStructureField,
+} from '@src/components/SoundStructureTree/SoundStructure';
 import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
+import { FieldRandomConfig } from '@src/types';
 import { RANDOM_SEED_ID } from '@src/utils/constants';
 import { getNumberDef, removeDefault } from '@src/utils/schema';
 import { produce, WritableDraft } from 'immer';
@@ -76,8 +81,43 @@ export function getDefaultRandomConfig(
       fieldPath[fieldPath.length - 1] as never
     ],
   );
-  console.log(node.type, nodeConfig[node.type], schema instanceof z.ZodNumber);
+
   if (schema instanceof z.ZodNumber) {
     return { min: -0.3, max: 0.3 };
   }
+}
+
+export function isFieldRandomConfig(
+  field: SoundStructureField<FieldRandomConfig>,
+): field is FieldRandomConfig {
+  return (
+    typeof field === 'object' &&
+    (field.max != null || field.min != null || field.options != null)
+  );
+}
+
+export function iterateSoundStructure<T>(
+  structure: SoundStructure<T>,
+  isLeafNode: (field: SoundStructureField<T>) => field is T,
+  callback: (field: SoundFieldPath, value: T) => void,
+) {
+  Object.entries(structure).forEach(([synthId, nodes]) => {
+    Object.entries(nodes).forEach(([nodeId, fields]) => {
+      const iterate = (
+        value: SoundStructureField<T>,
+        fieldPath: string[],
+      ) => {
+        if (isLeafNode(value)) {
+          callback({ synthId, nodeId, fieldPath }, value);
+        } else {
+          Object.entries(value).map(([field, nestedValue]) => {
+            iterate(nestedValue, [...fieldPath, field]);
+          });
+        }
+      };
+      Object.entries(fields).forEach(([field, value]) => {
+        iterate(value, [field]);
+      });
+    });
+  });
 }

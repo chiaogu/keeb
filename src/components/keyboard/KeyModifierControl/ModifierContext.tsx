@@ -9,6 +9,8 @@ import {
 import { set } from 'lodash';
 import { createContext, useContext, useMemo, useState } from 'react';
 import { SoundFieldPath } from './RandomizationControl';
+import { FieldRandomConfig } from '@src/types';
+import { useDebounceCallback } from '@react-hook/debounce';
 
 function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
   const {
@@ -19,7 +21,7 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     updateModiferLayer,
     updateModifier,
     removeModifier,
-    randomizeModifier,
+    batchSetModifier,
     updateRandomConfig,
     loadModifiers,
   } = useMemo(
@@ -31,6 +33,11 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     () => modifiers[selectedLayerIndex],
     [modifiers, selectedLayerIndex],
   );
+  
+  // TODO: useThrottle
+  const randomizeAfterConfigChange = useDebounceCallback(() => {
+    batchSetModifier(selectedLayerIndex, Object.keys(selectedLayer.keys));
+  }, 50);
 
   return {
     soundName: name,
@@ -54,8 +61,18 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
 
     updateModifier,
     removeModifier,
-    randomizeModifier,
-    updateRandomConfig,
+    batchSetModifier,
+    updateRandomConfig(field: SoundFieldPath, config: FieldRandomConfig) {
+      updateRandomConfig(selectedLayerIndex, (draft) => {
+        set(
+          draft,
+          getSoundStructureFieldPath(field),
+          config,
+        );
+        return draft;
+      });
+      randomizeAfterConfigChange();
+    },
     fixRandomConfig(oldField: SoundFieldPath, newField: SoundFieldPath) {
       if (selectedLayer.type !== 'random') return;
       updateRandomConfig(selectedLayerIndex, (draft) => {
@@ -67,10 +84,6 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     },
     addRandomConfig(field: SoundFieldPath, node: SynthNodeState) {
       if (selectedLayer.type !== 'random') return;
-      console.log({
-        path: getSoundStructureFieldPath(field),
-        config: getDefaultRandomConfig(field, node),
-      });
       updateRandomConfig(selectedLayerIndex, (draft) => {
         set(
           draft,

@@ -1,6 +1,13 @@
-import { getFieldRandomSeed, ModifierOp } from '@src/keyboard/keySoundModifier';
+import {
+  getFieldRandomSeed,
+  isFieldRandomConfig,
+  iterateSoundStructure,
+  ModifierOp,
+} from '@src/keyboard/keySoundModifier';
 import { KeySoundConfig, ModifierLayer, RandomizationConfig } from '@src/types';
 import { RANDOM_SEED_ID } from '@src/utils/constants';
+import { getSoundStructureFieldPath } from '@src/utils/utils';
+import { isEmpty, set } from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import { v4 as uuid } from 'uuid';
@@ -116,68 +123,48 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
     [setModifiers],
   );
 
-  const randomizeModifier = useCallback(
+  const batchSetModifier = useCallback(
     (layerIndex: number, keys: string[]) => {
+      const getSeed = Math.random;
+
       setModifiers((draft) => {
         keys.forEach((key) => {
           if (draft[layerIndex].type !== 'random') return;
 
-          if (Object.keys(draft[layerIndex].config).length === 0) {
-            draft[layerIndex].keys = {
-              ...draft[layerIndex].keys,
-              [key]: {
-                [RANDOM_SEED_ID]: {
-                  [RANDOM_SEED_ID]: {
-                    [RANDOM_SEED_ID]: ['add', Math.random()],
-                  },
-                },
-              },
-            };
+          // Set seed when there is no random config yet
+          if (isEmpty(draft[layerIndex].config)) {
+            set(
+              draft[layerIndex].keys,
+              [key, ...Array(3).fill(RANDOM_SEED_ID)],
+              ['add', getSeed()],
+            );
             return;
           }
 
           const seed =
-            getFieldRandomSeed(draft[layerIndex].keys[key]) ?? Math.random();
+            getFieldRandomSeed(draft[layerIndex].keys[key]) ?? getSeed();
 
-          // TODO: Support nested fields
-          Object.entries(draft[layerIndex].config).forEach(
-            ([synthId, nodes]) => {
-              Object.entries(nodes).forEach(([nodeId, fields]) => {
-                Object.entries(fields).forEach(
-                  ([field, { max, min, options }]) => {
-                    let modifier: ModifierOp | null = null;
-                    if (min != null && max != null) {
-                      modifier = ['add', min + seed * (max - min)];
-                    } else if (options != null) {
-                      modifier = [
-                        'set',
-                        options[Math.round(seed * (options.length - 1))],
-                      ];
-                    }
+          iterateSoundStructure(
+            draft[layerIndex].config,
+            isFieldRandomConfig,
+            (fieldPath, { min, max, options }) => {
+              let modifier: ModifierOp | null = null;
+              if (min != null && max != null) {
+                modifier = ['add', min + seed * (max - min)];
+              } else if (options != null) {
+                modifier = [
+                  'set',
+                  options[Math.round(seed * (options.length - 1))],
+                ];
+              }
 
-                    if (!modifier) return;
-
-                    draft[layerIndex].keys = {
-                      ...draft[layerIndex].keys,
-                      [key]: {
-                        ...draft[layerIndex].keys[key],
-                        [synthId]: {
-                          ...draft[layerIndex].keys[key]?.[synthId],
-                          [nodeId]: {
-                            ...draft[layerIndex].keys[key]?.[synthId]?.[nodeId],
-                            [field]: modifier,
-                          },
-                        },
-                        [RANDOM_SEED_ID]: {
-                          [RANDOM_SEED_ID]: {
-                            [RANDOM_SEED_ID]: ['add', seed],
-                          },
-                        },
-                      },
-                    };
-                  },
+              if (modifier) {
+                set(
+                  draft[layerIndex].keys,
+                  [key, ...getSoundStructureFieldPath(fieldPath)],
+                  modifier,
                 );
-              });
+              }
             },
           );
         });
@@ -207,7 +194,7 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
     updateModiferLayer,
     updateModifier,
     removeModifier,
-    randomizeModifier,
+    batchSetModifier,
     updateRandomConfig,
     loadModifiers: load,
   };

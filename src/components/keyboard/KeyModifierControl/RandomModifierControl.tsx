@@ -3,7 +3,7 @@ import IconButton from '@src/components/shared/IconButton';
 import SectionHeader from '@src/components/shared/SectionHeader';
 import { keys } from '@src/keyboard/keys';
 import { getFieldRandomSeed } from '@src/keyboard/keySoundModifier';
-import { ModifierLayer, RandomizationConfig } from '@src/types';
+import { FieldRandomConfig, ModifierLayer, RandomizationConfig } from '@src/types';
 import { Fragment, memo, useCallback, useMemo, useState } from 'react';
 import { KeysSelect } from './KeysSelect';
 import { useModiferContext } from './ModifierContext';
@@ -11,6 +11,7 @@ import ModifierControl from './ModifierControl';
 import ModifierKeyboard from './ModifierKeyboard';
 import RandomizationControl, { SoundFieldPath } from './RandomizationControl';
 import SoundFieldPicker from './SoundFieldPicker';
+import { set } from 'lodash';
 
 const KeysDebug = memo(
   ({
@@ -50,7 +51,7 @@ export default function RandomModifierControl() {
   );
   const selectedLayer = useSelectedLayer();
   const {
-    randomizeModifier,
+    batchSetModifier,
     selectedLayerIndex,
     updateRandomConfig,
     removeModifier,
@@ -74,23 +75,10 @@ export default function RandomModifierControl() {
       if (modifiedKeys[key]) {
         removeModifier(selectedLayerIndex, [key]);
       } else {
-        randomizeModifier(selectedLayerIndex, [key]);
+        batchSetModifier(selectedLayerIndex, [key]);
       }
     },
-    [modifiedKeys, randomizeModifier, removeModifier, selectedLayerIndex],
-  );
-
-  // TODO: useThrottle
-  const randomizeAfterConfigChange = useDebounceCallback(() => {
-    randomizeModifier(selectedLayerIndex, Object.keys(selectedLayer.keys));
-  }, 50);
-
-  const handleConfigChange = useCallback(
-    (config: RandomizationConfig) => {
-      updateRandomConfig(selectedLayerIndex, () => config);
-      randomizeAfterConfigChange();
-    },
-    [randomizeAfterConfigChange, selectedLayerIndex, updateRandomConfig],
+    [modifiedKeys, batchSetModifier, removeModifier, selectedLayerIndex],
   );
 
   return (
@@ -100,7 +88,7 @@ export default function RandomModifierControl() {
         <KeysSelect
           onSelect={(selectedKeys) => {
             removeModifier(selectedLayerIndex, keys.flat());
-            randomizeModifier(selectedLayerIndex, selectedKeys);
+            batchSetModifier(selectedLayerIndex, selectedKeys);
           }}
         />
         <SectionHeader label='modifier' className='mt-4 font-bold'>
@@ -108,7 +96,7 @@ export default function RandomModifierControl() {
             icon='ifl'
             onClick={() => {
               removeModifier(selectedLayerIndex, keys.flat());
-              randomizeModifier(
+              batchSetModifier(
                 selectedLayerIndex,
                 Object.keys(selectedLayer.keys),
               );
@@ -117,7 +105,7 @@ export default function RandomModifierControl() {
         </SectionHeader>
         <RandomizationControl
           radomConfig={selectedLayer.config}
-          onChange={handleConfigChange}
+          onChange={updateRandomConfig}
           onClickInvalidField={(args) => {
             setSelectingField('fix');
             setFixingField(args);
@@ -151,10 +139,10 @@ export default function RandomModifierControl() {
           </>
         )}
       </div>
-      {/* <KeysDebug
+      <KeysDebug
         modifiedKeys={modifiedKeys}
         modifierKeys={selectedLayer.keys}
-      /> */}
+      />
     </>
   );
 }

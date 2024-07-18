@@ -2,21 +2,12 @@ import IconButton from '@src/components/shared/IconButton';
 import SectionHeader from '@src/components/shared/SectionHeader';
 import SoundStructure, {
   RenderFieldProps,
-  SoundStructureField,
 } from '@src/components/SoundStructureTree/SoundStructure';
 import { FieldRandomConfig, RandomizationConfig } from '@src/types';
 import { useCallback } from 'react';
 import FieldRandomControl from './FieldRandomControl';
 import { useModiferContext } from './ModifierContext';
-
-function shouldRenderField(
-  field: SoundStructureField<FieldRandomConfig>,
-): field is FieldRandomConfig {
-  return (
-    typeof field === 'object' &&
-    (field.max != null || field.min != null || field.options != null)
-  );
-}
+import { isFieldRandomConfig } from '@src/keyboard/keySoundModifier';
 
 export type SoundFieldPath = {
   synthId: string;
@@ -26,7 +17,7 @@ export type SoundFieldPath = {
 
 type RandomizationControlProps = {
   radomConfig: RandomizationConfig;
-  onChange: (randomConfig: RandomizationConfig) => void;
+  onChange: (field: SoundFieldPath, config: FieldRandomConfig) => void;
   onClickInvalidField: (args: SoundFieldPath) => void;
   onClickAdd: () => void;
 };
@@ -40,29 +31,16 @@ export default function RandomizationControl({
   const { synths } = useModiferContext();
 
   const renderField = useCallback(
-    ({
-      fieldPath,
-      value,
-      node,
-      synthId,
-      nodeId,
-    }: RenderFieldProps<FieldRandomConfig>) => (
+    (props: RenderFieldProps<FieldRandomConfig>) => (
       <FieldRandomControl
-        node={node}
-        field={fieldPath[fieldPath.length - 1]}
-        randomConfig={value}
+        node={props.node}
+        field={props.fieldPath[props.fieldPath.length - 1]}
+        randomConfig={props.value}
         onChange={(config) => {
-          // TODO: Fix overwriting
-          onChange({
-            [synthId]: {
-              [nodeId]: {
-                [fieldPath[fieldPath.length - 1]]: config,
-              },
-            },
-          });
+          onChange(props, config);
         }}
         onClickInvalidField={() =>
-          onClickInvalidField({ synthId, nodeId, fieldPath })
+          onClickInvalidField(props)
         }
       />
     ),
@@ -75,7 +53,7 @@ export default function RandomizationControl({
         synths={synths}
         structure={radomConfig}
         renderField={renderField}
-        shouldRenderField={shouldRenderField}
+        shouldRenderField={isFieldRandomConfig}
       />
       <SectionHeader label='new'>
         <IconButton
