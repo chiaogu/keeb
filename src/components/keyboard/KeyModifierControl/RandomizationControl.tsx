@@ -34,7 +34,7 @@ export default function RandomizationControl({
     (props: RenderFieldProps<FieldRandomConfig>) => (
       <FieldRandomControl
         node={props.node}
-        field={props.fieldPath[props.fieldPath.length - 1]}
+        fieldPath={props.fieldPath}
         randomConfig={props.value}
         onChange={(config) => {
           onChange(props, config);

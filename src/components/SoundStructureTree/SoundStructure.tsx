@@ -96,6 +96,7 @@ const SoundStructure = typedMemo(
         },
       ) => {
         const { fieldPath, value, level = 0, node } = props;
+        
         return (
           <div
             key={fieldPath.join()}

@@ -7,7 +7,7 @@ import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
 import { FieldRandomConfig, ModifierLayer } from '@src/types';
 import { RANDOM_SEED_ID } from '@src/utils/constants';
-import { getNumberDef, removeDefault } from '@src/utils/schema';
+import { getNestedFieldSchema, getNumberDef, removeDefault } from '@src/utils/schema';
 import { produce, WritableDraft } from 'immer';
 import { z } from 'zod';
 
@@ -77,15 +77,15 @@ export function getDefaultRandomConfig(
   { fieldPath }: SoundFieldPath,
   node: SynthNodeState,
 ) {
-  // TODO: Suppoer nested fields
-  const schema = removeDefault(
-    nodeConfig[node.type].schema.shape[
-      fieldPath[fieldPath.length - 1] as never
-    ],
-  );
+
+  const schema = getNestedFieldSchema(nodeConfig[node.type].schema, fieldPath);
 
   if (schema instanceof z.ZodNumber) {
     return { min: -0.3, max: 0.3 };
+  }
+  
+  if (schema instanceof z.ZodEnum) {
+    return { options: schema.options };
   }
 }
 

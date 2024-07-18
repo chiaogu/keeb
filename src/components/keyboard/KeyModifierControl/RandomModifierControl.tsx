@@ -1,9 +1,8 @@
-import { useDebounceCallback } from '@react-hook/debounce';
 import IconButton from '@src/components/shared/IconButton';
 import SectionHeader from '@src/components/shared/SectionHeader';
 import { keys } from '@src/keyboard/keys';
 import { getFieldRandomSeed } from '@src/keyboard/keySoundModifier';
-import { FieldRandomConfig, ModifierLayer, RandomizationConfig } from '@src/types';
+import { ModifierLayer } from '@src/types';
 import { Fragment, memo, useCallback, useMemo, useState } from 'react';
 import { KeysSelect } from './KeysSelect';
 import { useModiferContext } from './ModifierContext';
@@ -11,7 +10,6 @@ import ModifierControl from './ModifierControl';
 import ModifierKeyboard from './ModifierKeyboard';
 import RandomizationControl, { SoundFieldPath } from './RandomizationControl';
 import SoundFieldPicker from './SoundFieldPicker';
-import { set } from 'lodash';
 
 const KeysDebug = memo(
   ({
@@ -129,7 +127,8 @@ export default function RandomModifierControl() {
               onSelect={(newField, node) => {
                 if (selectingField === 'fix' && fixingField) {
                   fixRandomConfig(fixingField, newField);
-                } if (selectingField === 'add' && node) {
+                }
+                if (selectingField === 'add' && node) {
                   addRandomConfig(newField, node);
                 }
                 setSelectingField(false);

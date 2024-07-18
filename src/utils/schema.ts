@@ -60,3 +60,23 @@ export function omit(schema: z.ZodTypeAny, keys: string[]) {
 
   return innerSchema.omit(Object.fromEntries(keys.map((key) => [key, true])));
 }
+
+export function getNestedFieldSchema(
+  schema: z.ZodTypeAny,
+  fieldPath: string[],
+) {
+  const innerSchema = removeDefault(schema);
+
+  if (fieldPath.length > 0) {
+    if (innerSchema instanceof z.ZodObject) {
+      return getNestedFieldSchema(
+        innerSchema.shape[fieldPath[0]],
+        fieldPath.slice(1, fieldPath.length),
+      );
+    } else {
+      throw new Error(`Field path ${fieldPath.join(',')} is invalid`);
+    }
+  }
+
+  return innerSchema;
+}
