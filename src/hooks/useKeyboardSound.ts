@@ -1,4 +1,5 @@
 import {
+  findSoundModifiers,
   getFieldRandomSeed,
   isFieldRandomConfig,
   iterateSoundStructure,
@@ -40,8 +41,7 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
       ...rest,
       synths: states,
       trigger(key: string) {
-        // TODO: Apply multiple layers
-        soundCache.trigger(key, synths, modifiers[0]?.keys?.[key]);
+        soundCache.trigger(key, synths, findSoundModifiers(modifiers, key));
       },
     }),
     [modifiers, rest, soundCache, states, synths],

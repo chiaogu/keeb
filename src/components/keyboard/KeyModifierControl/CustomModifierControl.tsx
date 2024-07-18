@@ -32,10 +32,6 @@ export default function CustomModifierControl() {
     [setSelectedKeys],
   );
 
-  useEffect(() => {
-    setSelectedKeys([]);
-  }, [selectedLayer.id, setSelectedKeys]);
-
   return (
     <>
       <ModifierKeyboard

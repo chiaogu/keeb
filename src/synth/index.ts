@@ -122,10 +122,10 @@ export default function createSynth(config: Immutable<SynthConfig>) {
     setFxs(state.fxs);
   }
 
-  function trigger(modifier?: SynthModifier) {
+  function trigger(modifiers: SynthModifier[] = []) {
     if (!srcNode) throw new Error('synth is not initialized yet');
     
-    const modifiedSrcData = getModifiedNodeData(state.src, modifier);
+    const modifiedSrcData = getModifiedNodeData(state.src, modifiers);
     setToneState(state.src.type, srcNode, modifiedSrcData);
     nodeConfig[state.src.type].trigger?.(
       srcNode as never,
@@ -133,7 +133,7 @@ export default function createSynth(config: Immutable<SynthConfig>) {
     );
 
     state.fxs.forEach((fx, index) => {
-      const modifiedFxData = getModifiedNodeData(fx, modifier);
+      const modifiedFxData = getModifiedNodeData(fx, modifiers);
       setToneState(fx.type, fxNodes[index], modifiedFxData);
       nodeConfig[fx.type].trigger?.(
         fxNodes[index] as never,

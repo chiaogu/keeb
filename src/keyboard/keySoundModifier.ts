@@ -5,7 +5,7 @@ import {
 } from '@src/components/SoundStructureTree/SoundStructure';
 import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
-import { FieldRandomConfig } from '@src/types';
+import { FieldRandomConfig, ModifierLayer } from '@src/types';
 import { RANDOM_SEED_ID } from '@src/utils/constants';
 import { getNumberDef, removeDefault } from '@src/utils/schema';
 import { produce, WritableDraft } from 'immer';
@@ -50,18 +50,20 @@ function modifierNumberData(
 
 export function getModifiedNodeData(
   node: SynthNodeState,
-  modifier: SynthModifier = {},
+  modifiers: SynthModifier[],
 ) {
   return produce(node, (draft) => {
-    Object.entries(modifier[node.id] ?? {}).forEach(
-      ([key, [action, value]]) => {
-        if (action === 'add') {
-          modifierNumberData(draft, node, key, value);
-        } else if (action === 'set') {
-          draft.data[key] = value;
-        }
-      },
-    );
+    modifiers.forEach((modifier) => {
+      Object.entries(modifier[node.id] ?? {}).forEach(
+        ([key, [action, value]]) => {
+          if (action === 'add') {
+            modifierNumberData(draft, node, key, value);
+          } else if (action === 'set') {
+            draft.data[key] = value;
+          }
+        },
+      );
+    });
   }).data;
 }
 
@@ -103,10 +105,7 @@ export function iterateSoundStructure<T>(
 ) {
   Object.entries(structure).forEach(([synthId, nodes]) => {
     Object.entries(nodes).forEach(([nodeId, fields]) => {
-      const iterate = (
-        value: SoundStructureField<T>,
-        fieldPath: string[],
-      ) => {
+      const iterate = (value: SoundStructureField<T>, fieldPath: string[]) => {
         if (isLeafNode(value)) {
           callback({ synthId, nodeId, fieldPath }, value);
         } else {
@@ -120,4 +119,27 @@ export function iterateSoundStructure<T>(
       });
     });
   });
+}
+
+export function findSynthModifiers(
+  soundModifiers: SoundModifier[],
+  synthId: string,
+) {
+  const result: SynthModifier[] = [];
+  soundModifiers.forEach((sound) => {
+    Object.entries(sound).forEach(([_synthId, synthModifier]) => {
+      if (synthId === _synthId) {
+        result.push(synthModifier);
+      }
+    });
+  });
+  return result;
+}
+
+
+export function findSoundModifiers(
+  layers: ModifierLayer[],
+  key: string,
+) {
+  return layers.map(({ keys }) => keys[key]).filter(Boolean);
 }

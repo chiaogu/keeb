@@ -1,4 +1,7 @@
-import { SoundModifier } from '@src/keyboard/keySoundModifier';
+import {
+  findSynthModifiers,
+  SoundModifier,
+} from '@src/keyboard/keySoundModifier';
 import { Synth } from '@src/synth';
 import * as Tone from '@src/tone';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -26,28 +29,37 @@ export default function useSoundCache() {
   }, [clear, instanceId]);
 
   const trigger = useMemo(() => {
-    function playCached(key: string, synths: Synth[], modifier: SoundModifier) {
+    function playCached(
+      key: string,
+      synths: Synth[],
+      modifiers: SoundModifier[],
+    ) {
       try {
         playerPool.play(cache[instanceId][key]);
       } catch (e) {
         console.log(e);
         delete cache[instanceId][key];
-        playRealtime(synths, modifier);
+        playRealtime(synths, modifiers);
       }
     }
 
-    function playRealtime(synths: Synth[], modifier: SoundModifier) {
-      synths.forEach((synth) => synth.trigger(modifier[synth.state.id]));
+    function playRealtime(synths: Synth[], modifiers: SoundModifier[]) {
+      synths.forEach((synth) =>
+        synth.trigger(findSynthModifiers(modifiers, synth.state.id)),
+      );
     }
 
     async function renderCache(
       key: string,
       synths: Synth[],
-      modifier: SoundModifier,
+      modifiers: SoundModifier[],
     ) {
       cache[instanceId][key] = new Tone.ToneAudioBuffer();
 
-      const buffer = await renderSound(synths.map((s) => s.state), modifier);
+      const buffer = await renderSound(
+        synths.map((s) => s.state),
+        modifiers,
+      );
 
       if (buffer) {
         cache[instanceId][key] = buffer;
@@ -56,14 +68,14 @@ export default function useSoundCache() {
       logCacheSize(cache);
     }
 
-    return (key: string, synths: Synth[], modifier: SoundModifier = {}) => {
+    return (key: string, synths: Synth[], modifiers: SoundModifier[] = []) => {
       if (cache[instanceId][key]) {
         cache[instanceId][key].loaded
-          ? playCached(key, synths, modifier)
-          : playRealtime(synths, modifier);
+          ? playCached(key, synths, modifiers)
+          : playRealtime(synths, modifiers);
       } else {
-        playRealtime(synths, modifier);
-        renderCache(key, synths, modifier);
+        playRealtime(synths, modifiers);
+        renderCache(key, synths, modifiers);
       }
     };
   }, [instanceId]);
