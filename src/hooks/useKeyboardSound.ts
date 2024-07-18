@@ -131,19 +131,22 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
         keys.forEach((key) => {
           if (draft[layerIndex].type !== 'random') return;
 
-          // Set seed when there is no random config yet
-          if (isEmpty(draft[layerIndex].config)) {
-            set(
-              draft[layerIndex].keys,
-              [key, ...Array(3).fill(RANDOM_SEED_ID)],
-              ['add', getSeed()],
-            );
-            return;
-          }
-
           const seed =
             getFieldRandomSeed(draft[layerIndex].keys[key]) ?? getSeed();
 
+          draft[layerIndex].keys[key] = {
+            [RANDOM_SEED_ID]: {
+              [RANDOM_SEED_ID]: {
+                [RANDOM_SEED_ID]: ['add', seed]
+              }
+            }
+          };
+
+          // Don't set modifier when there is no random config
+          if (isEmpty(draft[layerIndex].config)) {
+            return;
+          }
+            
           iterateSoundStructure(
             draft[layerIndex].config,
             isFieldRandomConfig,

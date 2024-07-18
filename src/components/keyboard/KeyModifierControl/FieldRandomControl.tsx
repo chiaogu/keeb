@@ -16,6 +16,7 @@ type FieldRandomControlProps = {
   node?: SynthNodeState;
   onChange: (randomConfig: FieldRandomConfig) => void;
   onClickInvalidField: () => void;
+  onClickRemove: () => void;
 };
 
 export default function FieldRandomControl({
@@ -24,6 +25,7 @@ export default function FieldRandomControl({
   node,
   onChange,
   onClickInvalidField,
+  onClickRemove,
 }: FieldRandomControlProps) {
   const valid = node?.data?.[field] != undefined;
 
@@ -41,7 +43,7 @@ export default function FieldRandomControl({
     return (
       <>
         <SectionHeader label={field}>
-          <IconButton icon="remove" />
+          <IconButton icon="remove" onClick={onClickRemove} />
         </SectionHeader>
         <div className='flex w-full flex-col items-center border-l-2 border-dotted border-l-black pl-[16px]'>
           <Slider
