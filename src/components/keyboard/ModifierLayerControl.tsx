@@ -62,8 +62,8 @@ export default function ModifierLayerControl() {
         </SectionHeader>
         <RadioGroup
           label='layers'
-          value={selectedLayer?.id}
-          onChange={(id) =>
+          values={[selectedLayer?.id]}
+          onChange={([id]) =>
             setSelectedLayerIndex(modifiers.findIndex((m) => m.id === id))
           }
           options={layers}

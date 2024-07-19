@@ -13,10 +13,7 @@ type SrcNodeControlProps = {
 
 const srcTypeOptions = Object.keys(srcNodeConfig) as SrcNodeType[];
 
-export default function SrcNodeControl({
-  src,
-  onChange,
-}: SrcNodeControlProps) {
+export default function SrcNodeControl({ src, onChange }: SrcNodeControlProps) {
   return (
     <div className='flex w-full flex-col items-center'>
       <Controls
@@ -32,8 +29,14 @@ export default function SrcNodeControl({
       <RadioGroup
         label='type'
         options={srcTypeOptions}
-        value={src.type}
-        onChange={(type) => onChange({ type, data: {} })}
+        values={[src.type]}
+        onChange={([type]) =>
+          onChange({
+            id: src.id,
+            type: type as SrcNodeType,
+            data: {},
+          })
+        }
       />
       <SectionHeader className='mt-4 font-bold' label={src.type} />
       <Controls

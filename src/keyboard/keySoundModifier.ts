@@ -7,8 +7,9 @@ import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
 import { FieldRandomConfig, ModifierLayer } from '@src/types';
 import { RANDOM_SEED_ID } from '@src/utils/constants';
-import { getNestedFieldSchema, getNumberDef, removeDefault } from '@src/utils/schema';
+import { getNestedFieldSchema, getNumberDef } from '@src/utils/schema';
 import { produce, WritableDraft } from 'immer';
+import { get, set } from 'lodash';
 import { z } from 'zod';
 
 export type ModifierOp = ['add', number] | ['set', string];
@@ -32,34 +33,37 @@ export type KeySoundModifier = {
 function modifierNumberData(
   draft: WritableDraft<SynthNodeState>,
   node: SynthNodeState,
-  field: string,
+  fieldPath: string[],
   value: number,
 ) {
-  const schema = removeDefault(
-    nodeConfig[node.type].schema.shape[field as never],
-  );
+  const schema = getNestedFieldSchema(nodeConfig[node.type].schema, fieldPath);
   if (schema instanceof z.ZodNumber) {
     const { min, max } = getNumberDef(schema);
     const newValue = Math.min(
       max,
-      Math.max(min, (draft.data[field] as number) + value * (max - min)),
+      Math.max(
+        min,
+        (get(draft.data, fieldPath) as number) + value * (max - min),
+      ),
     );
-    draft.data[field] = newValue;
+    set(draft.data, fieldPath, newValue);
   }
 }
 
 export function getModifiedNodeData(
   node: SynthNodeState,
-  modifiers: SynthModifier[],
+  modifiers: SoundModifier[],
 ) {
   return produce(node, (draft) => {
     modifiers.forEach((modifier) => {
-      Object.entries(modifier[node.id] ?? {}).forEach(
-        ([key, [action, value]]) => {
+      iterateSoundStructure(
+        modifier,
+        isModifierOp,
+        ({ fieldPath }: SoundFieldPath, [action, value]) => {
           if (action === 'add') {
-            modifierNumberData(draft, node, key, value);
+            modifierNumberData(draft, node, fieldPath, value);
           } else if (action === 'set') {
-            draft.data[key] = value;
+            set(draft.data, fieldPath, value);
           }
         },
       );
@@ -77,16 +81,21 @@ export function getDefaultRandomConfig(
   { fieldPath }: SoundFieldPath,
   node: SynthNodeState,
 ) {
-
   const schema = getNestedFieldSchema(nodeConfig[node.type].schema, fieldPath);
 
   if (schema instanceof z.ZodNumber) {
     return { min: -0.3, max: 0.3 };
   }
-  
+
   if (schema instanceof z.ZodEnum) {
     return { options: schema.options };
   }
+}
+
+export function isModifierOp(
+  field: SoundStructureField<ModifierOp>,
+): field is ModifierOp {
+  return Array.isArray(field) && field.length === 2;
 }
 
 export function isFieldRandomConfig(
@@ -121,25 +130,6 @@ export function iterateSoundStructure<T>(
   });
 }
 
-export function findSynthModifiers(
-  soundModifiers: SoundModifier[],
-  synthId: string,
-) {
-  const result: SynthModifier[] = [];
-  soundModifiers.forEach((sound) => {
-    Object.entries(sound).forEach(([_synthId, synthModifier]) => {
-      if (synthId === _synthId) {
-        result.push(synthModifier);
-      }
-    });
-  });
-  return result;
-}
-
-
-export function findSoundModifiers(
-  layers: ModifierLayer[],
-  key: string,
-) {
+export function findSoundModifiers(layers: ModifierLayer[], key: string) {
   return layers.map(({ keys }) => keys[key]).filter(Boolean);
 }

@@ -1,15 +1,15 @@
 import IconButton from '@src/components/shared/IconButton';
+import RadioGroup from '@src/components/shared/RadioGroup';
 import SectionHeader from '@src/components/shared/SectionHeader';
 import Slider from '@src/components/shared/Slider';
 import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
 import { FieldRandomConfig } from '@src/types';
-import { getNestedFieldSchema, removeDefault } from '@src/utils/schema';
+import { getNestedFieldSchema } from '@src/utils/schema';
 import { formatModifierValue } from '@src/utils/utils';
+import { get } from 'lodash';
 import { z } from 'zod';
 import InvalidFieldModifier from './InvalidFieldModifier';
-import { get } from 'lodash';
-import RadioGroup from '@src/components/shared/RadioGroup';
 
 type FieldRandomControlProps = {
   fieldPath: string[];
@@ -66,15 +66,16 @@ export default function FieldRandomControl({
       </>
     );
   }
-  
+
   // TODO: Multi select
   if (schema instanceof z.ZodEnum) {
     return (
       <RadioGroup
         label='options'
-        value={schema.options[0]}
-        onChange={() => {}}
+        values={randomConfig.options}
+        onChange={(options) => onChange({ options })}
         options={schema.options}
+        multi
       />
     );
   }

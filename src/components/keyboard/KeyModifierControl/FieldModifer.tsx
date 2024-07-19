@@ -1,3 +1,4 @@
+import RadioGroup from '@src/components/shared/RadioGroup';
 import ReadOnly from '@src/components/shared/ReadOnly';
 import Slider from '@src/components/shared/Slider';
 import { ModifierOp } from '@src/keyboard/keySoundModifier';
@@ -14,6 +15,7 @@ type FieldModifierProps = {
   onChange: (value: unknown) => void;
 };
 
+// TODO: Support nested field
 export default function FieldModifier({
   field,
   modifier: [operation, value],
@@ -45,6 +47,18 @@ export default function FieldModifier({
         min={-0.5}
         max={0.5}
         renderValue={formatModifierValue}
+      />
+    );
+  }
+  
+  if (schema instanceof z.ZodEnum) {
+    return (
+      <RadioGroup
+        label={field}
+        values={[value as string]}
+        // TODO: Support selecting
+        onChange={() => {}}
+        options={schema.options}
       />
     );
   }

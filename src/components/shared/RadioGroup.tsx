@@ -1,20 +1,38 @@
+import { useCallback } from 'react';
 import LabelField, { LabelFieldProps } from './LabelField';
 
 type Option = { label: string; key: string };
 
 type RadioGroupProps<T> = {
+  multi?: boolean;
   label: string;
   options: readonly T[];
-  value?: string;
-  onChange: (value: string) => void;
+  values?: string[];
+  onChange: (value: string[]) => void;
 } & Omit<LabelFieldProps, 'children'>;
 
 export default function RadioGroup<T extends string | Option>({
-  value,
+  values = [],
   onChange,
   options,
+  multi,
   ...labelFields
 }: RadioGroupProps<T>) {
+  const handleClick = useCallback(
+    (key: string) => {
+      if (multi) {
+        if (values.includes(key)) {
+          onChange(values.filter((v) => v !== key));
+        } else {
+          onChange([...values, key]);
+        }
+      } else {
+        onChange([key]);
+      }
+    },
+    [multi, onChange, values],
+  );
+
   return (
     <LabelField {...labelFields}>
       <div className='flex flex-wrap'>
@@ -26,10 +44,10 @@ export default function RadioGroup<T extends string | Option>({
               <input
                 type='radio'
                 value={label}
-                checked={value === key}
-                onChange={() => onChange(key)}
+                checked={values.includes(key)}
+                onChange={() => handleClick(key)}
               />
-              <label onClick={() => onChange(key)}>{label}</label>
+              <label onClick={() => handleClick(key)}>{label}</label>
             </div>
           );
         })}

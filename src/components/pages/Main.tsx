@@ -23,14 +23,14 @@ function Main() {
         <div className='flex w-full flex-col items-center border-2 border-black p-8'>
           <RadioGroup
             label='key event'
-            value={keyEvent}
-            onChange={(value) => setKeyEvent(value as KeyEvent)}
+            values={[keyEvent]}
+            onChange={([value]) => setKeyEvent(value as KeyEvent)}
             options={['down', 'up']}
           />
           <RadioGroup
             label='tab'
-            value={tab}
-            onChange={(value) => setTab(value as Tab)}
+            values={[tab]}
+            onChange={([value]) => setTab(value as Tab)}
             options={['config', 'modifier']}
           />
         </div>

@@ -1,20 +1,17 @@
 import IconButton from '@src/components/shared/IconButton';
 import SoundStructure, {
-  SoundStructureField,
   SoundStructureProps,
 } from '@src/components/SoundStructureTree/SoundStructure';
 import { UpdateModifierArgs } from '@src/hooks/useKeyboardSound';
-import { ModifierOp, SoundModifier } from '@src/keyboard/keySoundModifier';
+import {
+  isModifierOp,
+  ModifierOp,
+  SoundModifier,
+} from '@src/keyboard/keySoundModifier';
 import { SynthConfig } from '@src/synth';
 import { memo, useCallback } from 'react';
 import FieldModifier from './FieldModifer';
 import { useModiferContext } from './ModifierContext';
-
-function shouldRenderField(
-  field: SoundStructureField<ModifierOp>,
-): field is ModifierOp {
-  return Array.isArray(field) && field.length === 2;
-}
 
 type ModifierControlProps = {
   modifier: SoundModifier;
@@ -54,7 +51,7 @@ const InnerModifierControl = memo(function ModifierControl({
         synths={synths}
         structure={modifier}
         renderField={renderField}
-        shouldRenderField={shouldRenderField}
+        shouldRenderField={isModifierOp}
       />
       <IconButton
         className='mb-4 ml-[-11px] self-start'

@@ -1,7 +1,4 @@
-import {
-  findSynthModifiers,
-  SoundModifier,
-} from '@src/keyboard/keySoundModifier';
+import { SoundModifier } from '@src/keyboard/keySoundModifier';
 import { Synth } from '@src/synth';
 import * as Tone from '@src/tone';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -45,7 +42,7 @@ export default function useSoundCache() {
 
     function playRealtime(synths: Synth[], modifiers: SoundModifier[]) {
       synths.forEach((synth) =>
-        synth.trigger(findSynthModifiers(modifiers, synth.state.id)),
+        synth.trigger(modifiers),
       );
     }
 

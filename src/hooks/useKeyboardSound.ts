@@ -152,6 +152,7 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
             isFieldRandomConfig,
             (fieldPath, { min, max, options }) => {
               let modifier: ModifierOp | null = null;
+
               if (min != null && max != null) {
                 modifier = ['add', min + seed * (max - min)];
               } else if (options != null) {
@@ -160,6 +161,7 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
                   options[Math.round(seed * (options.length - 1))],
                 ];
               }
+              
 
               if (modifier) {
                 set(

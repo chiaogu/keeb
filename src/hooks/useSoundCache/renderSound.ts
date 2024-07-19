@@ -1,7 +1,4 @@
-import {
-  findSynthModifiers,
-  SoundModifier,
-} from '@src/keyboard/keySoundModifier';
+import { SoundModifier } from '@src/keyboard/keySoundModifier';
 import createSynth, { SynthConfig } from '@src/synth';
 import * as Tone from '@src/tone';
 import { MAX_SOUND_DURATION } from '@src/utils/constants';
@@ -17,9 +14,7 @@ export default async function renderSound(
     Tone.Offline(async () => {
       const offlineSynths = synths.map(createSynth);
       await Promise.all(offlineSynths.map(({ ready }) => ready()));
-      offlineSynths.forEach((s) =>
-        s.trigger(findSynthModifiers(modifiers, s.state.id)),
-      );
+      offlineSynths.forEach((s) => s.trigger(modifiers));
     }, MAX_SOUND_DURATION),
   );
   const buffer = await renderQueue;

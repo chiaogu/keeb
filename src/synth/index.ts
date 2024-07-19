@@ -3,7 +3,7 @@ import { castDraft, Immutable, produce } from 'immer';
 import { v4 as uuid } from 'uuid';
 import { FxNodeType, nodeConfig, SrcNodeType, SynthNodeType } from './config';
 import parseNodeData from './parseNodeData';
-import { getModifiedNodeData, SynthModifier } from '@src/keyboard/keySoundModifier';
+import { getModifiedNodeData, SoundModifier, SynthModifier } from '@src/keyboard/keySoundModifier';
 
 type SupportedSrcToneNode = ReturnType<
   (typeof nodeConfig)[SrcNodeType]['createNode']
@@ -122,7 +122,7 @@ export default function createSynth(config: Immutable<SynthConfig>) {
     setFxs(state.fxs);
   }
 
-  function trigger(modifiers: SynthModifier[] = []) {
+  function trigger(modifiers: SoundModifier[] = []) {
     if (!srcNode) throw new Error('synth is not initialized yet');
     
     const modifiedSrcData = getModifiedNodeData(state.src, modifiers);
