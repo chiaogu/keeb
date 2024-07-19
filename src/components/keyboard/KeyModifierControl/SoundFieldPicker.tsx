@@ -1,3 +1,5 @@
+import IconButton from '@src/components/shared/IconButton';
+import SectionHeader from '@src/components/shared/SectionHeader';
 import SoundStructure, {
   RenderFieldProps,
   SoundStructureField,
@@ -14,10 +16,16 @@ function shouldRenderField(
 }
 
 type SoundFieldPickerProps = {
+  soundName: string;
   onSelect: (args: SoundFieldPath, node?: SynthNodeState) => void;
+  onClose: () => void;
 };
 
-export default function SoundFieldPicker({ onSelect }: SoundFieldPickerProps) {
+export default function SoundFieldPicker({
+  soundName,
+  onSelect,
+  onClose,
+}: SoundFieldPickerProps) {
   const { synths } = useModiferContext();
 
   const nodeMap = useMemo(() => {
@@ -53,11 +61,16 @@ export default function SoundFieldPicker({ onSelect }: SoundFieldPickerProps) {
   }, [onSelect]);
 
   return (
-    <SoundStructure
-      synths={synths}
-      structure={nodeMap}
-      renderField={renderField}
-      shouldRenderField={shouldRenderField}
-    />
+    <>
+      <SectionHeader label={soundName} className='mt-4 font-bold'>
+        <IconButton icon='close' onClick={onClose} />
+      </SectionHeader>
+      <SoundStructure
+        synths={synths}
+        structure={nodeMap}
+        renderField={renderField}
+        shouldRenderField={shouldRenderField}
+      />
+    </>
   );
 }

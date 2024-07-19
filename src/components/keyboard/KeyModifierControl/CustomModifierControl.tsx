@@ -1,5 +1,5 @@
 import IconButton from '@src/components/shared/IconButton';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 import { useImmer } from 'use-immer';
 import SectionHeader from '../../shared/SectionHeader';
@@ -8,8 +8,13 @@ import ModifierControl from './ModifierControl';
 import ModifierKeyboard from './ModifierKeyboard';
 
 export default function CustomModifierControl() {
-  const { selectedLayer, selectedLayerIndex, updateModifier, removeModifier } =
-    useModiferContext();
+  const {
+    selectedLayer,
+    selectedLayerIndex,
+    updateModifier,
+    removeModifier,
+    soundName,
+  } = useModiferContext();
   const [selectedKeys, setSelectedKeys] = useImmer<string[]>([]);
   const highlightedKeys = useMemo(() => {
     if (!selectedLayer) return {};
@@ -41,28 +46,29 @@ export default function CustomModifierControl() {
       />
       <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
         {selectedKeys.length === 0 && 'select a key'}
-        {selectedKeys.map((selectedKey) => (
-          <Fragment key={selectedKey}>
-            <SectionHeader className='font-bold' label={selectedKey}>
+        {selectedKeys.map((key) => (
+          <div key={key} className="mb-4 flex w-full flex-col">
+            <SectionHeader className='font-bold' label={key}>
               <IconButton
                 icon='remove'
                 onClick={() => {
-                  removeModifier(selectedLayerIndex, [selectedKey]);
-                  toggleKey(selectedKey);
+                  removeModifier(selectedLayerIndex, [key]);
+                  toggleKey(key);
                 }}
               />
             </SectionHeader>
             <ModifierControl
-              modifier={selectedLayer.keys[selectedKey] ?? {}}
+              soundName={soundName}
+              modifier={selectedLayer.keys[key] ?? {}}
               onChange={(args) =>
                 updateModifier({
                   ...args,
-                  keys: [selectedKey],
+                  keys: [key],
                   layerIndex: selectedLayerIndex,
                 })
               }
             />
-          </Fragment>
+          </div>
         ))}
       </div>
     </>

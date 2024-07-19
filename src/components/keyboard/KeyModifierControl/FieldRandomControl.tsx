@@ -18,33 +18,39 @@ type FieldRandomControlProps = {
   onChange: (randomConfig: FieldRandomConfig) => void;
   onClickInvalidField: () => void;
   onClickRemove: () => void;
+  showFixButton: boolean;
 };
 
 export default function FieldRandomControl({
   fieldPath,
-  randomConfig,
+  randomConfig: { min = -0.3, max = 0.3, options },
   node,
   onChange,
   onClickInvalidField,
   onClickRemove,
+  showFixButton,
 }: FieldRandomControlProps) {
   const field = fieldPath[fieldPath.length - 1];
   const valid = node && get(node?.data, fieldPath) != undefined;
 
   if (!valid) {
-    return <InvalidFieldModifier field={field} onClick={onClickInvalidField} />;
+    return (
+      <InvalidFieldModifier
+        field={field}
+        onClick={onClickInvalidField}
+        showFixButton={showFixButton}
+      />
+    );
   }
 
   const schema = getNestedFieldSchema(nodeConfig[node.type].schema, fieldPath);
 
-  if (schema instanceof z.ZodNumber) {
-    const min = randomConfig.min ?? -0.3;
-    const max = randomConfig.max ?? 0.3;
-    return (
-      <>
-        <SectionHeader label={field}>
-          <IconButton icon='remove' onClick={onClickRemove} />
-        </SectionHeader>
+  return (
+    <>
+      <SectionHeader label={field}>
+        <IconButton icon='remove' onClick={onClickRemove} />
+      </SectionHeader>
+      {schema instanceof z.ZodNumber && (
         <div className='flex w-full flex-col items-center border-l-2 border-dotted border-l-black pl-[16px]'>
           <Slider
             label='min'
@@ -63,22 +69,16 @@ export default function FieldRandomControl({
             renderValue={formatModifierValue}
           />
         </div>
-      </>
-    );
-  }
-
-  // TODO: Multi select
-  if (schema instanceof z.ZodEnum) {
-    return (
-      <RadioGroup
-        label='options'
-        values={randomConfig.options}
-        onChange={(options) => onChange({ options })}
-        options={schema.options}
-        multi
-      />
-    );
-  }
-
-  return null;
+      )}
+      {schema instanceof z.ZodEnum && (
+        <RadioGroup
+          label='options'
+          values={options}
+          onChange={(selected) => onChange({ options: selected })}
+          options={schema.options}
+          multi
+        />
+      )}
+    </>
+  );
 }

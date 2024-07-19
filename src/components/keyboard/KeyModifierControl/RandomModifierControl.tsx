@@ -111,31 +111,26 @@ export default function RandomModifierControl() {
           onClickAdd={() => {
             setSelectingField('add');
           }}
+          selectingField={!!selectingField}
         />
         {selectingField && (
-          <>
-            <SectionHeader label={soundName} className='mt-4 font-bold'>
-              <IconButton
-                icon='close'
-                onClick={() => {
-                  setSelectingField(false);
-                  setFixingField(undefined);
-                }}
-              />
-            </SectionHeader>
-            <SoundFieldPicker
-              onSelect={(newField, node) => {
-                if (selectingField === 'fix' && fixingField) {
-                  fixRandomConfig(fixingField, newField);
-                }
-                if (selectingField === 'add' && node) {
-                  addRandomConfig(newField, node);
-                }
-                setSelectingField(false);
-                setFixingField(undefined);
-              }}
-            />
-          </>
+          <SoundFieldPicker
+            soundName={soundName}
+            onSelect={(newField, node) => {
+              if (selectingField === 'fix' && fixingField) {
+                fixRandomConfig(fixingField, newField);
+              }
+              if (selectingField === 'add' && node) {
+                addRandomConfig(newField, node);
+              }
+              setSelectingField(false);
+              setFixingField(undefined);
+            }}
+            onClose={() => {
+              setSelectingField(false);
+              setFixingField(undefined);
+            }}
+          />
         )}
       </div>
       <KeysDebug

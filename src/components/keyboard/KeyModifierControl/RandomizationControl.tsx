@@ -20,6 +20,7 @@ type RandomizationControlProps = {
   onChange: (field: SoundFieldPath, config: FieldRandomConfig) => void;
   onClickInvalidField: (args: SoundFieldPath) => void;
   onClickAdd: () => void;
+  selectingField: boolean;
 };
 
 export default function RandomizationControl({
@@ -27,6 +28,7 @@ export default function RandomizationControl({
   onChange,
   onClickInvalidField,
   onClickAdd,
+  selectingField,
 }: RandomizationControlProps) {
   const { synths, removeRandomConfig } = useModiferContext();
 
@@ -41,9 +43,10 @@ export default function RandomizationControl({
         }}
         onClickInvalidField={() => onClickInvalidField(props)}
         onClickRemove={() => removeRandomConfig(props)}
+        showFixButton={!selectingField}
       />
     ),
-    [onChange, onClickInvalidField, removeRandomConfig],
+    [onChange, onClickInvalidField, removeRandomConfig, selectingField],
   );
 
   return (
@@ -54,9 +57,11 @@ export default function RandomizationControl({
         renderField={renderField}
         shouldRenderField={isFieldRandomConfig}
       />
-      <SectionHeader label='new'>
-        <IconButton icon='add' onClick={onClickAdd} />
-      </SectionHeader>
+      {!selectingField && (
+        <SectionHeader label='new'>
+          <IconButton icon='add' onClick={onClickAdd} />
+        </SectionHeader>
+      )}
     </>
   );
 }
