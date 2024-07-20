@@ -39,7 +39,7 @@ export default function ModifierLayerControl() {
     selectedLayer,
     addModifierLayer,
     soundName,
-    loadModifiers,
+    loadModifierLayers,
   } = useModiferContext();
   const layers = useMemo(
     () => modifiers.map(({ id, name }) => ({ label: name, key: id })),
@@ -51,7 +51,7 @@ export default function ModifierLayerControl() {
     <>
       <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
         <SectionHeader label={`${soundName} modifier`} className='font-bold'>
-          <IconButton icon='upload' onClick={loadModifiers} />
+          <IconButton icon='upload' onClick={loadModifierLayers} />
           <IconButton icon='download' onClick={() => downloadModifierLayers(`${soundName}-modifier`, modifiers)} />
         </SectionHeader>
         <RadioGroup

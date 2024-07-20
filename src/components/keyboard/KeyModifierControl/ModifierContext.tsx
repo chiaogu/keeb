@@ -17,6 +17,7 @@ import {
   useState,
 } from 'react';
 import { SoundFieldPath } from './RandomizationControl';
+import useUplodaFile from '@src/hooks/useUplodaFile';
 
 function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
   const {
@@ -26,12 +27,12 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     addModifierLayer: soundAddModifierLayer,
     removeModifierLayer: soundRemoveModifierLayer,
     updateModiferLayer,
-    loadModifiers,
 
     updateModifier: soundUpdateModifier,
     removeModifier,
     batchSetModifier,
     updateRandomConfig: soundUpdateRandomConfig,
+    loadModifierLayers: soundLoadModifierLayers,
   } = useMemo(
     () => (keyEvent === 'down' ? keyboard.down : keyboard.up),
     [keyEvent, keyboard],
@@ -169,6 +170,9 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     [selectedLayerIndex, soundUpdateModifier],
   );
   
+  // TODO: Validation
+  const { load: loadModifierLayers } = useUplodaFile(soundLoadModifierLayers);
+  
   return {
     soundName: name,
     synths,
@@ -181,7 +185,7 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     addModifierLayer,
     removeModifierLayer,
     updateModiferLayer,
-    loadModifiers,
+    loadModifierLayers,
 
     removeModifier,
     batchSetModifier,

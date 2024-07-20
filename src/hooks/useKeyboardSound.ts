@@ -15,14 +15,11 @@ import { useImmer } from 'use-immer';
 import { v4 as uuid } from 'uuid';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
-import useUplodaFile from './useUplodaFile';
 
 export default function useKeyboardSound(keySound: KeySoundConfig) {
   const soundCache = useSoundCache();
   const { synths, states, ...rest } = useSound(keySound.config);
   const [modifiers, setModifiers] = useImmer(keySound.modifiers);
-  // TODO: Validation
-  const { load } = useUplodaFile(setModifiers);
 
   useEffect(() => {
     soundCache.clear();
@@ -39,6 +36,13 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
     [modifiers, rest, soundCache, states, synths],
   );
 
+  const loadModifierLayers = useCallback(
+    (config: ModifierLayer[]) => {
+      setModifiers(() => config);
+    },
+    [setModifiers],
+  );
+  
   const addModifierLayer = useCallback(
     (config: Pick<ModifierLayer, 'name' | 'type'>) => {
       setModifiers((draft) => {
@@ -179,7 +183,7 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
     removeModifier,
     batchSetModifier,
     updateRandomConfig,
-    loadModifiers: load,
+    loadModifierLayers,
   };
 }
 

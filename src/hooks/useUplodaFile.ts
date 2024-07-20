@@ -1,7 +1,7 @@
 import { loadFile } from '@src/utils/file';
 import { useCallback, useMemo, useState } from 'react';
 
-export default function useUplodaFile<T>(onLoad: (sound: T) => void) {
+export default function useUplodaFile<T>(onLoad: (data: T) => void) {
   const [loading, setLoading] = useState(false);
 
   const load = useCallback(async () => {
