@@ -65,11 +65,11 @@ export default function RandomModifierControl() {
   const modifiedKeys = useMemo(
     () =>
       Object.fromEntries(
-        Object.entries(selectedLayer.keys).map(([key, modifier]) => {
-          return [key, getFieldRandomSeed(modifier) ?? 1];
+        Object.keys(selectedLayer.keys).map((key) => {
+          return [key, selectedLayer.randomSeed[key] ?? 1];
         }),
       ),
-    [selectedLayer.keys],
+    [selectedLayer.keys, selectedLayer.randomSeed],
   );
 
   const toggleKey = useCallback(
@@ -102,6 +102,7 @@ export default function RandomModifierControl() {
               batchSetModifier(
                 selectedLayerIndex,
                 Object.keys(selectedLayer.keys),
+                true
               );
             }}
           />

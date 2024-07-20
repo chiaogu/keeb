@@ -1,13 +1,11 @@
 import {
   findSoundModifiers,
-  getFieldRandomSeed,
   isFieldRandomConfig,
   iterateSoundStructure,
   ModifierOp,
   SoundModifier,
 } from '@src/keyboard/keySoundModifier';
 import { KeySoundConfig, ModifierLayer, RandomizationConfig } from '@src/types';
-import { RANDOM_SEED_ID } from '@src/utils/constants';
 import { getSoundStructureFieldPath } from '@src/utils/utils';
 import { isEmpty, set } from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -42,16 +40,28 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
     },
     [setModifiers],
   );
-  
+
   const addModifierLayer = useCallback(
-    (config: Pick<ModifierLayer, 'name' | 'type'>) => {
+    ({ name, type }: Pick<ModifierLayer, 'name' | 'type'>) => {
       setModifiers((draft) => {
-        draft.push({
-          id: uuid(),
-          keys: {},
-          config: {},
-          ...config,
-        });
+        if (type === 'custom') {
+          draft.push({
+            id: uuid(),
+            keys: {},
+            name,
+            type,
+          });
+        }
+        if (type === 'random') {
+          draft.push({
+            id: uuid(),
+            keys: {},
+            config: {},
+            randomSeed: {},
+            name,
+            type,
+          });
+        }
       });
     },
     [setModifiers],
@@ -107,23 +117,17 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
   );
 
   const batchSetModifier = useCallback(
-    (layerIndex: number, keys: string[]) => {
+    (layerIndex: number, keys: string[], resetSeed: boolean = false) => {
       const getSeed = Math.random;
 
       setModifiers((draft) => {
         keys.forEach((key) => {
           if (draft[layerIndex].type !== 'random') return;
 
-          const seed =
-            getFieldRandomSeed(draft[layerIndex].keys[key]) ?? getSeed();
+          const currentSeed = draft[layerIndex].randomSeed[key];
+          const seed = currentSeed && !resetSeed ? currentSeed : getSeed();
 
-          draft[layerIndex].keys[key] = {
-            [RANDOM_SEED_ID]: {
-              [RANDOM_SEED_ID]: {
-                [RANDOM_SEED_ID]: ['add', seed],
-              },
-            },
-          };
+          set(draft[layerIndex], ['randomSeed', key], seed);
 
           // Don't set modifier when there is no random config
           if (isEmpty(draft[layerIndex].config)) {

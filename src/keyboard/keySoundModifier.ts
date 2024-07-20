@@ -6,7 +6,6 @@ import {
 import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
 import { FieldRandomConfig, ModifierLayer } from '@src/types';
-import { RANDOM_SEED_ID } from '@src/utils/constants';
 import { getNestedFieldSchema, getNumberDef } from '@src/utils/schema';
 import { produce, WritableDraft } from 'immer';
 import { get, set } from 'lodash';
@@ -69,12 +68,6 @@ export function getModifiedNodeData(
       );
     });
   }).data;
-}
-
-export function getFieldRandomSeed(modifier: SoundModifier) {
-  return modifier?.[RANDOM_SEED_ID]?.[RANDOM_SEED_ID]?.[RANDOM_SEED_ID]?.[1] as
-    | number
-    | undefined;
 }
 
 export function getDefaultRandomConfig(

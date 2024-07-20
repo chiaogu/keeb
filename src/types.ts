@@ -24,6 +24,7 @@ export type RandomizationConfig = SoundStructure<FieldRandomConfig>;
 type RandomModifierLayer = {
   type: 'random';
   config: RandomizationConfig;
+  randomSeed: { [key: string]: number };
 };
 
 export type ModifierLayer = {
