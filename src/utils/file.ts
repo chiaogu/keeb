@@ -1,4 +1,4 @@
-import { ModifierLayer, SoundConfig } from '@src/types';
+import { KeyboardConfig, ModifierLayer, SoundConfig } from '@src/types';
 
 function download(fileName: string, data: unknown) {
   const jsonData = JSON.stringify(data, null, 2);
@@ -11,6 +11,10 @@ function download(fileName: string, data: unknown) {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+}
+
+export function downloadKeyboard(keyboard: KeyboardConfig) {
+  download(`${keyboard.name}.json`, keyboard);
 }
 
 export function downloadSound(sound: SoundConfig) {

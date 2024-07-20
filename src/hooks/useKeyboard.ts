@@ -1,6 +1,7 @@
 import { getDefaultKeyboard } from '@src/keyboard/defaults';
+import { downloadKeyboard } from '@src/utils/file';
 import * as storage from '@src/utils/localstorage';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useKeyEvents } from './useKeyEvents';
 import useKeyboardSound from './useKeyboardSound';
 
@@ -11,13 +12,14 @@ function getKeyboardConfig() {
 export type KeyEvent = 'down' | 'up';
 
 export default function useKeyboard() {
-  const config = useRef(getKeyboardConfig());
-  const down = useKeyboardSound(config.current.sound.down);
-  const up = useKeyboardSound(config.current.sound.up);
-
-  useEffect(() => {
-    storage.setKeyboardConfig({
-      ...config,
+  const initConfig = useRef(getKeyboardConfig());
+  const down = useKeyboardSound(initConfig.current.sound.down);
+  const up = useKeyboardSound(initConfig.current.sound.up);
+  const [name, setName] = useState(initConfig.current.name);
+  const currentConfig = useMemo(
+    () => ({
+      ...initConfig.current,
+      name,
       sound: {
         down: {
           config: down.sound,
@@ -28,8 +30,14 @@ export default function useKeyboard() {
           modifiers: up.modifiers,
         },
       },
-    });
-  }, [down, up]);
+    }),
+    [down.modifiers, down.sound, name, up.modifiers, up.sound],
+  );
+  console.log(currentConfig);
+
+  useEffect(() => {
+    storage.setKeyboardConfig(currentConfig);
+  }, [currentConfig]);
 
   const onKeydown = useCallback(
     (e: KeyboardEvent) => {
@@ -47,7 +55,14 @@ export default function useKeyboard() {
 
   useKeyEvents({ onKeydown, onKeyUp });
 
-  return useMemo(() => ({ down, up }), [down, up]);
+  const download = useCallback(() => {
+    downloadKeyboard(currentConfig);
+  }, [currentConfig]);
+
+  return useMemo(
+    () => ({ down, up, name, setName, download }),
+    [down, up, name, download],
+  );
 }
 
 export type Keyboard = ReturnType<typeof useKeyboard>;

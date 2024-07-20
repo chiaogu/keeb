@@ -56,7 +56,7 @@ export default function SoundControl({
           <IconButton icon='upload' onClick={load} />
           <IconButton icon='download' onClick={() => downloadSound(sound)} />
         </SectionHeader>
-        <div className='mt-4 flex w-full flex-col'>
+        <div className='flex w-full flex-col'>
           <RadioGroup
             label='layers'
             values={[selectedSynth.id]}

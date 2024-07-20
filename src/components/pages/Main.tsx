@@ -4,7 +4,9 @@ import { Tab } from '@src/types';
 import { useMemo, useState } from 'react';
 import SoundControl from '../SoundControl';
 import KeySoundModifier from '../keyboard/KeySoundModifier';
+import IconButton from '../shared/IconButton';
 import RadioGroup from '../shared/RadioGroup';
+import SectionHeader from '../shared/SectionHeader';
 
 function Main() {
   const [keyEvent, setKeyEvent] = useState<KeyEvent>('down');
@@ -21,8 +23,12 @@ function Main() {
       <Keys />
       <div className='mb-4 flex w-full max-w-[500px] flex-col items-center'>
         <div className='flex w-full flex-col items-center border-2 border-black p-8'>
+          <SectionHeader label={keyboard.name} onLabelChange={keyboard.setName} className='font-bold'>
+            <IconButton icon='upload' onClick={() => {}} />
+            <IconButton icon='download' onClick={keyboard.download} />
+          </SectionHeader>
           <RadioGroup
-            label='key event'
+            label='event'
             values={[keyEvent]}
             onChange={([value]) => setKeyEvent(value as KeyEvent)}
             options={['down', 'up']}

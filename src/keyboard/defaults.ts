@@ -58,6 +58,7 @@ function getDefaultKeySound(): KeySoundConfig {
 
 export function getDefaultKeyboard(): KeyboardConfig {
   return {
+    name: 'untitled',
     sound: {
       up: getDefaultKeySound(),
       down: getDefaultKeySound(),
