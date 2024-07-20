@@ -1,6 +1,6 @@
 import { useDebounceCallback } from '@react-hook/debounce';
 import { Keyboard, KeyEvent } from '@src/hooks/useKeyboard';
-import { getDefaultRandomConfig } from '@src/keyboard/keySoundModifier';
+import { getDefaultModifier, getDefaultRandomConfig, ModifierOp } from '@src/keyboard/keySoundModifier';
 import { SynthNodeState } from '@src/synth';
 import { FieldRandomConfig } from '@src/types';
 import {
@@ -27,8 +27,8 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     removeModifierLayer: soundRemoveModifierLayer,
     updateModiferLayer,
     loadModifiers,
-    
-    updateModifier,
+
+    updateModifier: soundUpdateModifier,
     removeModifier,
     batchSetModifier,
     updateRandomConfig: soundUpdateRandomConfig,
@@ -107,15 +107,68 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     },
     [randomizeAfterConfigChange, selectedLayerIndex, soundUpdateRandomConfig],
   );
-  
-  const removeRandomConfig = useCallback((field: SoundFieldPath) => {
-    soundUpdateRandomConfig(selectedLayerIndex, (draft) => {
-      removeSoundStructureField(draft, field);
-      return draft;
-    });
-    randomizeAfterConfigChange();
-  }, [randomizeAfterConfigChange, selectedLayerIndex, soundUpdateRandomConfig]);
 
+  const removeRandomConfig = useCallback(
+    (field: SoundFieldPath) => {
+      soundUpdateRandomConfig(selectedLayerIndex, (draft) => {
+        removeSoundStructureField(draft, field);
+        return draft;
+      });
+      randomizeAfterConfigChange();
+    },
+    [randomizeAfterConfigChange, selectedLayerIndex, soundUpdateRandomConfig],
+  );
+
+  const updateFieldModifier = useCallback(
+    (keys: string[], field: SoundFieldPath, modifier: ModifierOp) => {
+      soundUpdateModifier(selectedLayerIndex, keys, (draft) => {
+        set(
+          draft,
+          getSoundStructureFieldPath(field),
+          modifier,
+        );
+        return draft;
+      });
+    },
+    [selectedLayerIndex, soundUpdateModifier],
+  );
+
+  const addFieldModifier = useCallback(
+    (keys: string[], field: SoundFieldPath, node: SynthNodeState) => {
+      soundUpdateModifier(selectedLayerIndex, keys, (draft) => {
+        set(
+          draft,
+          getSoundStructureFieldPath(field),
+          getDefaultModifier(field, node),
+        );
+        return draft;
+      });
+    },
+    [selectedLayerIndex, soundUpdateModifier],
+  );
+  
+  const fixFieldModifier = useCallback(
+    (keys: string[], oldField: SoundFieldPath, newField: SoundFieldPath) => {
+      soundUpdateModifier(selectedLayerIndex, keys, (draft) => {
+        const value = getSoundStructureValue(draft, oldField);
+        set(draft, getSoundStructureFieldPath(newField), value);
+        removeSoundStructureField(draft, oldField);
+        return draft;
+      });
+    },
+    [selectedLayerIndex, soundUpdateModifier],
+  );
+
+  const removeFieldModifier = useCallback(
+    (keys: string[], field: SoundFieldPath) => {
+      soundUpdateModifier(selectedLayerIndex, keys, (draft) => {
+        removeSoundStructureField(draft, field);
+        return draft;
+      });
+    },
+    [selectedLayerIndex, soundUpdateModifier],
+  );
+  
   return {
     soundName: name,
     synths,
@@ -130,13 +183,17 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     updateModiferLayer,
     loadModifiers,
 
-    updateModifier,
     removeModifier,
     batchSetModifier,
     updateRandomConfig,
     fixRandomConfig,
     addRandomConfig,
     removeRandomConfig,
+    
+    addFieldModifier,
+    updateFieldModifier,
+    fixFieldModifier,
+    removeFieldModifier,
 
     triggerUp(key: string) {
       keyboard.up.sound.trigger(key);

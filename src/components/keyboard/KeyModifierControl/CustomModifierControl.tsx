@@ -1,6 +1,5 @@
 import IconButton from '@src/components/shared/IconButton';
 import { useCallback, useMemo } from 'react';
-import { Fragment } from 'react/jsx-runtime';
 import { useImmer } from 'use-immer';
 import SectionHeader from '../../shared/SectionHeader';
 import { useModiferContext } from './ModifierContext';
@@ -11,7 +10,10 @@ export default function CustomModifierControl() {
   const {
     selectedLayer,
     selectedLayerIndex,
-    updateModifier,
+    addFieldModifier,
+    updateFieldModifier,
+    removeFieldModifier,
+    fixFieldModifier,
     removeModifier,
     soundName,
   } = useModiferContext();
@@ -47,7 +49,7 @@ export default function CustomModifierControl() {
       <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
         {selectedKeys.length === 0 && 'select a key'}
         {selectedKeys.map((key) => (
-          <div key={key} className="mb-4 flex w-full flex-col">
+          <div key={key} className='mb-4 flex w-full flex-col'>
             <SectionHeader className='font-bold' label={key}>
               <IconButton
                 icon='remove'
@@ -60,13 +62,15 @@ export default function CustomModifierControl() {
             <ModifierControl
               soundName={soundName}
               modifier={selectedLayer.keys[key] ?? {}}
-              onChange={(args) =>
-                updateModifier({
-                  ...args,
-                  keys: [key],
-                  layerIndex: selectedLayerIndex,
-                })
-              }
+              onChange={(field, modifier) => {
+                updateFieldModifier([key], field, modifier);
+              }}
+              onAdd={(field, node) => {
+                addFieldModifier([key], field, node);
+              }}
+              onFix={(fixingField, newField) => {
+                fixFieldModifier([key], fixingField, newField);
+              }}
             />
           </div>
         ))}

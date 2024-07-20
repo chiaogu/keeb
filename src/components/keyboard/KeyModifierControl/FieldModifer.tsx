@@ -1,28 +1,31 @@
+import IconButton from '@src/components/shared/IconButton';
 import RadioGroup from '@src/components/shared/RadioGroup';
 import ReadOnly from '@src/components/shared/ReadOnly';
+import SectionHeader from '@src/components/shared/SectionHeader';
 import Slider from '@src/components/shared/Slider';
 import { ModifierOp } from '@src/keyboard/keySoundModifier';
 import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
-import { removeDefault } from '@src/utils/schema';
+import { getNestedFieldSchema } from '@src/utils/schema';
 import { formatModifierValue } from '@src/utils/utils';
+import { get } from 'lodash';
 import { z } from 'zod';
 
 type FieldModifierProps = {
-  field: string;
+  fieldPath: string[];
   modifier: ModifierOp;
   node?: SynthNodeState;
-  onChange: (value: unknown) => void;
+  onChange: (value: ModifierOp) => void;
 };
 
-// TODO: Support nested field
 export default function FieldModifier({
-  field,
-  modifier: [operation, value],
+  fieldPath,
+  modifier: [_operation, value],
   node,
   onChange,
 }: FieldModifierProps) {
-  const valid = node?.data?.[field] != undefined;
+  const field = fieldPath[fieldPath.length - 1];
+  const valid = node && get(node?.data, fieldPath) != undefined;
 
   if (!valid) {
     return (
@@ -34,34 +37,31 @@ export default function FieldModifier({
     );
   }
 
-  const schema = removeDefault(
-    nodeConfig[node.type].schema.shape[field as never],
-  );
-
-  if (schema instanceof z.ZodNumber) {
-    return (
-      <Slider
-        label={field}
-        value={value as number}
-        onChange={onChange}
-        min={-0.5}
-        max={0.5}
-        renderValue={formatModifierValue}
-      />
-    );
-  }
+  const schema = getNestedFieldSchema(nodeConfig[node.type].schema, fieldPath);
   
-  if (schema instanceof z.ZodEnum) {
-    return (
-      <RadioGroup
-        label={field}
-        values={[value as string]}
-        // TODO: Support selecting
-        onChange={() => {}}
-        options={schema.options}
-      />
-    );
-  }
-
-  return null;
+  return (
+    <>
+      <div className='flex w-full items-start'>
+        {schema instanceof z.ZodNumber && (
+          <Slider
+            label={field}
+            value={value as number}
+            onChange={(v) => onChange(['add', v])}
+            min={-0.5}
+            max={0.5}
+            renderValue={formatModifierValue}
+          />
+        )}
+        {schema instanceof z.ZodEnum && (
+          <RadioGroup
+            label={field}
+            values={[value as string]}
+            onChange={([o]) => onChange(['set', o])}
+            options={schema.options}
+          />
+        )}
+        <IconButton className="ml-4" icon='remove' />
+      </div>
+    </>
+  );
 }

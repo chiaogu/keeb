@@ -3,13 +3,12 @@ import SectionHeader from '@src/components/shared/SectionHeader';
 import SoundStructure, {
   SoundStructureProps,
 } from '@src/components/SoundStructureTree/SoundStructure';
-import { UpdateModifierArgs } from '@src/hooks/useKeyboardSound';
 import {
   isModifierOp,
   ModifierOp,
   SoundModifier,
 } from '@src/keyboard/keySoundModifier';
-import { SynthConfig } from '@src/synth';
+import { SynthConfig, SynthNodeState } from '@src/synth';
 import { memo, useCallback, useState } from 'react';
 import FieldModifier from './FieldModifer';
 import { useModiferContext } from './ModifierContext';
@@ -19,7 +18,9 @@ import SoundFieldPicker from './SoundFieldPicker';
 type ModifierControlProps = {
   soundName: string;
   modifier: SoundModifier;
-  onChange?: (args: Omit<UpdateModifierArgs, 'keys' | 'layerIndex'>) => void;
+  onChange?: (field: SoundFieldPath, modifier: ModifierOp) => void;
+  onAdd?: (field: SoundFieldPath, node: SynthNodeState) => void;
+  onFix?: (fixingField: SoundFieldPath, newField: SoundFieldPath) => void;
 };
 
 const InnerModifierControl = memo(function ModifierControl({
@@ -27,6 +28,8 @@ const InnerModifierControl = memo(function ModifierControl({
   modifier,
   onChange,
   synths,
+  onAdd,
+  onFix,
 }: ModifierControlProps & { synths: SynthConfig[] }) {
   const [fixingField, setFixingField] = useState<SoundFieldPath>();
   const [selectingField, setSelectingField] = useState<'add' | 'fix' | false>(
@@ -35,19 +38,14 @@ const InnerModifierControl = memo(function ModifierControl({
 
   const renderField: SoundStructureProps<ModifierOp>['renderField'] =
     useCallback(
-      ({ node, fieldPath, value, synthId, nodeId }) => {
+      (props) => {
         return (
           <FieldModifier
-            field={fieldPath[fieldPath.length - 1]}
-            modifier={value}
-            node={node}
+            fieldPath={props.fieldPath}
+            modifier={props.value}
+            node={props.node}
             onChange={(value) => {
-              onChange?.({
-                synthId,
-                nodeId,
-                value,
-                field: fieldPath[fieldPath.length - 1],
-              });
+              onChange?.(props, value);
             }}
           />
         );
@@ -69,12 +67,6 @@ const InnerModifierControl = memo(function ModifierControl({
             icon='add'
             onClick={() => {
               setSelectingField('add');
-              // onChange?.({
-              //   synthId: synths[0].id,
-              //   nodeId: synths[0].src.id,
-              //   field: 'frequency',
-              //   value: 0,
-              // });
             }}
           />
         </SectionHeader>
@@ -84,10 +76,10 @@ const InnerModifierControl = memo(function ModifierControl({
           soundName={soundName}
           onSelect={(newField, node) => {
             if (selectingField === 'fix' && fixingField) {
-              // fixRandomConfig(fixingField, newField);
+              onFix?.(fixingField, newField);
             }
             if (selectingField === 'add' && node) {
-              // addRandomConfig(newField, node);
+              onAdd?.(newField, node);
             }
             setSelectingField(false);
             setFixingField(undefined);

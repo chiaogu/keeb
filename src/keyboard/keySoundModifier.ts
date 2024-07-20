@@ -133,3 +133,18 @@ export function iterateSoundStructure<T>(
 export function findSoundModifiers(layers: ModifierLayer[], key: string) {
   return layers.map(({ keys }) => keys[key]).filter(Boolean);
 }
+
+export function getDefaultModifier(
+  { fieldPath }: SoundFieldPath,
+  node: SynthNodeState,
+) {
+  const schema = getNestedFieldSchema(nodeConfig[node.type].schema, fieldPath);
+
+  if (schema instanceof z.ZodNumber) {
+    return ['add', 0];
+  }
+
+  if (schema instanceof z.ZodEnum) {
+    return ['set', schema.options[0]];
+  }
+}

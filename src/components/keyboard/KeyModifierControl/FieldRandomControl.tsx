@@ -50,35 +50,37 @@ export default function FieldRandomControl({
       <SectionHeader label={field}>
         <IconButton icon='remove' onClick={onClickRemove} />
       </SectionHeader>
-      {schema instanceof z.ZodNumber && (
-        <div className='flex w-full flex-col items-center border-l-2 border-dotted border-l-black pl-[16px]'>
-          <Slider
-            label='min'
-            value={min}
-            onChange={(v) => onChange({ max, min: Math.min(v, max) })}
-            min={-0.5}
-            max={0.5}
-            renderValue={formatModifierValue}
+      <div className='flex w-full flex-col items-center border-l-2 border-dotted border-l-black pl-[16px]'>
+        {schema instanceof z.ZodNumber && (
+          <>
+            <Slider
+              label='min'
+              value={min}
+              onChange={(v) => onChange({ max, min: Math.min(v, max) })}
+              min={-0.5}
+              max={0.5}
+              renderValue={formatModifierValue}
+            />
+            <Slider
+              label='max'
+              value={max}
+              onChange={(v) => onChange({ min, max: Math.max(v, min) })}
+              min={-0.5}
+              max={0.5}
+              renderValue={formatModifierValue}
+            />
+          </>
+        )}
+        {schema instanceof z.ZodEnum && (
+          <RadioGroup
+            label='options'
+            values={options}
+            onChange={(selected) => onChange({ options: selected })}
+            options={schema.options}
+            multi
           />
-          <Slider
-            label='max'
-            value={max}
-            onChange={(v) => onChange({ min, max: Math.max(v, min) })}
-            min={-0.5}
-            max={0.5}
-            renderValue={formatModifierValue}
-          />
-        </div>
-      )}
-      {schema instanceof z.ZodEnum && (
-        <RadioGroup
-          label='options'
-          values={options}
-          onChange={(selected) => onChange({ options: selected })}
-          options={schema.options}
-          multi
-        />
-      )}
+        )}
+      </div>
     </>
   );
 }

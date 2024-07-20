@@ -4,6 +4,7 @@ import {
   isFieldRandomConfig,
   iterateSoundStructure,
   ModifierOp,
+  SoundModifier,
 } from '@src/keyboard/keySoundModifier';
 import { KeySoundConfig, ModifierLayer, RandomizationConfig } from '@src/types';
 import { RANDOM_SEED_ID } from '@src/utils/constants';
@@ -15,15 +16,6 @@ import { v4 as uuid } from 'uuid';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
 import useUplodaFile from './useUplodaFile';
-
-export type UpdateModifierArgs = {
-  layerIndex: number;
-  keys: string[];
-  synthId: string;
-  nodeId: string;
-  field: string;
-  value: unknown;
-};
 
 export default function useKeyboardSound(keySound: KeySoundConfig) {
   const soundCache = useSoundCache();
@@ -83,29 +75,16 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
   );
 
   const updateModifier = useCallback(
-    ({
-      layerIndex,
-      keys,
-      synthId,
-      nodeId,
-      field,
-      value,
-    }: UpdateModifierArgs) => {
+    (
+      layerIndex: number,
+      keys: string[],
+      updater: (modifier: SoundModifier) => SoundModifier,
+    ) => {
       setModifiers((draft) => {
         keys.forEach((key) => {
-          draft[layerIndex].keys = {
-            ...draft[layerIndex].keys,
-            [key]: {
-              ...draft[layerIndex].keys[key],
-              [synthId]: {
-                ...draft[layerIndex].keys[key]?.[synthId],
-                [nodeId]: {
-                  ...draft[layerIndex].keys[key]?.[synthId]?.[nodeId],
-                  [field]: ['add', value as number],
-                },
-              },
-            },
-          };
+          draft[layerIndex].keys[key] = updater(
+            draft[layerIndex].keys[key] ?? {},
+          );
         });
       });
     },
@@ -137,16 +116,16 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
           draft[layerIndex].keys[key] = {
             [RANDOM_SEED_ID]: {
               [RANDOM_SEED_ID]: {
-                [RANDOM_SEED_ID]: ['add', seed]
-              }
-            }
+                [RANDOM_SEED_ID]: ['add', seed],
+              },
+            },
           };
 
           // Don't set modifier when there is no random config
           if (isEmpty(draft[layerIndex].config)) {
             return;
           }
-            
+
           iterateSoundStructure(
             draft[layerIndex].config,
             isFieldRandomConfig,
@@ -161,7 +140,6 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
                   options[Math.round(seed * (options.length - 1))],
                 ];
               }
-              
 
               if (modifier) {
                 set(
