@@ -2,6 +2,7 @@ import { SoundFieldPath } from '@src/components/keyboard/KeyModifierControl/Rand
 import {
   findSoundModifiers,
   isFieldRandomConfig,
+  isModifierOp,
   iterateSoundStructure,
   ModifierOp,
   SoundModifier,
@@ -9,8 +10,6 @@ import {
 import { KeySoundConfig, ModifierLayer, RandomizationConfig } from '@src/types';
 import {
   getSoundStructureFieldPath,
-  getSoundStructureValue,
-  removeSoundStructureField,
   replaceSoundStructureField,
 } from '@src/utils/utils';
 import { isEmpty, set } from 'lodash';
@@ -188,11 +187,39 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
       setModifiers((draft) => {
         draft.forEach((layer) => {
           if (layer.type === 'random') {
-            replaceSoundStructureField(layer.config, oldField, newField);
+            iterateSoundStructure(
+              layer.config,
+              isFieldRandomConfig,
+              (field) => {
+                if (
+                  field.synthId === oldField.synthId &&
+                  field.nodeId === oldField.nodeId
+                ) {
+                  replaceSoundStructureField(layer.config, field, {
+                    ...newField,
+                    fieldPath: field.fieldPath,
+                  });
+                }
+              },
+            );
           }
-          
+
           Object.values(layer.keys).forEach((modifier) => {
-            replaceSoundStructureField(modifier, oldField, newField);
+            iterateSoundStructure(
+              modifier,
+              isModifierOp,
+              (field) => {
+                if (
+                  field.synthId === oldField.synthId &&
+                  field.nodeId === oldField.nodeId
+                ) {
+                  replaceSoundStructureField(modifier, field, {
+                    ...newField,
+                    fieldPath: field.fieldPath,
+                  });
+                }
+              },
+            );
           });
         });
       });
