@@ -19,6 +19,7 @@ type FieldRandomControlProps = {
   onClickInvalidField: () => void;
   onClickRemove: () => void;
   showFixButton: boolean;
+  highlighted: boolean;
 };
 
 export default function FieldRandomControl({
@@ -29,6 +30,7 @@ export default function FieldRandomControl({
   onClickInvalidField,
   onClickRemove,
   showFixButton,
+  highlighted,
 }: FieldRandomControlProps) {
   const field = fieldPath[fieldPath.length - 1];
   const valid = node && get(node?.data, fieldPath) != undefined;
@@ -39,6 +41,7 @@ export default function FieldRandomControl({
         field={field}
         onClick={onClickInvalidField}
         showFixButton={showFixButton}
+        highlighted={highlighted}
       />
     );
   }

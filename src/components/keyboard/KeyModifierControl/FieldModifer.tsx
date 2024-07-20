@@ -1,7 +1,6 @@
 import IconButton from '@src/components/shared/IconButton';
 import RadioGroup from '@src/components/shared/RadioGroup';
 import ReadOnly from '@src/components/shared/ReadOnly';
-import SectionHeader from '@src/components/shared/SectionHeader';
 import Slider from '@src/components/shared/Slider';
 import { ModifierOp } from '@src/keyboard/keySoundModifier';
 import { SynthNodeState } from '@src/synth';
@@ -10,12 +9,17 @@ import { getNestedFieldSchema } from '@src/utils/schema';
 import { formatModifierValue } from '@src/utils/utils';
 import { get } from 'lodash';
 import { z } from 'zod';
+import InvalidFieldModifier from './InvalidFieldModifier';
 
 type FieldModifierProps = {
   fieldPath: string[];
   modifier: ModifierOp;
   node?: SynthNodeState;
   onChange: (value: ModifierOp) => void;
+  onRemove: () => void;
+  onClickInvalidField: () => void;
+  showFixButton: boolean;
+  highlighted: boolean;
 };
 
 export default function FieldModifier({
@@ -23,22 +27,27 @@ export default function FieldModifier({
   modifier: [_operation, value],
   node,
   onChange,
+  onRemove,
+  onClickInvalidField,
+  showFixButton,
+  highlighted,
 }: FieldModifierProps) {
   const field = fieldPath[fieldPath.length - 1];
   const valid = node && get(node?.data, fieldPath) != undefined;
 
   if (!valid) {
     return (
-      <ReadOnly
-        key={field}
-        label={`[invalid] ${field}`}
-        value={formatModifierValue(value)}
+      <InvalidFieldModifier
+        field={field}
+        onClick={onClickInvalidField}
+        showFixButton={showFixButton}
+        highlighted={highlighted}
       />
     );
   }
 
   const schema = getNestedFieldSchema(nodeConfig[node.type].schema, fieldPath);
-  
+
   return (
     <>
       <div className='flex w-full items-start'>
@@ -60,7 +69,7 @@ export default function FieldModifier({
             options={schema.options}
           />
         )}
-        <IconButton className="ml-4" icon='remove' />
+        <IconButton className='ml-4' icon='remove' onClick={onRemove}/>
       </div>
     </>
   );

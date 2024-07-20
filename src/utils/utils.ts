@@ -1,7 +1,7 @@
 import { SoundFieldPath } from '@src/components/keyboard/KeyModifierControl/RandomizationControl';
 import { SoundStructure } from '@src/components/SoundStructureTree/SoundStructure';
 import * as Tone from '@src/tone';
-import { get, isEmpty, unset } from 'lodash';
+import { get, isEmpty, isEqual, unset } from 'lodash';
 import React from 'react';
 
 export function frequencyToHertz(value: Tone.Unit.Frequency): number {
@@ -46,11 +46,29 @@ export function removeSoundStructureField<T>(
   field: SoundFieldPath,
 ) {
   const path = getSoundStructureFieldPath(field);
-  
+
   do {
     unset(structure, path);
     path.pop();
   } while (path.length > 0 && isEmpty(get(structure, path)));
 
   return structure;
+}
+
+export function isSoundFieldPathEqual(
+  fieldA: SoundFieldPath,
+  fieldB: SoundFieldPath,
+) {
+  return isEqual(
+    {
+      synthId: fieldA.synthId,
+      nodeId: fieldA.nodeId,
+      fieldPath: fieldA.fieldPath,
+    },
+    {
+      synthId: fieldB.synthId,
+      nodeId: fieldB.nodeId,
+      fieldPath: fieldB.fieldPath,
+    },
+  );
 }

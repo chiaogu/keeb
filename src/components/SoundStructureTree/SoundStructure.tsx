@@ -41,7 +41,8 @@ export type SoundStructureProps<T> = {
 const SynthHeader = ({ synth }: { synth?: SynthConfig }) => (
   <SectionHeader
     label={synth?.name ?? 'unknown'}
-    labelClassName={synth ? undefined : 'invert px-2'}
+    // labelClassName={synth ? undefined : 'invert px-2'}
+    labelClassName={synth ? undefined : 'line-through'}
   />
 );
 
@@ -49,7 +50,8 @@ function NodeHeader({ node }: { node?: SynthNodeState }): React.ReactNode {
   return (
     <SectionHeader
       className='ml-[16px]'
-      labelClassName={node ? '' : 'invert px-2'}
+      // labelClassName={node ? '' : 'invert px-2'}
+      labelClassName={node ? '' : 'line-through'}
       label={node?.type ?? 'unknown'}
     />
   );
@@ -111,7 +113,8 @@ const SoundStructure = typedMemo(
             {!shouldRenderField(value) && (
               <>
                 <SectionHeader
-                  labelClassName={node ? '' : 'invert px-2'}
+                  labelClassName={node ? '' : 'line-through'}
+                  // labelClassName={node ? '' : 'invert px-2'}
                   label={fieldPath[fieldPath.length - 1]}
                 />
                 {

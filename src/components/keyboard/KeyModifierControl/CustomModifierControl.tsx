@@ -1,4 +1,5 @@
 import IconButton from '@src/components/shared/IconButton';
+import { isEmpty } from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import SectionHeader from '../../shared/SectionHeader';
@@ -21,7 +22,9 @@ export default function CustomModifierControl() {
   const highlightedKeys = useMemo(() => {
     if (!selectedLayer) return {};
     return Object.fromEntries(
-      Object.keys(selectedLayer.keys).map((key) => [key, 1]),
+      Object.entries(selectedLayer.keys)
+        .filter(([_key, modifier]) => !isEmpty(modifier))
+        .map(([key]) => [key, 1]),
     );
   }, [selectedLayer]);
 
@@ -70,6 +73,9 @@ export default function CustomModifierControl() {
               }}
               onFix={(fixingField, newField) => {
                 fixFieldModifier([key], fixingField, newField);
+              }}
+              onRemove={(field) => {
+                removeFieldModifier([key], field);
               }}
             />
           </div>

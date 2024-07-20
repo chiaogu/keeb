@@ -24,7 +24,7 @@ const KeysDebug = memo(
         {Object.keys(modifiedKeys).map((selectedKey) => (
           <Fragment key={selectedKey}>
             <SectionHeader className='font-bold' label={selectedKey} />
-            <ModifierControl modifier={modifierKeys[selectedKey] ?? {}} />
+            <ModifierControl soundName='Debug' modifier={modifierKeys[selectedKey] ?? {}} />
           </Fragment>
         ))}
       </div>
@@ -112,6 +112,7 @@ export default function RandomModifierControl() {
             setSelectingField('add');
           }}
           selectingField={!!selectingField}
+          selectedField={fixingField}
         />
         {selectingField && (
           <SoundFieldPicker
@@ -133,10 +134,10 @@ export default function RandomModifierControl() {
           />
         )}
       </div>
-      <KeysDebug
+      {/* <KeysDebug
         modifiedKeys={modifiedKeys}
         modifierKeys={selectedLayer.keys}
-      />
+      /> */}
     </>
   );
 }

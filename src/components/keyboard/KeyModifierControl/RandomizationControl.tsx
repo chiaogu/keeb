@@ -5,6 +5,7 @@ import SoundStructure, {
 } from '@src/components/SoundStructureTree/SoundStructure';
 import { isFieldRandomConfig } from '@src/keyboard/keySoundModifier';
 import { FieldRandomConfig, RandomizationConfig } from '@src/types';
+import { isSoundFieldPathEqual } from '@src/utils/utils';
 import { useCallback } from 'react';
 import FieldRandomControl from './FieldRandomControl';
 import { useModiferContext } from './ModifierContext';
@@ -21,6 +22,7 @@ type RandomizationControlProps = {
   onClickInvalidField: (args: SoundFieldPath) => void;
   onClickAdd: () => void;
   selectingField: boolean;
+  selectedField?: SoundFieldPath;
 };
 
 export default function RandomizationControl({
@@ -29,24 +31,36 @@ export default function RandomizationControl({
   onClickInvalidField,
   onClickAdd,
   selectingField,
+  selectedField,
 }: RandomizationControlProps) {
   const { synths, removeRandomConfig } = useModiferContext();
 
   const renderField = useCallback(
-    (props: RenderFieldProps<FieldRandomConfig>) => (
-      <FieldRandomControl
-        node={props.node}
-        fieldPath={props.fieldPath}
-        randomConfig={props.value}
-        onChange={(config) => {
-          onChange(props, config);
-        }}
-        onClickInvalidField={() => onClickInvalidField(props)}
-        onClickRemove={() => removeRandomConfig(props)}
-        showFixButton={!selectingField}
-      />
-    ),
-    [onChange, onClickInvalidField, removeRandomConfig, selectingField],
+    (props: RenderFieldProps<FieldRandomConfig>) => {
+      return (
+        <FieldRandomControl
+          node={props.node}
+          fieldPath={props.fieldPath}
+          randomConfig={props.value}
+          onChange={(config) => {
+            onChange(props, config);
+          }}
+          onClickInvalidField={() => onClickInvalidField(props)}
+          onClickRemove={() => removeRandomConfig(props)}
+          showFixButton={!selectingField}
+          highlighted={
+            !!selectedField && isSoundFieldPathEqual(selectedField, props)
+          }
+        />
+      );
+    },
+    [
+      onChange,
+      onClickInvalidField,
+      removeRandomConfig,
+      selectedField,
+      selectingField,
+    ],
   );
 
   return (
