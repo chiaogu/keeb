@@ -6,6 +6,7 @@ import SectionHeader from '../../shared/SectionHeader';
 import { useModiferContext } from './ModifierContext';
 import ModifierControl from './ModifierControl';
 import ModifierKeyboard from './ModifierKeyboard';
+import { ModifierLayerInfo } from './ModifierLayerInfo';
 
 export default function CustomModifierControl() {
   const {
@@ -50,9 +51,10 @@ export default function CustomModifierControl() {
         onPress={toggleKey}
       />
       <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
+        <ModifierLayerInfo className='mb-4'/>
         {selectedKeys.length === 0 && 'select a key'}
         {selectedKeys.map((key) => (
-          <div key={key} className='mb-4 flex w-full flex-col'>
+          <div key={key} className='mb-4 flex w-full flex-col last:mb-0'>
             <SectionHeader className='font-bold' label={key}>
               <IconButton
                 icon='remove'

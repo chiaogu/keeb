@@ -38,18 +38,12 @@ export default function ModifierLayerControl() {
     setSelectedLayerIndex,
     selectedLayer,
     addModifierLayer,
-    removeModifierLayer,
-    updateModiferLayer,
     soundName,
     loadModifiers,
   } = useModiferContext();
   const layers = useMemo(
     () => modifiers.map(({ id, name }) => ({ label: name, key: id })),
     [modifiers],
-  );
-  const layerIndex = useMemo(
-    () => (selectedLayer ? modifiers.indexOf(selectedLayer) : -1),
-    [modifiers, selectedLayer],
   );
   const [addingLayer, setAddingLayer] = useState(false);
 
@@ -83,21 +77,6 @@ export default function ModifierLayerControl() {
           />
         )}
       </div>
-      {selectedLayer && (
-        <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
-          <SectionHeader
-            className='font-bold'
-            label={selectedLayer.name}
-            onLabelChange={(name) => updateModiferLayer(layerIndex, { name })}
-          >
-            <IconButton
-              icon='remove'
-              onClick={() => removeModifierLayer(layerIndex)}
-            />
-          </SectionHeader>
-          <ReadOnly label='type' value={selectedLayer.type} />
-        </div>
-      )}
     </>
   );
 }

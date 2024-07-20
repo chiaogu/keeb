@@ -64,7 +64,7 @@ export default function RandomizationControl({
   );
 
   return (
-    <>
+    <div className='mt-4'>
       <SoundStructure
         synths={synths}
         structure={radomConfig}
@@ -76,6 +76,6 @@ export default function RandomizationControl({
           <IconButton icon='add' onClick={onClickAdd} />
         </SectionHeader>
       )}
-    </>
+    </div>
   );
 }

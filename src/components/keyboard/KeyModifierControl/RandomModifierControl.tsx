@@ -8,6 +8,7 @@ import { KeysSelect } from './KeysSelect';
 import { useModiferContext } from './ModifierContext';
 import ModifierControl from './ModifierControl';
 import ModifierKeyboard from './ModifierKeyboard';
+import { ModifierLayerInfo } from './ModifierLayerInfo';
 import RandomizationControl, { SoundFieldPath } from './RandomizationControl';
 import SoundFieldPicker from './SoundFieldPicker';
 
@@ -24,7 +25,10 @@ const KeysDebug = memo(
         {Object.keys(modifiedKeys).map((selectedKey) => (
           <Fragment key={selectedKey}>
             <SectionHeader className='font-bold' label={selectedKey} />
-            <ModifierControl soundName='Debug' modifier={modifierKeys[selectedKey] ?? {}} />
+            <ModifierControl
+              soundName='Debug'
+              modifier={modifierKeys[selectedKey] ?? {}}
+            />
           </Fragment>
         ))}
       </div>
@@ -83,13 +87,14 @@ export default function RandomModifierControl() {
     <>
       <ModifierKeyboard highlightedKeys={modifiedKeys} onPress={toggleKey} />
       <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
+        <ModifierLayerInfo />
         <KeysSelect
           onSelect={(selectedKeys) => {
             removeModifier(selectedLayerIndex, keys.flat());
             batchSetModifier(selectedLayerIndex, selectedKeys);
           }}
         />
-        <SectionHeader label='modifier' className='mt-4 font-bold'>
+        <SectionHeader label='randomize'>
           <IconButton
             icon='ifl'
             onClick={() => {

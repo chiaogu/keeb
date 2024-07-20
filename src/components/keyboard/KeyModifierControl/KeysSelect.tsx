@@ -18,7 +18,7 @@ export function KeysSelect({ onSelect, className }: KeysSelectProps) {
   );
 
   return (
-    <LabelField label='keys' className='font-bold'>
+    <LabelField label='keys'>
       <div className={`inline-block w-full ${className}`}>
         <KeyGroupButton label='none' keys={[]} />
         <KeyGroupButton label='all' keys={keys.flat()} />
