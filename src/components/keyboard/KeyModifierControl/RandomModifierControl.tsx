@@ -58,7 +58,7 @@ export default function RandomModifierControl() {
     updateRandomConfig,
     removeModifier,
     soundName,
-    fixRandomConfig,
+    fixInvalidFields,
     addRandomConfig,
   } = useModiferContext();
 
@@ -125,7 +125,7 @@ export default function RandomModifierControl() {
             soundName={soundName}
             onSelect={(newField, node) => {
               if (selectingField === 'fix' && fixingField) {
-                fixRandomConfig(fixingField, newField);
+                fixInvalidFields(fixingField, newField);
               }
               if (selectingField === 'add' && node) {
                 addRandomConfig(newField, node);

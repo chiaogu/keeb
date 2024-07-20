@@ -15,7 +15,7 @@ export default function CustomModifierControl() {
     addFieldModifier,
     updateFieldModifier,
     removeFieldModifier,
-    fixFieldModifier,
+    fixInvalidFields,
     removeModifier,
     soundName,
   } = useModiferContext();
@@ -74,7 +74,7 @@ export default function CustomModifierControl() {
                 addFieldModifier([key], field, node);
               }}
               onFix={(fixingField, newField) => {
-                fixFieldModifier([key], fixingField, newField);
+                fixInvalidFields(fixingField, newField);
               }}
               onRemove={(field) => {
                 removeFieldModifier([key], field);

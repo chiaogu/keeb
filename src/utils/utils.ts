@@ -1,7 +1,8 @@
 import { SoundFieldPath } from '@src/components/keyboard/KeyModifierControl/RandomizationControl';
 import { SoundStructure } from '@src/components/SoundStructureTree/SoundStructure';
 import * as Tone from '@src/tone';
-import { get, isEmpty, isEqual, unset } from 'lodash';
+import { WritableDraft } from 'immer';
+import { get, isEmpty, isEqual, set, unset } from 'lodash';
 import React from 'react';
 
 export function frequencyToHertz(value: Tone.Unit.Frequency): number {
@@ -35,14 +36,14 @@ export function getSoundStructureFieldPath({
 }
 
 export function getSoundStructureValue<T>(
-  structure: SoundStructure<T>,
+  structure: SoundStructure<T> | WritableDraft<SoundStructure<T>>,
   field: SoundFieldPath,
 ) {
   return get(structure, getSoundStructureFieldPath(field));
 }
 
 export function removeSoundStructureField<T>(
-  structure: SoundStructure<T>,
+  structure: SoundStructure<T> | WritableDraft<SoundStructure<T>>,
   field: SoundFieldPath,
 ) {
   const path = getSoundStructureFieldPath(field);
@@ -53,6 +54,18 @@ export function removeSoundStructureField<T>(
   } while (path.length > 0 && isEmpty(get(structure, path)));
 
   return structure;
+}
+
+export function replaceSoundStructureField<T>(
+  structure: SoundStructure<T> | WritableDraft<SoundStructure<T>>,
+  oldField: SoundFieldPath,
+  newField: SoundFieldPath,
+) {
+  const value = getSoundStructureValue(structure, oldField);
+  if (value) {
+    set(structure, getSoundStructureFieldPath(newField), value);
+    removeSoundStructureField(structure, oldField);
+  }
 }
 
 export function isSoundFieldPathEqual(

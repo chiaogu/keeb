@@ -1,3 +1,4 @@
+import { SoundFieldPath } from '@src/components/keyboard/KeyModifierControl/RandomizationControl';
 import {
   findSoundModifiers,
   isFieldRandomConfig,
@@ -6,7 +7,12 @@ import {
   SoundModifier,
 } from '@src/keyboard/keySoundModifier';
 import { KeySoundConfig, ModifierLayer, RandomizationConfig } from '@src/types';
-import { getSoundStructureFieldPath } from '@src/utils/utils';
+import {
+  getSoundStructureFieldPath,
+  getSoundStructureValue,
+  removeSoundStructureField,
+  replaceSoundStructureField,
+} from '@src/utils/utils';
 import { isEmpty, set } from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
@@ -177,6 +183,23 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
     [setModifiers],
   );
 
+  const fixInvalidFields = useCallback(
+    (oldField: SoundFieldPath, newField: SoundFieldPath) => {
+      setModifiers((draft) => {
+        draft.forEach((layer) => {
+          if (layer.type === 'random') {
+            replaceSoundStructureField(layer.config, oldField, newField);
+          }
+          
+          Object.values(layer.keys).forEach((modifier) => {
+            replaceSoundStructureField(modifier, oldField, newField);
+          });
+        });
+      });
+    },
+    [setModifiers],
+  );
+
   return {
     sound,
     modifiers,
@@ -188,6 +211,7 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
     batchSetModifier,
     updateRandomConfig,
     loadModifierLayers,
+    fixInvalidFields,
   };
 }
 

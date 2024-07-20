@@ -1,11 +1,15 @@
 import { useDebounceCallback } from '@react-hook/debounce';
 import { Keyboard, KeyEvent } from '@src/hooks/useKeyboard';
-import { getDefaultModifier, getDefaultRandomConfig, ModifierOp } from '@src/keyboard/keySoundModifier';
+import useUplodaFile from '@src/hooks/useUplodaFile';
+import {
+  getDefaultModifier,
+  getDefaultRandomConfig,
+  ModifierOp,
+} from '@src/keyboard/keySoundModifier';
 import { SynthNodeState } from '@src/synth';
 import { FieldRandomConfig } from '@src/types';
 import {
   getSoundStructureFieldPath,
-  getSoundStructureValue,
   removeSoundStructureField,
 } from '@src/utils/utils';
 import { set } from 'lodash';
@@ -17,7 +21,6 @@ import {
   useState,
 } from 'react';
 import { SoundFieldPath } from './RandomizationControl';
-import useUplodaFile from '@src/hooks/useUplodaFile';
 
 function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
   const {
@@ -33,6 +36,7 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     batchSetModifier,
     updateRandomConfig: soundUpdateRandomConfig,
     loadModifierLayers: soundLoadModifierLayers,
+    fixInvalidFields,
   } = useMemo(
     () => (keyEvent === 'down' ? keyboard.down : keyboard.up),
     [keyEvent, keyboard],
@@ -75,25 +79,6 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     [randomizeAfterConfigChange, selectedLayerIndex, soundUpdateRandomConfig],
   );
 
-  const fixRandomConfig = useCallback(
-    (oldField: SoundFieldPath, newField: SoundFieldPath) => {
-      if (selectedLayer.type !== 'random') return;
-      soundUpdateRandomConfig(selectedLayerIndex, (draft) => {
-        const value = getSoundStructureValue(selectedLayer.config, oldField);
-        set(draft, getSoundStructureFieldPath(newField), value);
-        removeSoundStructureField(draft, oldField);
-        return draft;
-      });
-      randomizeAfterConfigChange();
-    },
-    [
-      randomizeAfterConfigChange,
-      selectedLayer,
-      selectedLayerIndex,
-      soundUpdateRandomConfig,
-    ],
-  );
-
   const addRandomConfig = useCallback(
     (field: SoundFieldPath, node: SynthNodeState) => {
       soundUpdateRandomConfig(selectedLayerIndex, (draft) => {
@@ -123,11 +108,7 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
   const updateFieldModifier = useCallback(
     (keys: string[], field: SoundFieldPath, modifier: ModifierOp) => {
       soundUpdateModifier(selectedLayerIndex, keys, (draft) => {
-        set(
-          draft,
-          getSoundStructureFieldPath(field),
-          modifier,
-        );
+        set(draft, getSoundStructureFieldPath(field), modifier);
         return draft;
       });
     },
@@ -147,18 +128,6 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     },
     [selectedLayerIndex, soundUpdateModifier],
   );
-  
-  const fixFieldModifier = useCallback(
-    (keys: string[], oldField: SoundFieldPath, newField: SoundFieldPath) => {
-      soundUpdateModifier(selectedLayerIndex, keys, (draft) => {
-        const value = getSoundStructureValue(draft, oldField);
-        set(draft, getSoundStructureFieldPath(newField), value);
-        removeSoundStructureField(draft, oldField);
-        return draft;
-      });
-    },
-    [selectedLayerIndex, soundUpdateModifier],
-  );
 
   const removeFieldModifier = useCallback(
     (keys: string[], field: SoundFieldPath) => {
@@ -169,10 +138,10 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     },
     [selectedLayerIndex, soundUpdateModifier],
   );
-  
+
   // TODO: Validation
   const { load: loadModifierLayers } = useUplodaFile(soundLoadModifierLayers);
-  
+
   return {
     soundName: name,
     synths,
@@ -187,16 +156,15 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     updateModiferLayer,
     loadModifierLayers,
 
+    fixInvalidFields,
     removeModifier,
     batchSetModifier,
     updateRandomConfig,
-    fixRandomConfig,
     addRandomConfig,
     removeRandomConfig,
-    
+
     addFieldModifier,
     updateFieldModifier,
-    fixFieldModifier,
     removeFieldModifier,
 
     triggerUp(key: string) {
