@@ -16,7 +16,7 @@ function Content() {
   const { selectedLayer } = useModiferContext();
 
   return (
-    <div className='flex  w-full flex-col items-center space-y-5 pb-[70vh]'>
+    <div className='flex  w-full flex-col items-center space-y-5'>
       <ModifierLayerControl />
       {selectedLayer?.type === 'custom' && <CustomModifierControl />}
       {selectedLayer?.type === 'random' && <RandomModifierControl />}

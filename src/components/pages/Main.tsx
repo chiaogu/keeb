@@ -17,7 +17,7 @@ function Main() {
   );
 
   return (
-    <div className='flex flex-col items-center'>
+    <div className='flex flex-col items-center pb-[70vh]'>
       <Keys />
       <div className='mb-4 flex w-full max-w-[500px] flex-col items-center'>
         <div className='flex w-full flex-col items-center border-2 border-black p-8'>

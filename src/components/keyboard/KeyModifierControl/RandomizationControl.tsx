@@ -64,7 +64,7 @@ export default function RandomizationControl({
   );
 
   return (
-    <div className='mt-4'>
+    <div className='mt-4 w-full'>
       <SoundStructure
         synths={synths}
         structure={radomConfig}

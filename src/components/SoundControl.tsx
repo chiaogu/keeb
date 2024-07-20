@@ -1,10 +1,12 @@
 import { Sound } from '@src/hooks/useSound';
+import useUplodaFile from '@src/hooks/useUplodaFile';
 import { SoundConfig } from '@src/types';
 import { downloadSound } from '@src/utils/file';
+import { useEffect, useMemo, useState } from 'react';
 import IconButton from './shared/IconButton';
+import RadioGroup from './shared/RadioGroup';
 import SectionHeader from './shared/SectionHeader';
 import SynthControl from './synth/SynthControl';
-import useUplodaFile from '@src/hooks/useUplodaFile';
 
 type SoundControlProps = {
   sound: SoundConfig;
@@ -31,9 +33,18 @@ export default function SoundControl({
   onLoadSound,
   onSynthNameChange,
 }: SoundControlProps) {
+  const [selectedLayerIndex, setSelectedLayerIndex] = useState(0);
+  const selectedSynth = useMemo(
+    () => sound.synths[selectedLayerIndex],
+    [selectedLayerIndex, sound.synths],
+  );
   // TODO: Validation
   const { load } = useUplodaFile(onLoadSound);
-  
+
+  useEffect(() => {
+    setSelectedLayerIndex(0);
+  }, [sound.id]);
+
   return (
     <div className='flex w-full max-w-[500px] flex-col items-center space-y-5'>
       <div className='flex w-full flex-col items-center border-2 border-black p-8'>
@@ -45,28 +56,55 @@ export default function SoundControl({
           <IconButton icon='upload' onClick={load} />
           <IconButton icon='download' onClick={() => downloadSound(sound)} />
         </SectionHeader>
-      </div>
-      {sound.synths.map((synth, index) => (
-        <SynthControl
-          key={synth.id}
-          synth={synth}
-          removable={sound.synths.length > 1}
-          onRemove={() => onRemoveLayer(index)}
-          onSrcChange={(src) => onSrcChange(index, src)}
-          onFxChange={(fxIndex, fx) => onFxChange(index, fxIndex, fx)}
-          onRemoveFx={(fxIndex) => onRemoveFx(index, fxIndex)}
-          onAddFx={(fxIndex, fxType) => onAddFx(index, fxIndex, fxType)}
-          onNameChange={(name) => onSynthNameChange(index, name)}
-        />
-      ))}
-      <div className='flex w-full flex-col items-center border-2 border-black p-8'>
-        <div className='flex w-full items-end justify-between'>
-          <label className='font-bold'>layer</label>
-          <div className='flex space-x-2'>
-            <IconButton icon='add' onClick={onAddLayer} />
-          </div>
+        <div className='mt-4 flex w-full flex-col'>
+          <RadioGroup
+            label='layers'
+            values={[selectedSynth.id]}
+            onChange={([id]) =>
+              setSelectedLayerIndex(sound.synths.findIndex((s) => s.id === id))
+            }
+            options={sound.synths.map(({ id, name }) => ({
+              key: id,
+              label: name,
+            }))}
+          />
+          <SectionHeader label='new'>
+            <IconButton
+              icon='add'
+              onClick={() => {
+                onAddLayer();
+                setSelectedLayerIndex(sound.synths.length);
+              }}
+            />
+          </SectionHeader>
         </div>
       </div>
+      <SynthControl
+        key={selectedSynth.id}
+        synth={selectedSynth}
+        removable={sound.synths.length > 1}
+        onRemove={() => {
+          onRemoveLayer(selectedLayerIndex);
+          setSelectedLayerIndex(
+            Math.max(Math.min(selectedLayerIndex, sound.synths.length - 2), 0),
+          );
+        }}
+        onSrcChange={(src) => {
+          onSrcChange(selectedLayerIndex, src);
+        }}
+        onFxChange={(fxIndex, fx) =>
+          onFxChange(selectedLayerIndex, fxIndex, fx)
+        }
+        onRemoveFx={(fxIndex) => {
+          onRemoveFx(selectedLayerIndex, fxIndex);
+        }}
+        onAddFx={(fxIndex, fxType) =>
+          onAddFx(selectedLayerIndex, fxIndex, fxType)
+        }
+        onNameChange={(name) => {
+          onSynthNameChange(selectedLayerIndex, name);
+        }}
+      />
     </div>
   );
 }
