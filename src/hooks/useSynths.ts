@@ -2,7 +2,7 @@ import { getDefaultSynth } from '@src/keyboard/defaults';
 import createSynth, { Synth, SynthConfig } from '@src/synth';
 import { parseFxNodeState, parseSrcNodeState } from '@src/synth/parseNodeData';
 import { castDraft } from 'immer';
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 
 type SynthState = {
@@ -29,9 +29,7 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
   );
   const [synthStates, setSynthStates] = useImmer<SynthState[]>(initSynthStates);
 
-  // TODO: Dispose when unmounted
-
-  return useMemo(() => {
+  const wrapStateUpdater = useCallback(
     function wrapStateUpdater<
       FuncName extends 'setSrcState' | 'setFxState' | 'removeFx' | 'addFx',
       Func extends Synth[FuncName] & ((...args: unknown[]) => unknown),
@@ -40,46 +38,100 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
         setSynthStates((states) => {
           const func = states[index].synth[funcName] as Func;
           func(...args);
-          states[index].state = states[index].synth.state;
-        });
-      };
-    }
 
-    return {
-      states: synthStates.map((s) => s.state),
-      synths: synthStates.map((s) => s.synth),
-      removeLayer(index: number) {
-        synthStates[index].synth.dispose();
-        setSynthStates((states) => states.filter((_, i) => i !== index));
-      },
-      addLayer() {
-        setSynthStates((states) => {
-          states.push(
-            castDraft(
-              createSynthState({
-                ...getDefaultSynth(),
-                name: `layer ${states.length}`,
-              }),
-            ),
-          );
-        });
-      },
-      updateLayer(index: number, updates: Pick<SynthConfig, 'name'>) {
-        setSynthStates((states) => {
+          const { src, fxs } = states[index].synth.state;
           states[index].state = {
             ...states[index].state,
-            ...updates,
+            src,
+            fxs,
           };
         });
-      },
-      reset(newSynths: SynthConfig[]) {
-        synthStates.forEach((s) => s.synth.dispose());
-        setSynthStates(newSynths.map(createSynthState));
-      },
-      setSrcState: wrapStateUpdater('setSrcState'),
-      setFxState: wrapStateUpdater('setFxState'),
-      removeFx: wrapStateUpdater('removeFx'),
-      addFx: wrapStateUpdater('addFx'),
-    };
-  }, [setSynthStates, synthStates]);
+      };
+    },
+    [setSynthStates],
+  );
+
+  const setSrcState = useMemo(
+    () => wrapStateUpdater('setSrcState'),
+    [wrapStateUpdater],
+  );
+  const setFxState = useMemo(
+    () => wrapStateUpdater('setFxState'),
+    [wrapStateUpdater],
+  );
+  const removeFx = useMemo(
+    () => wrapStateUpdater('removeFx'),
+    [wrapStateUpdater],
+  );
+  const addFx = useMemo(() => wrapStateUpdater('addFx'), [wrapStateUpdater]);
+
+  const removeLayer = useCallback(
+    (index: number) => {
+      synthStates[index].synth.dispose();
+      setSynthStates((states) => states.filter((_, i) => i !== index));
+    },
+    [setSynthStates, synthStates],
+  );
+
+  const addLayer = useCallback(() => {
+    setSynthStates((states) => {
+      states.push(
+        castDraft(
+          createSynthState({
+            ...getDefaultSynth(),
+            name: `layer ${states.length}`,
+          }),
+        ),
+      );
+    });
+  }, [setSynthStates]);
+
+  const updateLayer = useCallback(
+    (index: number, updates: Pick<SynthConfig, 'name'>) => {
+      setSynthStates((states) => {
+        states[index].state = {
+          ...states[index].state,
+          ...updates,
+        };
+      });
+    },
+    [setSynthStates],
+  );
+
+  const reset = useCallback(
+    (newSynths: SynthConfig[]) => {
+      synthStates.forEach((s) => s.synth.dispose());
+      setSynthStates(newSynths.map(createSynthState));
+    },
+    [setSynthStates, synthStates],
+  );
+
+  // TODO: Dispose when unmounted
+
+  return useMemo(
+    () => ({
+      states: synthStates.map((s) => s.state),
+      synths: synthStates.map((s) => s.synth),
+      removeLayer,
+      addLayer,
+      updateLayer,
+      reset,
+      setSrcState,
+      setFxState,
+      removeFx,
+      addFx,
+    }),
+    // eslint-disable-next-line max-len
+    [
+      addFx,
+      addLayer,
+      removeFx,
+      removeLayer,
+      reset,
+      setFxState,
+      setSrcState,
+      synthStates,
+      updateLayer,
+    ],
+  );
 }

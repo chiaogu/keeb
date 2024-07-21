@@ -140,10 +140,10 @@ export default function RandomModifierControl() {
           />
         )}
       </div>
-      <KeysDebug
+      {/* <KeysDebug
         modifiedKeys={modifiedKeys}
         modifierKeys={selectedLayer.keys}
-      />
+      /> */}
     </>
   );
 }

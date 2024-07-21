@@ -24,6 +24,7 @@ function Main() {
       <div className='mb-4 flex w-full max-w-[500px] flex-col items-center'>
         <div className='flex w-full flex-col items-center border-2 border-black p-8'>
           <SectionHeader label={keyboard.name} onLabelChange={keyboard.setName} className='font-bold'>
+            <IconButton icon='reset_settings' onClick={keyboard.reset} />
             <IconButton icon='upload' onClick={keyboard.upload} />
             <IconButton icon='download' onClick={keyboard.download} />
           </SectionHeader>

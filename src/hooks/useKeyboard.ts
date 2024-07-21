@@ -1,4 +1,4 @@
-import { getDefaultKeyboard } from '@src/keyboard/defaults';
+import { getDefaultKeyboard, getDefaultSound } from '@src/keyboard/defaults';
 import { downloadKeyboard } from '@src/utils/file';
 import * as storage from '@src/utils/localstorage';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -68,9 +68,17 @@ export default function useKeyboard() {
     down.loadModifierLayers(data.sound.down.modifiers);
   });
 
+  const reset = useCallback(() => {
+    setName('untitled');
+    up.sound.loadConfig(getDefaultSound());
+    up.loadModifierLayers([]);
+    down.sound.loadConfig(getDefaultSound());
+    down.loadModifierLayers([]);
+  }, [down, up]);
+  
   return useMemo(
-    () => ({ down, up, name, setName, download, upload }),
-    [down, up, name, download, upload],
+    () => ({ down, up, name, setName, download, upload, reset }),
+    [down, up, name, download, upload, reset],
   );
 }
 

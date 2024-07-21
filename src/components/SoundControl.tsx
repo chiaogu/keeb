@@ -35,7 +35,7 @@ export default function SoundControl({
 }: SoundControlProps) {
   const [selectedLayerIndex, setSelectedLayerIndex] = useState(0);
   const selectedSynth = useMemo(
-    () => sound.synths[selectedLayerIndex],
+    () => sound.synths[Math.min(selectedLayerIndex, sound.synths.length - 1)],
     [selectedLayerIndex, sound.synths],
   );
   // TODO: Validation
