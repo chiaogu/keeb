@@ -37,7 +37,6 @@ export default function createSynth(config: Immutable<SynthConfig>) {
   let state: Immutable<SynthConfig> = config;
   let srcNode: SupportedSrcToneNode | null = null;
   let fxNodes: SupportedFxToneNode[] = [];
-  let handleChange: (() => void) | null = null;
 
   setSrcState(state.src);
   setFxs(state.fxs);
@@ -78,7 +77,6 @@ export default function createSynth(config: Immutable<SynthConfig>) {
     state = produce(state, (draft) => {
       draft.src = { id, type, data };
     });
-    handleChange?.();
   }
 
   function setFxs(fxs: Immutable<SynthConfig['fxs']>) {
@@ -91,7 +89,6 @@ export default function createSynth(config: Immutable<SynthConfig>) {
     state = produce(state, (draft) => {
       draft.fxs = castDraft(fxs);
     });
-    handleChange?.();
   }
 
   function setFxState(index: number, fxState: SynthConfig['fxs'][number]) {
@@ -104,7 +101,6 @@ export default function createSynth(config: Immutable<SynthConfig>) {
     state = produce(state, (draft) => {
       draft.fxs[index] = { id, type, data };
     });
-    handleChange?.();
   }
 
   function removeFx(index: number) {
@@ -146,11 +142,6 @@ export default function createSynth(config: Immutable<SynthConfig>) {
     if (!srcNode) throw new Error('synth is not initialized yet');
     srcNode.dispose();
     fxNodes.forEach((fxNode) => fxNode.dispose());
-    handleChange = null;
-  }
-
-  function setOnChangeListener(listenr: () => void) {
-    handleChange = listenr;
   }
 
   async function ready() {
@@ -171,7 +162,6 @@ export default function createSynth(config: Immutable<SynthConfig>) {
     addFx,
     trigger,
     dispose,
-    setOnChangeListener,
     ready,
     get state() {
       return state;

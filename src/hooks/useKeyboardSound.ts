@@ -133,6 +133,7 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
           const seed = currentSeed && !resetSeed ? currentSeed : getSeed();
 
           set(draft[layerIndex], ['randomSeed', key], seed);
+          draft[layerIndex].keys[key] = {};
 
           // Don't set modifier when there is no random config
           if (isEmpty(draft[layerIndex].config)) {

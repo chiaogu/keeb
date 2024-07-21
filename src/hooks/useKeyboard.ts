@@ -20,7 +20,6 @@ export default function useKeyboard() {
   const [name, setName] = useState(initConfig.current.name);
   const currentConfig = useMemo(
     () => ({
-      ...initConfig.current,
       name,
       sound: {
         down: {

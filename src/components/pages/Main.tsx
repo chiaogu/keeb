@@ -10,7 +10,7 @@ import SectionHeader from '../shared/SectionHeader';
 
 function Main() {
   const [keyEvent, setKeyEvent] = useState<KeyEvent>('down');
-  const [tab, setTab] = useState<Tab>('modifier');
+  const [tab, setTab] = useState<Tab>('config');
 
   const keyboard = useKeyboard();
   const { sound } = useMemo(

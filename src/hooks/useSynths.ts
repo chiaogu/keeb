@@ -38,7 +38,8 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
     >(funcName: FuncName) {
       return (index: number, ...args: Parameters<Func>) => {
         setSynthStates((states) => {
-          (states[index].synth[funcName] as Func)(...args);
+          const func = states[index].synth[funcName] as Func;
+          func(...args);
           states[index].state = states[index].synth.state;
         });
       };
