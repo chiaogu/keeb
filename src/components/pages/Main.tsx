@@ -2,7 +2,7 @@ import Keys from '@src/components/synth/Keys';
 import useKeyboard, { KeyEvent } from '@src/hooks/useKeyboard';
 import { Tab } from '@src/types';
 import { useMemo, useState } from 'react';
-import SoundControl from '../SoundControl';
+import SoundControl from '../sound/SoundControl';
 import KeySoundModifier from '../keyboard/KeySoundModifier';
 import IconButton from '../shared/IconButton';
 import RadioGroup from '../shared/RadioGroup';

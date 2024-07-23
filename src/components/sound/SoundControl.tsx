@@ -1,12 +1,8 @@
 import { Sound } from '@src/hooks/useSound';
-import useUplodaFile from '@src/hooks/useUplodaFile';
 import { SoundConfig } from '@src/types';
-import { downloadSound } from '@src/utils/file';
 import { useEffect, useMemo, useState } from 'react';
-import IconButton from './shared/IconButton';
-import RadioGroup from './shared/RadioGroup';
-import SectionHeader from './shared/SectionHeader';
-import SynthControl from './synth/SynthControl';
+import SynthControl from '../synth/SynthControl';
+import { SoundLayerControl } from './SoundLayerControl';
 
 type SoundControlProps = {
   sound: SoundConfig;
@@ -38,8 +34,6 @@ export default function SoundControl({
     () => sound.synths[Math.min(selectedLayerIndex, sound.synths.length - 1)],
     [selectedLayerIndex, sound.synths],
   );
-  // TODO: Validation
-  const { load } = useUplodaFile(onLoadSound);
 
   useEffect(() => {
     setSelectedLayerIndex(0);
@@ -47,38 +41,14 @@ export default function SoundControl({
 
   return (
     <div className='flex w-full max-w-[500px] flex-col items-center space-y-5'>
-      <div className='flex w-full flex-col items-center border-2 border-black p-8'>
-        <SectionHeader
-          className='font-bold'
-          label={sound.name}
-          onLabelChange={onNameChange}
-        >
-          <IconButton icon='upload' onClick={load} />
-          <IconButton icon='download' onClick={() => downloadSound(sound)} />
-        </SectionHeader>
-        <div className='flex w-full flex-col'>
-          <RadioGroup
-            label='layers'
-            values={[selectedSynth.id]}
-            onChange={([id]) =>
-              setSelectedLayerIndex(sound.synths.findIndex((s) => s.id === id))
-            }
-            options={sound.synths.map(({ id, name }) => ({
-              key: id,
-              label: name,
-            }))}
-          />
-          <SectionHeader label='new'>
-            <IconButton
-              icon='add'
-              onClick={() => {
-                onAddLayer();
-                setSelectedLayerIndex(sound.synths.length);
-              }}
-            />
-          </SectionHeader>
-        </div>
-      </div>
+      <SoundLayerControl
+        sound={sound}
+        selectedSynth={selectedSynth}
+        onAddLayer={onAddLayer}
+        onNameChange={onNameChange}
+        onLoadSound={onLoadSound}
+        onSelectLayer={setSelectedLayerIndex}
+      />
       <SynthControl
         key={selectedSynth.id}
         synth={selectedSynth}

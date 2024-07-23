@@ -1,9 +1,13 @@
 import { SoundFieldPath } from '@src/components/keyboard/KeyModifierControl/RandomizationControl';
 import { SoundStructure } from '@src/components/SoundStructureTree/SoundStructure';
+import { SynthConfig } from '@src/synth';
+import { nodeConfig } from '@src/synth/config';
+import { Envelope, zEnvelope } from '@src/synth/config/envelope';
 import * as Tone from '@src/tone';
 import { WritableDraft } from 'immer';
 import { get, isEmpty, isEqual, set, unset } from 'lodash';
 import React from 'react';
+import { z } from 'zod';
 
 export function frequencyToHertz(value: Tone.Unit.Frequency): number {
   const frequency = value.valueOf();
@@ -84,4 +88,15 @@ export function isSoundFieldPathEqual(
       fieldPath: fieldB.fieldPath,
     },
   );
+}
+
+export function findEnvelope({ src, fxs }: SynthConfig) {
+  if (src.data.envelope) {
+    return zEnvelope.parse(src.data.envelope) as Envelope;
+  }
+  
+  const fxEnvelope = fxs.find((fx) => fx.type === 'amplitudeEnvelope');
+  if (fxEnvelope) {
+    return zEnvelope.parse(fxEnvelope) as Envelope;
+  }
 }

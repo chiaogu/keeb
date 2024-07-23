@@ -5,6 +5,7 @@ export type LabelFieldProps = {
   children: ReactNode;
   indent?: number;
   className?: string;
+  containerClassName?: string;
   onClick?: () => void;
 };
 
@@ -14,9 +15,10 @@ export default function LabelField({
   indent = 0,
   className,
   onClick,
+  containerClassName,
 }: LabelFieldProps) {
   return (
-    <div className='flex w-full items-start'>
+    <div className={`flex w-full items-start ${containerClassName}`}>
       <div
         style={{
           paddingLeft: indent > 0 ? 8 : 0,
