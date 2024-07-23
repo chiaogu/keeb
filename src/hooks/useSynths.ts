@@ -2,7 +2,7 @@ import { getDefaultSynth } from '@src/keyboard/defaults';
 import createSynth, { Synth, SynthConfig } from '@src/synth';
 import { parseFxNodeState, parseSrcNodeState } from '@src/synth/parseNodeData';
 import { castDraft } from 'immer';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 
 type SynthState = {
@@ -121,7 +121,6 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
       removeFx,
       addFx,
     }),
-    // eslint-disable-next-line max-len
     [
       addFx,
       addLayer,

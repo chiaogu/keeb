@@ -4,22 +4,24 @@ import useSynths from './useSynths';
 
 export default function useSound(config: SoundConfig) {
   const { states, synths, reset, ...methods } = useSynths(config.synths);
+  const [id, setId] = useState(config.id);
   const [name, setName] = useState(config.name);
 
   return useMemo(
     () => ({
-      id: config.id,
+      id,
       name,
       setName,
       synths,
       states,
       loadConfig(config: SoundConfig) {
+        setId(config.id);
         setName(config.name);
         reset(config.synths);
       },
       ...methods,
     }),
-    [config.id, name, states, methods, synths, reset],
+    [id, name, synths, states, methods, reset],
   );
 }
 
