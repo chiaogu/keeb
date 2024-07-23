@@ -7,38 +7,49 @@ import LabelField from '../shared/LabelField';
 import SectionHeader from '../shared/SectionHeader';
 import Adsr from './Adsr';
 
+function TimeCursor() {
+  return null;
+}
+
 type TimelineBlockProps = {
   synth: SynthConfig;
   maxDuration: number;
-  maxDelay: number;
+  maxDelayAndDuration: number;
 };
 
-function TimelineBlock({ synth, maxDuration, maxDelay }: TimelineBlockProps) {
+function TimelineBlock({
+  synth,
+  maxDuration,
+  maxDelayAndDuration,
+}: TimelineBlockProps) {
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const { duration, delay } = zBaseSynthSrc.parse(synth.src.data);
   const envelope = findEnvelope(synth);
 
   return (
-    <div className='relative h-8 w-full' ref={setContainer}>
+    <div className='relative h-6 w-full' ref={setContainer}>
       <div
-        style={{ top: 'calc(50% - 0.5px)' }}
-        className='absolute h-px w-full bg-black'
+        style={{
+          width: `${Math.max(1, ((duration + delay) / maxDelayAndDuration) * 100)}%`,
+        }}
+        className='absolute bottom-0 h-1/2 w-full border-b-2 border-dotted border-black'
       ></div>
       <div
         style={{
-          width: `${Math.max(1, (duration / (maxDuration + maxDelay)) * 100)}%`,
-          left: `${(delay / (maxDuration + maxDelay)) * 100}%`,
+          width: `${Math.max(1, (duration / maxDelayAndDuration) * 100)}%`,
+          left: `${(delay / maxDelayAndDuration) * 100}%`,
         }}
-        className='absolute  h-full overflow-hidden border-r border-black'
+        className='absolute  h-full overflow-hidden'
       >
-        {envelope && (
-          <div
-            style={{ width: container?.clientWidth ?? 0 }}
-            className='absolute flex h-full'
-          >
-            <Adsr envelope={envelope} maxDuration={maxDuration} />
-          </div>
-        )}
+        <div
+          style={{ width: container?.clientWidth ?? 0 }}
+          className='absolute flex h-full'
+        >
+          {envelope && <Adsr envelope={envelope} maxDuration={maxDuration} />}
+          {!envelope && (
+            <div className='absolute flex size-full bg-black'></div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -49,15 +60,19 @@ type SoundLayerTimelineProps = {
 };
 
 export function SoundLayerTimeline({ sound }: SoundLayerTimelineProps) {
-  const { maxDuration, maxDelay } = useMemo(
+  const { maxDuration, maxDelayAndDuration } = useMemo(
     () => ({
       maxDuration: Math.max(
         ...sound.synths.map(
           ({ src }) => zBaseSynthSrc.parse(src.data).duration,
         ),
       ),
-      maxDelay: Math.max(
-        ...sound.synths.map(({ src }) => zBaseSynthSrc.parse(src.data).delay),
+      maxDelayAndDuration: Math.max(
+        ...sound.synths.map(
+          ({ src }) =>
+            zBaseSynthSrc.parse(src.data).delay +
+            zBaseSynthSrc.parse(src.data).duration,
+        ),
       ),
     }),
     [sound.synths],
@@ -65,7 +80,7 @@ export function SoundLayerTimeline({ sound }: SoundLayerTimelineProps) {
   return (
     <>
       <SectionHeader className='mt-4 font-bold' label='timeline'>
-        <div className='font-normal'>{(maxDuration + maxDelay).toFixed(2)}s</div>
+        <div className='font-normal'>{maxDelayAndDuration.toFixed(2)}s</div>
       </SectionHeader>
       {sound.synths.map((synth) => (
         <LabelField
@@ -76,7 +91,7 @@ export function SoundLayerTimeline({ sound }: SoundLayerTimelineProps) {
           <TimelineBlock
             synth={synth}
             maxDuration={maxDuration}
-            maxDelay={maxDelay}
+            maxDelayAndDuration={maxDelayAndDuration}
           />
         </LabelField>
       ))}

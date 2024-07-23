@@ -28,26 +28,25 @@ export default function Adsr({ envelope, maxDuration }: AdsrProps) {
     const aX = (attack / maxDuration) * w;
     const aY = h * amplitude;
     ctx.beginPath();
-    ctx.moveTo(0, h / 2);
+    ctx.moveTo(0, h);
     ctx.lineTo(aX, aY);
     ctx.lineTo(aX, h - aY);
     ctx.fill();
 
     const dX = aX + (decay / maxDuration) * w;
-    const dY = (aY * (1 - sustain)) / 2;
+    const dY = aY * (1 - sustain);
     ctx.beginPath();
     ctx.moveTo(aX - 0.5, aY);
-    ctx.lineTo(dX, h - dY);
+    ctx.lineTo(dX, h);
     ctx.lineTo(dX, dY);
     ctx.lineTo(aX - 0.5, h - aY);
     ctx.fill();
 
     const rX = dX + (release / maxDuration) * w;
-    const rY = h / 2;
     ctx.beginPath();
-    ctx.moveTo(dX - 1, dY);
-    ctx.lineTo(rX, rY);
-    ctx.lineTo(dX - 1, h - dY);
+    ctx.moveTo(dX - 0.5, dY);
+    ctx.lineTo(rX, h);
+    ctx.lineTo(dX - 0.5, h);
     ctx.fill();
   }, [envelope, canvas, maxDuration]);
 
