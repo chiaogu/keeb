@@ -1,16 +1,17 @@
 import { SoundModifier } from '@src/keyboard/keySoundModifier';
 import { Synth } from '@src/synth';
 import * as Tone from '@src/tone';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { v4 as uuid } from 'uuid';
 import logCacheSize from './logCacheSize';
-import * as playerPool from './playerPool';
+import { createPlayerPool } from './playerPool';
 import renderSound from './renderSound';
 
 export type SoundCache = Record<string, Record<string, Tone.ToneAudioBuffer>>;
 const cache: SoundCache = {};
 
-export default function useSoundCache() {
+export default function useSoundCache(destination: Tone.ToneAudioNode) {
+  const playerPool = useRef(createPlayerPool(destination));
   const instanceId = useMemo(uuid, []);
 
   // TODO: Clear render queue
@@ -21,7 +22,6 @@ export default function useSoundCache() {
   }, [instanceId]);
 
   useEffect(() => {
-    playerPool.lazyInit();
     cache[instanceId] = {};
     return () => clear();
   }, [clear, instanceId]);
@@ -33,7 +33,7 @@ export default function useSoundCache() {
       modifiers: SoundModifier[],
     ) {
       try {
-        playerPool.play(cache[instanceId][key]);
+        playerPool.current?.play(cache[instanceId][key]);
       } catch (e) {
         console.log(e);
         delete cache[instanceId][key];
@@ -42,9 +42,7 @@ export default function useSoundCache() {
     }
 
     function playRealtime(synths: Synth[], modifiers: SoundModifier[]) {
-      synths.forEach((synth) =>
-        synth.trigger(modifiers),
-      );
+      synths.forEach((synth) => synth.trigger(modifiers));
     }
 
     async function renderCache(

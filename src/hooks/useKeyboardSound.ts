@@ -24,7 +24,7 @@ export default function useKeyboardSound(
   keySound: KeySoundConfig,
   channel: Tone.ToneAudioNode,
 ) {
-  const soundCache = useSoundCache();
+  const soundCache = useSoundCache(channel);
   const { synths, states, ...rest } = useSound(keySound.config, channel);
   const [modifiers, setModifiers] = useImmer(keySound.modifiers);
 

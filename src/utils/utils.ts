@@ -1,14 +1,11 @@
 import { SoundFieldPath } from '@src/components/keyboard/KeyModifierControl/RandomizationControl';
 import { SoundStructure } from '@src/components/SoundStructureTree/SoundStructure';
 import { SynthConfig } from '@src/synth';
-import { nodeConfig } from '@src/synth/config';
 import { Envelope, zEnvelope } from '@src/synth/config/envelope';
-import { zBaseSynthSrc } from '@src/synth/config/shared';
 import * as Tone from '@src/tone';
 import { WritableDraft } from 'immer';
 import { get, isEmpty, isEqual, set, unset } from 'lodash';
 import React from 'react';
-import { z } from 'zod';
 
 export function frequencyToHertz(value: Tone.Unit.Frequency): number {
   const frequency = value.valueOf();
@@ -95,9 +92,19 @@ export function findEnvelope({ src, fxs }: SynthConfig) {
   if (src.data.envelope) {
     return zEnvelope.parse(src.data.envelope) as Envelope;
   }
-  
+
   const fxEnvelope = fxs.find((fx) => fx.type === 'amplitudeEnvelope');
   if (fxEnvelope) {
     return zEnvelope.parse(fxEnvelope.data) as Envelope;
   }
+}
+
+export function resizeCavas(
+  w: number,
+  h: number,
+  ctx: CanvasRenderingContext2D,
+) {
+  ctx.canvas.width = w * devicePixelRatio;
+  ctx.canvas.height = h * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
 }

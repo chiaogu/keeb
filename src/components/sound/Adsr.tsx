@@ -1,4 +1,5 @@
 import { Envelope } from '@src/synth/config/envelope';
+import { resizeCavas } from '@src/utils/utils';
 import { useEffect, useState } from 'react';
 
 type AdsrProps = {
@@ -15,9 +16,7 @@ export default function Adsr({ envelope, maxDuration }: AdsrProps) {
 
     const { clientWidth: w, clientHeight: h } =
       ctx.canvas.parentElement ?? ctx.canvas;
-    ctx.canvas.width = w * devicePixelRatio;
-    ctx.canvas.height = h * devicePixelRatio;
-    ctx.scale(devicePixelRatio, devicePixelRatio);
+    resizeCavas(w, h, ctx);
 
     const { attack, decay, sustain, release } = envelope;
 

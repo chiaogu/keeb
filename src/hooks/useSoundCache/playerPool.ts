@@ -1,23 +1,18 @@
 import * as Tone from '@src/tone';
 
-const POOL_SIZE = 32;
-const players: Tone.Player[] = [];
-let index = 0;
+const POOL_SIZE = 16;
 
-export function lazyInit() {
-  if (players.length != POOL_SIZE) {
-    players.splice(
-      0,
-      players.length,
-      ...Array(POOL_SIZE)
-        .fill(0)
-        .map(() => new Tone.Player().toDestination()),
-    );
+export function createPlayerPool(destination: Tone.ToneAudioNode) {
+  let index = 0;
+  const players: Tone.Player[] = Array(POOL_SIZE)
+    .fill(0)
+    .map(() => new Tone.Player().connect(destination));
+
+  function play(buffer: Tone.ToneAudioBuffer) {
+    players[index].buffer = buffer;
+    players[index].start();
+    index = (index + 1) % POOL_SIZE;
   }
-}
-
-export function play(buffer: Tone.ToneAudioBuffer) {
-  players[index].buffer = buffer;
-  players[index].start();
-  index = (index + 1) % POOL_SIZE;
+  
+  return { play };
 }

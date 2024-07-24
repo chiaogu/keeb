@@ -3,9 +3,11 @@ import { SoundConfig } from '@src/types';
 import { useEffect, useMemo, useState } from 'react';
 import SynthControl from '../synth/SynthControl';
 import { SoundLayerControl } from './SoundLayerControl';
+import * as Tone from '@src/tone';
 
 type SoundControlProps = {
   sound: SoundConfig;
+  channel: Tone.ToneAudioNode;
   onRemoveLayer: Sound['removeLayer'];
   onAddLayer: Sound['addLayer'];
   onSrcChange: Sound['setSrcState'];
@@ -19,6 +21,7 @@ type SoundControlProps = {
 
 export default function SoundControl({
   sound,
+  channel,
   onRemoveLayer,
   onAddLayer,
   onSrcChange,
@@ -43,6 +46,7 @@ export default function SoundControl({
     <div className='flex w-full max-w-[500px] flex-col items-center space-y-5'>
       <SoundLayerControl
         sound={sound}
+        channel={channel}
         selectedSynth={selectedSynth}
         onAddLayer={onAddLayer}
         onNameChange={onNameChange}

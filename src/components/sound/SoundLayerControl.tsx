@@ -1,16 +1,19 @@
 import { Sound } from '@src/hooks/useSound';
 import useUplodaFile from '@src/hooks/useUplodaFile';
 import { SynthConfig } from '@src/synth';
+import * as Tone from '@src/tone';
 import { SoundConfig } from '@src/types';
 import { downloadSound } from '@src/utils/file';
 import IconButton from '../shared/IconButton';
-import SectionHeader from '../shared/SectionHeader';
 import RadioGroup from '../shared/RadioGroup';
+import SectionHeader from '../shared/SectionHeader';
 import { SoundLayerTimeline } from './SoundLayerTimeline';
+import Waveform from './Waveform';
 
 type SoundLayerControlProps = {
   sound: SoundConfig;
   selectedSynth: SynthConfig;
+  channel: Tone.ToneAudioNode;
   onAddLayer: Sound['addLayer'];
   onNameChange: Sound['setName'];
   onLoadSound: (sound: SoundConfig) => void;
@@ -20,6 +23,7 @@ type SoundLayerControlProps = {
 export function SoundLayerControl({
   sound,
   selectedSynth,
+  channel,
   onAddLayer,
   onNameChange,
   onLoadSound,
@@ -59,7 +63,8 @@ export function SoundLayerControl({
             }}
           />
         </SectionHeader>
-        <SoundLayerTimeline sound={sound}/>
+        <SoundLayerTimeline sound={sound} />
+        <Waveform channel={channel} />
       </div>
     </div>
   );
