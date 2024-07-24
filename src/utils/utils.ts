@@ -3,6 +3,7 @@ import { SoundStructure } from '@src/components/SoundStructureTree/SoundStructur
 import { SynthConfig } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
 import { Envelope, zEnvelope } from '@src/synth/config/envelope';
+import { zBaseSynthSrc } from '@src/synth/config/shared';
 import * as Tone from '@src/tone';
 import { WritableDraft } from 'immer';
 import { get, isEmpty, isEqual, set, unset } from 'lodash';
@@ -97,6 +98,6 @@ export function findEnvelope({ src, fxs }: SynthConfig) {
   
   const fxEnvelope = fxs.find((fx) => fx.type === 'amplitudeEnvelope');
   if (fxEnvelope) {
-    return zEnvelope.parse(fxEnvelope) as Envelope;
+    return zEnvelope.parse(fxEnvelope.data) as Envelope;
   }
 }
