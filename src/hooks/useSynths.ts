@@ -1,6 +1,7 @@
 import { getDefaultSynth } from '@src/keyboard/defaults';
 import createSynth, { Synth, SynthConfig } from '@src/synth';
 import { parseFxNodeState, parseSrcNodeState } from '@src/synth/parseNodeData';
+import * as Tone from '@src/tone';
 import { castDraft } from 'immer';
 import { useCallback, useMemo } from 'react';
 import { useImmer } from 'use-immer';
@@ -10,7 +11,7 @@ type SynthState = {
   state: SynthConfig;
 };
 
-function createSynthState(config: SynthConfig) {
+function createSynthState(config: SynthConfig, channel: Tone.ToneAudioNode) {
   const parsed = {
     ...config,
     src: parseSrcNodeState(config.src),
@@ -18,14 +19,17 @@ function createSynthState(config: SynthConfig) {
   };
   return {
     state: parsed,
-    synth: createSynth(parsed),
+    synth: createSynth(parsed, channel),
   };
 }
 
-export default function useSynths(synthConfigs: SynthConfig[]) {
+export default function useSynths(
+  synthConfigs: SynthConfig[],
+  channel: Tone.ToneAudioNode,
+) {
   const initSynthStates = useMemo(
-    () => synthConfigs.map(createSynthState),
-    [synthConfigs],
+    () => synthConfigs.map((config) => createSynthState(config, channel)),
+    [synthConfigs, channel],
   );
   const [synthStates, setSynthStates] = useImmer<SynthState[]>(initSynthStates);
 
@@ -77,14 +81,17 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
     setSynthStates((states) => {
       states.push(
         castDraft(
-          createSynthState({
-            ...getDefaultSynth(),
-            name: `layer ${states.length}`,
-          }),
+          createSynthState(
+            {
+              ...getDefaultSynth(),
+              name: `layer ${states.length}`,
+            },
+            channel,
+          ),
         ),
       );
     });
-  }, [setSynthStates]);
+  }, [channel, setSynthStates]);
 
   const updateLayer = useCallback(
     (index: number, updates: Pick<SynthConfig, 'name'>) => {
@@ -101,9 +108,11 @@ export default function useSynths(synthConfigs: SynthConfig[]) {
   const reset = useCallback(
     (newSynths: SynthConfig[]) => {
       synthStates.forEach((s) => s.synth.dispose());
-      setSynthStates(newSynths.map(createSynthState));
+      setSynthStates(
+        newSynths.map((config) => createSynthState(config, channel)),
+      );
     },
-    [setSynthStates, synthStates],
+    [channel, setSynthStates, synthStates],
   );
 
   // TODO: Dispose when unmounted

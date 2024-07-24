@@ -7,6 +7,7 @@ import {
   ModifierOp,
   SoundModifier,
 } from '@src/keyboard/keySoundModifier';
+import * as Tone from '@src/tone';
 import { KeySoundConfig, ModifierLayer, RandomizationConfig } from '@src/types';
 import {
   getSoundStructureFieldPath,
@@ -19,9 +20,12 @@ import { v4 as uuid } from 'uuid';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
 
-export default function useKeyboardSound(keySound: KeySoundConfig) {
+export default function useKeyboardSound(
+  keySound: KeySoundConfig,
+  channel: Tone.ToneAudioNode,
+) {
   const soundCache = useSoundCache();
-  const { synths, states, ...rest } = useSound(keySound.config);
+  const { synths, states, ...rest } = useSound(keySound.config, channel);
   const [modifiers, setModifiers] = useImmer(keySound.modifiers);
 
   useEffect(() => {
@@ -206,21 +210,17 @@ export default function useKeyboardSound(keySound: KeySoundConfig) {
           }
 
           Object.values(layer.keys).forEach((modifier) => {
-            iterateSoundStructure(
-              modifier,
-              isModifierOp,
-              (field) => {
-                if (
-                  field.synthId === oldField.synthId &&
-                  field.nodeId === oldField.nodeId
-                ) {
-                  replaceSoundStructureField(modifier, field, {
-                    ...newField,
-                    fieldPath: field.fieldPath,
-                  });
-                }
-              },
-            );
+            iterateSoundStructure(modifier, isModifierOp, (field) => {
+              if (
+                field.synthId === oldField.synthId &&
+                field.nodeId === oldField.nodeId
+              ) {
+                replaceSoundStructureField(modifier, field, {
+                  ...newField,
+                  fieldPath: field.fieldPath,
+                });
+              }
+            });
           });
         });
       });

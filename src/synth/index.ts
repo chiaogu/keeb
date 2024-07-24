@@ -1,9 +1,12 @@
+import {
+  getModifiedNodeData,
+  SoundModifier,
+} from '@src/keyboard/keySoundModifier';
 import * as Tone from '@src/tone';
 import { castDraft, Immutable, produce } from 'immer';
 import { v4 as uuid } from 'uuid';
 import { FxNodeType, nodeConfig, SrcNodeType, SynthNodeType } from './config';
 import parseNodeData from './parseNodeData';
-import { getModifiedNodeData, SoundModifier, SynthModifier } from '@src/keyboard/keySoundModifier';
 
 type SupportedSrcToneNode = ReturnType<
   (typeof nodeConfig)[SrcNodeType]['createNode']
@@ -33,7 +36,10 @@ export type SynthConfig = {
   fxs: SynthFxNodeState[];
 };
 
-export default function createSynth(config: Immutable<SynthConfig>) {
+export default function createSynth(
+  config: Immutable<SynthConfig>,
+  destination: Tone.ToneAudioNode,
+) {
   let state: Immutable<SynthConfig> = config;
   let srcNode: SupportedSrcToneNode | null = null;
   let fxNodes: SupportedFxToneNode[] = [];
@@ -46,7 +52,7 @@ export default function createSynth(config: Immutable<SynthConfig>) {
 
     srcNode.disconnect();
     fxNodes.forEach((fxNode) => fxNode.disconnect());
-    srcNode.chain(...fxNodes, Tone.getDestination());
+    srcNode.chain(...fxNodes, destination);
   }
 
   function setToneState(
@@ -120,7 +126,7 @@ export default function createSynth(config: Immutable<SynthConfig>) {
 
   function trigger(modifiers: SoundModifier[] = []) {
     if (!srcNode) throw new Error('synth is not initialized yet');
-    
+
     const modifiedSrcData = getModifiedNodeData(state.src, modifiers);
     setToneState(state.src.type, srcNode, modifiedSrcData);
     nodeConfig[state.src.type].trigger?.(

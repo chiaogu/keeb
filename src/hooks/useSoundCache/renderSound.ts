@@ -9,12 +9,16 @@ export default async function renderSound(
   synths: Immutable<SynthConfig[]>,
   modifiers: SoundModifier[],
 ) {
-  renderQueue = renderQueue.then(() =>
-    Tone.Offline(async () => {
-      const offlineSynths = synths.map(createSynth);
-      await Promise.all(offlineSynths.map(({ ready }) => ready()));
-      offlineSynths.forEach((s) => s.trigger(modifiers));
-    }, 2),
+  renderQueue = renderQueue.then(
+    () =>
+      Tone.Offline(async () => {
+        const offlineSynths = synths.map((config) =>
+          createSynth(config, Tone.getDestination()),
+        );
+        await Promise.all(offlineSynths.map(({ ready }) => ready()));
+        offlineSynths.forEach((s) => s.trigger(modifiers));
+      }, 1),
+    // TODO: Dynamic duration
   );
   const buffer = await renderQueue;
   return buffer;

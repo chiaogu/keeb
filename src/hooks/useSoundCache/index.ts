@@ -13,6 +13,7 @@ const cache: SoundCache = {};
 export default function useSoundCache() {
   const instanceId = useMemo(uuid, []);
 
+  // TODO: Clear render queue
   const clear = useCallback(() => {
     Object.values(cache[instanceId]).forEach((cache) => cache?.dispose());
     cache[instanceId] = {};
