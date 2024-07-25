@@ -7,9 +7,13 @@ import TimelineBlock from './TimelineBlock';
 
 type SoundLayerTimelineProps = {
   sound: SoundConfig;
+  className?: string;
 };
 
-export function SoundLayerTimeline({ sound }: SoundLayerTimelineProps) {
+export function SoundLayerTimeline({
+  sound,
+  className,
+}: SoundLayerTimelineProps) {
   const { maxDuration, maxDelayAndDuration } = useMemo(
     () => ({
       maxDuration: Math.max(
@@ -28,7 +32,7 @@ export function SoundLayerTimeline({ sound }: SoundLayerTimelineProps) {
     [sound.synths],
   );
   return (
-    <>
+    <div className={className}>
       <SectionHeader className='mt-4 font-bold' label='timeline'>
         <div className='font-normal'>
           {Math.round(maxDelayAndDuration * 1000)}ms
@@ -47,6 +51,6 @@ export function SoundLayerTimeline({ sound }: SoundLayerTimelineProps) {
           />
         </LabelField>
       ))}
-    </>
+    </ div>
   );
 }

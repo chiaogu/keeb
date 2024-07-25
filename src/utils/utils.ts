@@ -6,6 +6,7 @@ import * as Tone from '@src/tone';
 import { WritableDraft } from 'immer';
 import { get, isEmpty, isEqual, set, unset } from 'lodash';
 import React from 'react';
+import { MAX_SAMPLE_SIZE } from './constants';
 
 export function frequencyToHertz(value: Tone.Unit.Frequency): number {
   const frequency = value.valueOf();
@@ -107,4 +108,29 @@ export function resizeCavas(
   ctx.canvas.width = w * devicePixelRatio;
   ctx.canvas.height = h * devicePixelRatio;
   ctx.scale(devicePixelRatio, devicePixelRatio);
+}
+
+export function downSample(values: Float32Array) {
+  let resampled = new Float32Array(MAX_SAMPLE_SIZE);
+  if (values.length > MAX_SAMPLE_SIZE) {
+    for (let i = 0; i < MAX_SAMPLE_SIZE; i++) {
+      resampled[i] = values[Math.floor((i / MAX_SAMPLE_SIZE) * values.length)];
+    }
+  } else {
+    resampled = values;
+  }
+  const max = Math.max(0.001, ...resampled) * 1.1;
+  const min = Math.min(-0.001, ...resampled) * 1.1;
+
+  return { resampled, min, max };
+}
+
+export function scale(
+  v: number,
+  inMin: number,
+  inMax: number,
+  outMin: number,
+  outMax: number,
+) {
+  return ((v - inMin) / (inMax - inMin)) * (outMax - outMin) + outMin;
 }

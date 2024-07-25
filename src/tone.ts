@@ -10,3 +10,9 @@ export * from 'tone/build/esm/effect/Effect';
 export function getDestination(): DestinationClass {
   return getContext().destination;
 }
+
+// import { OmniOscillatorSynthOptions } from 'tone/build/esm/source/oscillator/OscillatorInterface';
+
+// const x: OmniOscillatorSynthOptions = {
+// 	type: ,
+// };

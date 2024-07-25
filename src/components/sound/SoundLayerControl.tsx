@@ -7,6 +7,7 @@ import { downloadSound } from '@src/utils/file';
 import IconButton from '../shared/IconButton';
 import RadioGroup from '../shared/RadioGroup';
 import SectionHeader from '../shared/SectionHeader';
+import FFT from './FFT';
 import { SoundLayerTimeline } from './SoundLayerTimeline';
 import Waveform from './Waveform';
 
@@ -63,8 +64,9 @@ export function SoundLayerControl({
             }}
           />
         </SectionHeader>
-        <SoundLayerTimeline sound={sound} />
+        <SoundLayerTimeline sound={sound} className='mb-4' />
         <Waveform channel={channel} />
+        <FFT channel={channel} />
       </div>
     </div>
   );
