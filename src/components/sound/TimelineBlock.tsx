@@ -35,8 +35,8 @@ export default function TimelineBlock({
         className='absolute  h-full overflow-hidden'
       >
         <div
-          style={{ width: container?.clientWidth ?? 0 }}
-          className='absolute flex h-full'
+          // style={{ width: container?.clientWidth ?? 0 }}
+          className='absolute flex size-full'
         >
           {envelope && (
             <Adsr envelope={envelope} maxDuration={maxDelayAndDuration} />

@@ -4,6 +4,7 @@ import createConfig from '../createConfig';
 import triggerSrcNode from '../triggerSrcNode';
 import { zEnvelope } from './envelope';
 import { zBaseSynthSrc, zFrequency, zHarmonicity } from './shared';
+import { calculateEnvelope } from '@src/utils/utils';
 
 export const metalSynthConfig = createConfig(
   Tone.MetalSynth,
@@ -15,5 +16,13 @@ export const metalSynthConfig = createConfig(
     resonance: z.number().min(0).max(7000),
     envelope: zEnvelope,
   }),
-  { trigger: triggerSrcNode },
+  {
+    trigger: triggerSrcNode,
+    setState(node, state, { duration }) {
+      node.set({
+        ...state,
+        envelope: calculateEnvelope(state.envelope, duration),
+      });
+    },
+  },
 );

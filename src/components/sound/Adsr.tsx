@@ -7,7 +7,8 @@ type AdsrProps = {
   maxDuration: number;
 };
 
-export default function Adsr({ envelope, maxDuration }: AdsrProps) {
+// TODO: Curve
+export default function Adsr({ envelope }: AdsrProps) {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -19,12 +20,14 @@ export default function Adsr({ envelope, maxDuration }: AdsrProps) {
     resizeCavas(w, h, ctx);
 
     const { attack, decay, sustain, release } = envelope;
+    
+    console.log(attack);
 
     ctx.fillStyle = 'black';
 
     const amplitude = 1;
 
-    const aX = (attack / maxDuration) * w;
+    const aX = attack * w;
     const aY = h * amplitude;
     ctx.beginPath();
     ctx.moveTo(0, h);
@@ -32,7 +35,7 @@ export default function Adsr({ envelope, maxDuration }: AdsrProps) {
     ctx.lineTo(aX, h - aY);
     ctx.fill();
 
-    const dX = aX + (decay / maxDuration) * w;
+    const dX = aX + decay * w;
     const dY = aY * (1 - sustain);
     ctx.beginPath();
     ctx.moveTo(aX - 0.5, aY);
@@ -41,13 +44,13 @@ export default function Adsr({ envelope, maxDuration }: AdsrProps) {
     ctx.lineTo(aX - 0.5, h - aY);
     ctx.fill();
 
-    const rX = dX + (release / maxDuration) * w;
+    const rX = dX + release * w;
     ctx.beginPath();
     ctx.moveTo(dX - 0.5, dY);
     ctx.lineTo(rX, h);
     ctx.lineTo(dX - 0.5, h);
     ctx.fill();
-  }, [envelope, canvas, maxDuration]);
+  }, [envelope, canvas]);
 
   return <canvas className='size-full' ref={setCanvas} />;
 }

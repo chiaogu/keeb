@@ -134,3 +134,15 @@ export function scale(
 ) {
   return ((v - inMin) / (inMax - inMin)) * (outMax - outMin) + outMin;
 }
+
+export function calculateEnvelope(
+  envelope: Envelope,
+  duration: number,
+): Envelope {
+  return {
+    ...envelope,
+    attack: envelope.attack * duration,
+    decay: envelope.decay * duration,
+    release: envelope.release * duration,
+  };
+}

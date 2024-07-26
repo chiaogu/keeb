@@ -5,6 +5,7 @@ import { zEnvelope } from './envelope';
 import { zFilter } from './filter';
 import { zOmniOscillator } from './omniOscillator';
 import { zBaseSynthSrc, zFrequency } from './shared';
+import { calculateEnvelope } from '@src/utils/utils';
 
 export const monoSynthConfig = createConfig(
   Tone.MonoSynth,
@@ -17,5 +18,12 @@ export const monoSynthConfig = createConfig(
   }),
   {
     trigger: triggerSrcNode,
+    setState(node, state, { duration }) {
+      node.set({
+        ...state,
+        envelope: calculateEnvelope(state.envelope, duration),
+        filterEnvelope: calculateEnvelope(state.filterEnvelope, duration),
+      });
+    },
   },
 );

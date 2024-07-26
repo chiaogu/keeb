@@ -3,6 +3,7 @@ import createConfig from '../createConfig';
 import { zEnvelope } from './envelope';
 import { zNoise } from './noise';
 import { zBaseSynthSrc } from './shared';
+import { calculateEnvelope } from '@src/utils/utils';
 
 export const noiseSynthConfig = createConfig(
   Tone.NoiseSynth,
@@ -11,7 +12,7 @@ export const noiseSynthConfig = createConfig(
     envelope: zEnvelope,
   }),
   {
-    setState(node, state) {
+    setState(node, state, { duration }) {
       node.set({
         ...state,
         noise: {
@@ -20,6 +21,7 @@ export const noiseSynthConfig = createConfig(
           fadeIn: state.fadeIn,
           fadeOut: state.fadeOut,
         },
+        envelope: calculateEnvelope(state.envelope, duration)
       });
     },
     trigger(node, state) {

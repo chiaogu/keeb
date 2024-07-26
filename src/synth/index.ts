@@ -7,6 +7,7 @@ import { castDraft, Immutable, produce } from 'immer';
 import { v4 as uuid } from 'uuid';
 import { FxNodeType, nodeConfig, SrcNodeType, SynthNodeType } from './config';
 import parseNodeData from './parseNodeData';
+import { zBaseSynthSrc } from './config/shared';
 
 type SupportedSrcToneNode = ReturnType<
   (typeof nodeConfig)[SrcNodeType]['createNode']
@@ -58,12 +59,16 @@ export default function createSynth(
   function setToneState(
     type: SynthNodeType,
     node: SupportedSrcToneNode | SupportedFxToneNode,
-    state: Record<string, unknown>,
+    nodeState: Record<string, unknown>,
   ) {
     if (nodeConfig[type].setState) {
-      nodeConfig[type].setState?.(node as never, state as never);
+      nodeConfig[type].setState?.(
+        node as never,
+        nodeState as never,
+        zBaseSynthSrc.parse(state.src.data),
+      );
     } else {
-      node.set(state);
+      node.set(nodeState);
     }
   }
 

@@ -1,4 +1,6 @@
+import { zBaseSynthSrc } from '@src/synth/config/shared';
 import * as Tone from '@src/tone';
+import { ToneClass } from '@src/types';
 import { z } from 'zod';
 import { amSynthConfig } from './amSynth';
 import { amplitudeEnvelopeConfig } from './amplitudeEnvelope';
@@ -31,7 +33,6 @@ import { pluchSynthConfig } from './pluckSynth';
 import { reverbConfig } from './reverb';
 import { tremoloConfig } from './tremolo';
 import { vibratoConfig } from './vibrato';
-import { ToneClass } from '@src/types';
 
 export type NodeControlConfig = {
   label?: string | null;
@@ -44,10 +45,14 @@ export type SynthNodeConfig<
   schema: Z;
   createNode: () => T;
   controls?: Partial<Record<keyof z.infer<Z>, NodeControlConfig>>;
-  setState?: (node: T, state: z.infer<Z>) => void;
+  setState?: (
+    node: T,
+    state: z.infer<Z>,
+    srcState: z.infer<typeof zBaseSynthSrc>,
+  ) => void;
   trigger?: (
     node: T,
-    src: { duration: number; delay: number; frequency: number; },
+    src: { duration: number; delay: number; frequency: number },
   ) => void;
   ready?: (node: T) => Promise<void>;
   ToneClass: ToneClass<T>;

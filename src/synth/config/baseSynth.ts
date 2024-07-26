@@ -4,6 +4,7 @@ import triggerSrcNode from '../triggerSrcNode';
 import { zEnvelope } from './envelope';
 import { zOmniOscillator } from './omniOscillator';
 import { zBaseSynthSrc, zFrequency } from './shared';
+import { calculateEnvelope } from '@src/utils/utils';
 
 export const baseSynthConfig = createConfig(
   Tone.Synth,
@@ -14,5 +15,11 @@ export const baseSynthConfig = createConfig(
   }),
   {
     trigger: triggerSrcNode,
+    setState(node, state, { duration }) {
+      node.set({
+        ...state,
+        envelope: calculateEnvelope(state.envelope, duration)
+      });
+    },
   },
 );

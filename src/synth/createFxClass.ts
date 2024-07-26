@@ -1,12 +1,13 @@
 import * as Tone from '@src/tone';
 import { ToneClass } from '@src/types';
 
-type ComponentFxClass<O> = {
+type ComponentFxClass<O, T extends Tone.ToneAudioNode> = {
   new (): Tone.Effect<O & Tone.EffectOptions> & {
     triggerAttackRelease: (
       duration: Tone.Unit.Time,
       time?: Tone.Unit.Time,
     ) => void;
+    set: T['set'],
   };
   getDefaults: (...args: unknown[]) => unknown;
 };
@@ -15,7 +16,7 @@ export default function createFxClass<
   O extends Tone.ToneAudioNodeOptions,
   FxOptions extends O & Tone.EffectOptions,
   Node extends Tone.ToneAudioNode,
->(ToneClass: ToneClass<Node>): ComponentFxClass<O> {
+>(ToneClass: ToneClass<Node>): ComponentFxClass<O, Node> {
   function getDefaults() {
     return Object.assign(
       Tone.Effect.getDefaults(),
