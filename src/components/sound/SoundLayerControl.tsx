@@ -10,6 +10,7 @@ import SectionHeader from '../shared/SectionHeader';
 import FFT from './FFT';
 import { SoundLayerTimeline } from './SoundLayerTimeline';
 import Waveform from './Waveform';
+import VolumeMeter from './VolumeMeter';
 
 type SoundLayerControlProps = {
   sound: SoundConfig;
@@ -65,8 +66,11 @@ export function SoundLayerControl({
           />
         </SectionHeader>
         <SoundLayerTimeline sound={sound} className='mb-4' />
-        <Waveform channel={channel} />
+        <VolumeMeter channel={channel}/>
         <FFT channel={channel} />
+        <div className='mt-3'>
+        <Waveform channel={channel} />
+        </div>
       </div>
     </div>
   );

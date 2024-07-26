@@ -7,6 +7,7 @@ const zEnvelopeCurve = z
   
 export const MAX_ENVELOPE_DURATION = 0.2;
 
+// TODO: Normalize time and apply it based on the duration
 const zInnerEnvelope = z.object({
   attack: z.number().min(0).max(MAX_ENVELOPE_DURATION).catch(0),
   decay: z.number().min(0).max(MAX_ENVELOPE_DURATION).catch(0.05),
