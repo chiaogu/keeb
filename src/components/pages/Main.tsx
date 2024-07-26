@@ -27,7 +27,7 @@ function Main() {
             onLabelChange={keyboard.setName}
             className='font-bold'
           >
-            <IconButton icon='reset_settings' onClick={keyboard.reset} />
+            <IconButton icon='scan_delete' onClick={keyboard.reset} />
             <IconButton icon='upload' onClick={keyboard.upload} />
             <IconButton icon='download' onClick={keyboard.download} />
           </SectionHeader>

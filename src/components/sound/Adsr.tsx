@@ -1,5 +1,5 @@
 import { Envelope } from '@src/synth/config/envelope';
-import { resizeCavas } from '@src/utils/utils';
+import { clampEnevelop, resizeCavas } from '@src/utils/utils';
 import { useEffect, useState } from 'react';
 
 type AdsrProps = {
@@ -19,9 +19,7 @@ export default function Adsr({ envelope }: AdsrProps) {
       ctx.canvas.parentElement ?? ctx.canvas;
     resizeCavas(w, h, ctx);
 
-    const { attack, decay, sustain, release } = envelope;
-    
-    console.log(attack);
+    const { attack, decay, sustain, release } = clampEnevelop(envelope);
 
     ctx.fillStyle = 'black';
 
@@ -35,7 +33,7 @@ export default function Adsr({ envelope }: AdsrProps) {
     ctx.lineTo(aX, h - aY);
     ctx.fill();
 
-    const dX = aX + decay * w;
+    const dX = decay * w;
     const dY = aY * (1 - sustain);
     ctx.beginPath();
     ctx.moveTo(aX - 0.5, aY);
@@ -44,7 +42,7 @@ export default function Adsr({ envelope }: AdsrProps) {
     ctx.lineTo(aX - 0.5, h - aY);
     ctx.fill();
 
-    const rX = dX + release * w;
+    const rX = release * w;
     ctx.beginPath();
     ctx.moveTo(dX - 0.5, dY);
     ctx.lineTo(rX, h);

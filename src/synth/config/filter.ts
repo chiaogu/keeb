@@ -5,10 +5,10 @@ import withToneDefaults from '../withToneDefaults';
 import { zFrequency } from './shared';
 
 export const zInnerFilter = z.object({
-  rolloff: z.enum(['-12', '-24', '-48', '-96']),
-  Q: z.number().min(0).max(100),
   frequency: zFrequency,
   gain: z.number().min(-80).max(0),
+  Q: z.number().min(0).max(100),
+  rolloff: z.enum(['-12', '-24', '-48', '-96']),
   type: z.enum([
     'allpass',
     'bandpass',

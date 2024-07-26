@@ -25,7 +25,7 @@ export default function TimelineBlock({
         style={{
           width: `${Math.max(1, ((duration + delay) / maxDelayAndDuration) * 100)}%`,
         }}
-        className='absolute bottom-0 h-1/2 w-full border-b-2 border-dotted border-black'
+        className='absolute bottom-0 h-1/2 w-full border-b border-black'
       ></div>
       <div
         style={{
@@ -34,10 +34,7 @@ export default function TimelineBlock({
         }}
         className='absolute  h-full overflow-hidden'
       >
-        <div
-          // style={{ width: container?.clientWidth ?? 0 }}
-          className='absolute flex size-full'
-        >
+        <div className='absolute flex size-full'>
           {envelope && (
             <Adsr envelope={envelope} maxDuration={maxDelayAndDuration} />
           )}

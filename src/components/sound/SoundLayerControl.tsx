@@ -65,7 +65,7 @@ export function SoundLayerControl({
             }}
           />
         </SectionHeader>
-        <SoundLayerTimeline sound={sound} className='mb-4' />
+        <SoundLayerTimeline sound={sound} />
         <VolumeMeter channel={channel}/>
         <FFT channel={channel} />
         <div className='mt-3'>

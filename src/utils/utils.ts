@@ -135,14 +135,29 @@ export function scale(
   return ((v - inMin) / (inMax - inMin)) * (outMax - outMin) + outMin;
 }
 
+export function clampEnevelop(envelope: Envelope) {
+  const { attack } = envelope;
+  const decay = Math.max(attack, envelope.decay);
+  const release = Math.max(decay, envelope.release);
+  return {
+    ...envelope,
+    release,
+    decay,
+  };
+}
+
 export function calculateEnvelope(
   envelope: Envelope,
   duration: number,
 ): Envelope {
+  const clamped = clampEnevelop(envelope);
+  const { attack } = clamped;
+  const decay = clamped.decay - attack;
+  const release = clamped.release - decay;
   return {
-    ...envelope,
-    attack: envelope.attack * duration,
-    decay: envelope.decay * duration,
-    release: envelope.release * duration,
+    ...clamped,
+    attack: attack * duration,
+    decay: decay * duration,
+    release: release * duration,
   };
 }

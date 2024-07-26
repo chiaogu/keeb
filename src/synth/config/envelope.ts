@@ -10,9 +10,9 @@ export const zInnerEnvelope = z.object({
   decay: z.number().min(0).max(1).catch(0.25),
   sustain: z.number().min(0).max(1).catch(0),
   release: z.number().min(0).max(1).catch(0),
-  attackCurve: zEnvelopeCurve,
-  decayCurve: z.enum(['linear', 'exponential']).catch('linear'),
-  releaseCurve: zEnvelopeCurve,
+  // attackCurve: zEnvelopeCurve,
+  // decayCurve: z.enum(['linear', 'exponential']).catch('linear'),
+  // releaseCurve: zEnvelopeCurve,
 });
 
 export const zEnvelope = withInnerDefaults(zInnerEnvelope);

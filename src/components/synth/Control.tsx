@@ -58,7 +58,7 @@ export default function Control({
       <RadioGroup
         indent={indent}
         label={label}
-        values={[value as string]}
+        values={[`${value}`]}
         onChange={([v]) => onChange(v)}
         options={options}
       />
