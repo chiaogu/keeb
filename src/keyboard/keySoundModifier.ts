@@ -50,6 +50,7 @@ function modifierNumberData(
 }
 
 export function getModifiedNodeData(
+  synthId: string,
   node: SynthNodeState,
   modifiers: SoundModifier[],
 ) {
@@ -58,11 +59,15 @@ export function getModifiedNodeData(
       iterateSoundStructure(
         modifier,
         isModifierOp,
-        ({ fieldPath }: SoundFieldPath, [action, value]) => {
+        (field: SoundFieldPath, [action, value]) => {
+          if (synthId !== field.synthId || node.id !== field.nodeId) {
+            return;
+          }
+          
           if (action === 'add') {
-            modifierNumberData(draft, node, fieldPath, value);
+            modifierNumberData(draft, node, field.fieldPath, value);
           } else if (action === 'set') {
-            set(draft.data, fieldPath, value);
+            set(draft.data, field.fieldPath, value);
           }
         },
       );

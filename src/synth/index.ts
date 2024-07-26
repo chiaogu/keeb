@@ -132,7 +132,7 @@ export default function createSynth(
   function trigger(modifiers: SoundModifier[] = []) {
     if (!srcNode) throw new Error('synth is not initialized yet');
 
-    const modifiedSrcData = getModifiedNodeData(state.src, modifiers);
+    const modifiedSrcData = getModifiedNodeData(state.id, state.src, modifiers);
     setToneState(state.src.type, srcNode, modifiedSrcData);
     nodeConfig[state.src.type].trigger?.(
       srcNode as never,
@@ -140,7 +140,7 @@ export default function createSynth(
     );
 
     state.fxs.forEach((fx, index) => {
-      const modifiedFxData = getModifiedNodeData(fx, modifiers);
+      const modifiedFxData = getModifiedNodeData(state.id, fx, modifiers);
       setToneState(fx.type, fxNodes[index], modifiedFxData);
       nodeConfig[fx.type].trigger?.(
         fxNodes[index] as never,
