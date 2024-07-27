@@ -1,9 +1,9 @@
-import RadioGroup from '@src/components//shared/RadioGroup';
 import { Synth, SynthSrcNodeState } from '@src/synth';
 import { SrcNodeType, nodeConfig, srcNodeConfig } from '@src/synth/config';
 import { zBaseSynthSrc } from '@src/synth/config/shared';
 import { omit } from '@src/utils/schema';
 import SectionHeader from '../shared/SectionHeader';
+import SliderSelect from '../shared/SliderSelect';
 import Controls from './Controls';
 
 type SrcNodeControlProps = {
@@ -26,11 +26,11 @@ export default function SrcNodeControl({ src, onChange }: SrcNodeControlProps) {
           })
         }
       />
-      <RadioGroup
+      <SliderSelect
         label='type'
         options={srcTypeOptions}
-        values={[src.type]}
-        onChange={([type]) =>
+        value={src.type}
+        onChange={(type) =>
           onChange({
             id: src.id,
             type: type as SrcNodeType,
