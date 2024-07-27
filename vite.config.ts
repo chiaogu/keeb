@@ -12,4 +12,8 @@ export default defineConfig({
     react(),
   ],
   root: path.resolve('./src'),
+  build: {
+    outDir: path.resolve('./dist'),
+  },
+  base: '/keeb',
 });

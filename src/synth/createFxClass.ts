@@ -1,14 +1,18 @@
 import * as Tone from '@src/tone';
 import { ToneClass } from '@src/types';
 
+type ToneEffect<O, T extends Tone.ToneAudioNode> = Tone.Effect<
+  O & Tone.EffectOptions
+> & {
+  triggerAttackRelease: (
+    duration: Tone.Unit.Time,
+    time?: Tone.Unit.Time,
+  ) => void;
+  set: T['set'];
+};
+
 type ComponentFxClass<O, T extends Tone.ToneAudioNode> = {
-  new (): Tone.Effect<O & Tone.EffectOptions> & {
-    triggerAttackRelease: (
-      duration: Tone.Unit.Time,
-      time?: Tone.Unit.Time,
-    ) => void;
-    set: T['set'],
-  };
+  new (): ToneEffect<O, T>;
   getDefaults: (...args: unknown[]) => unknown;
 };
 
@@ -50,7 +54,10 @@ export default function createFxClass<
     }
 
     triggerAttackRelease(duration: Tone.Unit.Time, time?: Tone.Unit.Time) {
-      this.component.triggerAttackRelease?.(duration, time);
+      (this.component as unknown as ToneEffect<O, Node>).triggerAttackRelease?.(
+        duration,
+        time,
+      );
     }
 
     dispose(): this {

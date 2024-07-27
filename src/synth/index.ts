@@ -68,7 +68,7 @@ export default function createSynth(
         zBaseSynthSrc.parse(state.src.data),
       );
     } else {
-      node.set(nodeState);
+      (node as Tone.ToneAudioNode).set(nodeState);
     }
   }
 

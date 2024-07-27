@@ -1,7 +1,6 @@
 import IconButton from '@src/components/shared/IconButton';
 import SectionHeader from '@src/components/shared/SectionHeader';
 import { keys } from '@src/keyboard/keys';
-import { getFieldRandomSeed } from '@src/keyboard/keySoundModifier';
 import { ModifierLayer } from '@src/types';
 import { Fragment, memo, useCallback, useMemo, useState } from 'react';
 import { KeysSelect } from './KeysSelect';
@@ -102,7 +101,7 @@ export default function RandomModifierControl() {
               batchSetModifier(
                 selectedLayerIndex,
                 Object.keys(selectedLayer.keys),
-                true
+                true,
               );
             }}
           />
