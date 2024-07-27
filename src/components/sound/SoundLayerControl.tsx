@@ -3,14 +3,15 @@ import useUplodaFile from '@src/hooks/useUplodaFile';
 import { SynthConfig } from '@src/synth';
 import * as Tone from '@src/tone';
 import { SoundConfig } from '@src/types';
+import { COLOR } from '@src/utils/constants';
 import { downloadSound } from '@src/utils/file';
 import IconButton from '../shared/IconButton';
 import RadioGroup from '../shared/RadioGroup';
 import SectionHeader from '../shared/SectionHeader';
 import FFT from './FFT';
 import { SoundLayerTimeline } from './SoundLayerTimeline';
-import Waveform from './Waveform';
 import VolumeMeter from './VolumeMeter';
+import Waveform from './Waveform';
 
 type SoundLayerControlProps = {
   sound: SoundConfig;
@@ -35,7 +36,10 @@ export function SoundLayerControl({
   const { load } = useUplodaFile(onLoadSound);
 
   return (
-    <div className='flex w-full flex-col items-center border-2 border-black p-8'>
+    <div
+      style={{ background: COLOR.BG }}
+      className='flex w-full flex-col items-center border-2 border-black p-8'
+    >
       <SectionHeader
         className='font-bold'
         label={sound.name}
@@ -66,10 +70,10 @@ export function SoundLayerControl({
           />
         </SectionHeader>
         <SoundLayerTimeline sound={sound} />
-        <VolumeMeter channel={channel}/>
+        <VolumeMeter channel={channel} />
         <FFT channel={channel} />
         <div className='mt-3'>
-        <Waveform channel={channel} />
+          <Waveform channel={channel} />
         </div>
       </div>
     </div>

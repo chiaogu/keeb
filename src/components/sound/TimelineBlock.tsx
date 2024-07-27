@@ -1,5 +1,6 @@
 import { SynthConfig } from '@src/synth';
 import { zBaseSynthSrc } from '@src/synth/config/shared';
+import { COLOR } from '@src/utils/constants';
 import { findEnvelope } from '@src/utils/utils';
 import { useState } from 'react';
 import Adsr from './Adsr';
@@ -20,7 +21,11 @@ export default function TimelineBlock({
   const envelope = findEnvelope(synth);
 
   return (
-    <div className='relative h-6 w-full bg-white' ref={setContainer}>
+    <div
+      style={{ background: COLOR.BG }}
+      className='relative h-8 w-full'
+      ref={setContainer}
+    >
       <div
         style={{
           width: `${Math.max(1, ((duration + delay) / maxDelayAndDuration) * 100)}%`,

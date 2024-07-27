@@ -20,7 +20,7 @@ export default function SectionHeader({
       {onLabelChange ? (
         <input value={label} onChange={(e) => onLabelChange(e.target.value)} />
       ) : (
-        <label className={`shrink-0 bg-white ${labelClassName}`}>
+        <label className={`shrink-0 ${labelClassName}`}>
           {label}
         </label>
       )}

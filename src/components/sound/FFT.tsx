@@ -1,6 +1,6 @@
 import * as Tone from '@src/tone';
 import Meter from './Meter';
-import { MAX_SAMPLE_SIZE } from '@src/utils/constants';
+import { COLOR, MAX_SAMPLE_SIZE } from '@src/utils/constants';
 import { downSample, scale } from '@src/utils/utils';
 
 const defaultValues = new Float32Array(Array(MAX_SAMPLE_SIZE).fill(1));
@@ -15,7 +15,7 @@ function draw(
 
   const { resampled, min, max } = downSample(values.slice(0, 500));
 
-  ctx.fillStyle = 'white';
+  ctx.fillStyle = COLOR.BG;
   ctx.fillRect(0, 0, w, h);
   
   ctx.lineWidth = 1;

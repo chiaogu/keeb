@@ -25,8 +25,8 @@ export default function Meter<T extends Tone.ToneAudioNode>({
 
   const stop = useDebounceCallback(() => {
     // TODO: uncomment when performance becomes an issue
-    // setEnabled(false);
-  }, 2000);
+    setEnabled(false);
+  }, 10000);
 
   const start = useCallback(() => {
     setEnabled(true);
@@ -57,7 +57,7 @@ export default function Meter<T extends Tone.ToneAudioNode>({
       draw(ctx, toneNode, false);
 
       if (!enabled || toneNode.disposed) {
-        draw(ctx, toneNode, true);
+        // draw(ctx, toneNode, true);
         return;
       }
 

@@ -7,3 +7,7 @@ export const channels = {
   up: new Tone.Channel().toDestination(),
   down: new Tone.Channel().toDestination(),
 };
+
+export const COLOR = {
+  BG: '#f3f4f6',
+};

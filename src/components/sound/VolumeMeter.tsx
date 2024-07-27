@@ -2,6 +2,7 @@ import * as Tone from '@src/tone';
 import { scale } from '@src/utils/utils';
 import { useCallback, useRef } from 'react';
 import Meter from './Meter';
+import { COLOR } from '@src/utils/constants';
 
 const LENGTH = 100;
 const defaultValues = Array(LENGTH).fill(0);
@@ -28,7 +29,7 @@ export default function VolumeMeter({ channel }: VolumeMeterProps) {
       const values = level.current;
       const { clientWidth: w, clientHeight: h } = ctx.canvas;
 
-      ctx.fillStyle = 'white';
+      ctx.fillStyle = COLOR.BG;
       ctx.fillRect(0, 0, w, h);
 
       ctx.lineWidth = 1;

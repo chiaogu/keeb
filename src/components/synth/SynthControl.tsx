@@ -3,6 +3,7 @@ import IconButton from '../shared/IconButton';
 import SectionHeader from '../shared/SectionHeader';
 import FxsControl from './FxsControl';
 import SrcNodeControl from './SrcNodeControl';
+import { COLOR } from '@src/utils/constants';
 
 type SynthControlProps = {
   synth: SynthConfig;
@@ -26,7 +27,10 @@ export default function SynthControl({
   onNameChange,
 }: SynthControlProps) {
   return (
-    <div className='flex w-full flex-col items-center border-2 border-black p-8'>
+    <div
+      style={{ background: COLOR.BG }}
+      className='flex w-full flex-col items-center border-2 border-black p-8'
+    >
       <SectionHeader
         className='font-bold'
         label={synth.name ?? 'untitled'}
