@@ -8,6 +8,7 @@ import IconButton from '../shared/IconButton';
 import RadioGroup from '../shared/RadioGroup';
 import SectionHeader from '../shared/SectionHeader';
 import SoundControl from '../sound/SoundControl';
+import KeyEvents from '../keyboard/KeyEvents';
 
 function Main() {
   const [keyEvent, setKeyEvent] = useState<KeyEvent>('down');
@@ -19,7 +20,7 @@ function Main() {
 
   return (
     <div className='flex flex-col items-center pb-[70vh]'>
-      <Keys />
+      {/* <Keys /> */}
       <div className='mb-4 flex w-full max-w-[500px] flex-col items-center'>
         <div className='flex w-full flex-col items-center border-2 border-black p-8'>
           <SectionHeader
@@ -42,7 +43,9 @@ function Main() {
             values={[tab]}
             onChange={([value]) => setTab(value as Tab)}
             options={['config', 'modifier']}
+            className='mb-4'
           />
+          <KeyEvents />
         </div>
       </div>
       {tab === 'config' && (
