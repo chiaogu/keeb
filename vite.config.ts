@@ -16,4 +16,7 @@ export default defineConfig({
     outDir: path.resolve('./dist'),
   },
   base: '/keeb',
+  server: {
+    host: true,
+  },
 });

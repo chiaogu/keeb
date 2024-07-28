@@ -8,4 +8,5 @@
 * {
   font-family: 'Overpass Mono', monospace;
   font-variant-ligatures: no-common-ligatures;
+  user-select: none;
 }

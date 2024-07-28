@@ -17,10 +17,9 @@ export default function SliderSelect({
 }: SliderSelectProps) {
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
-  const scrollX = useMemo(() => {
-    if (!container) return 0;
-    return container.scrollWidth - container.clientWidth;
-  }, [container]);
+  const scrollX = !container
+    ? 0
+    : container.scrollWidth - container.clientWidth;
 
   const index = useMemo(() => options.indexOf(value), [options, value]);
 
@@ -31,7 +30,7 @@ export default function SliderSelect({
       max={options.length - 1}
       min={0}
       step={1}
-      onChange={(v) => onChange(options[Math.round(v)])}
+      onChange={(v) => onChange(options[Math.floor(v)])}
       render={({ normalValue, dragging }) => (
         <>
           <div

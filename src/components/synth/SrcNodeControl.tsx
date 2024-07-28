@@ -16,16 +16,6 @@ const srcTypeOptions = Object.keys(srcNodeConfig) as SrcNodeType[];
 export default function SrcNodeControl({ src, onChange }: SrcNodeControlProps) {
   return (
     <div className='flex w-full flex-col items-center'>
-      <Controls
-        schema={zBaseSynthSrc}
-        value={src.data}
-        onChange={(data) =>
-          onChange({
-            ...src,
-            data: data,
-          })
-        }
-      />
       <SliderSelect
         label='type'
         options={srcTypeOptions}
@@ -35,6 +25,16 @@ export default function SrcNodeControl({ src, onChange }: SrcNodeControlProps) {
             id: src.id,
             type: type as SrcNodeType,
             data: {},
+          })
+        }
+      />
+      <Controls
+        schema={zBaseSynthSrc}
+        value={src.data}
+        onChange={(data) =>
+          onChange({
+            ...src,
+            data: data,
           })
         }
       />
