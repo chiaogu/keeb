@@ -15,6 +15,7 @@ export type SliderBaseProps = {
   indent?: number;
   onChange: (v: number) => void;
   render: (props: { normalValue: number; dragging: boolean }) => ReactNode;
+  sensitivity?: number;
 };
 
 const DRAG_THRESHOLD = 20;
@@ -26,6 +27,7 @@ export default function SliderBase({
   min,
   indent = 0,
   render,
+  sensitivity = 1,
 }: SliderBaseProps) {
   const container = useRef<HTMLDivElement>(null);
   const startPos = useRef({ x: 0, y: 0 });
@@ -64,7 +66,7 @@ export default function SliderBase({
       }
 
       const { clientWidth } = container.current;
-      const normalDelta = moveEvent.movementX / clientWidth;
+      const normalDelta = moveEvent.movementX / clientWidth * sensitivity;
       const denormalizedNewValue =
         min + (max - min) * Math.max(0, Math.min(1, normalValue + normalDelta));
       onChange(denormalizedNewValue);
@@ -78,7 +80,7 @@ export default function SliderBase({
       removeEventListener('pointerup', cancel);
       removeEventListener('pointercancel', cancel);
     };
-  }, [dragging, max, min, normalValue, onChange]);
+  }, [dragging, max, min, normalValue, onChange, sensitivity]);
 
   const handlePointerDown: PointerEventHandler = useCallback((downEvent) => {
     thresholdPassed.current = false;

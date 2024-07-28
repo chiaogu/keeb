@@ -30,6 +30,7 @@ export default function SliderSelect({
 
   return (
     <SliderBase
+      sensitivity={1.5}
       indent={indent}
       value={sliderValue}
       max={options.length - 1}
@@ -41,35 +42,41 @@ export default function SliderSelect({
         }
       }}
       render={({ normalValue, dragging }) => {
+        const normalScrollOffset = Math.max(
+          0,
+          Math.min(1, normalValue * 1.8 - 0.4),
+        );
         return (
-          <div
-            className='relative size-full overflow-hidden'
-            ref={setContainer}
-          >
-            <div className='flex h-full w-fit'>
-              {options.map((option) => (
-                <div
-                  key={option}
-                  className='flex h-full items-center text-clip bg-white px-4'
-                  style={{
-                    color: dragging ? 'black' : 'transparent',
-                    transform: `translateX(-${scrollX * Math.max(0, Math.min(1, normalValue * 1.8 - 0.4))}px)`,
-                    filter: `invert(${option === value ? '1' : '0'})`,
-                  }}
-                >
-                  {option}
-                </div>
-              ))}
+          <div className='flex size-full overflow-hidden'>
+            <div className='flex h-full items-center justify-between bg-white pl-1 pr-4'>
+              {label}
             </div>
             <div
-              style={{
-                color: dragging ? 'transparent' : 'white',
-                transition: 'color 0.1s',
-              }}
-              className='absolute top-0 flex size-full items-center justify-between px-1 text-white mix-blend-difference'
+              className='relative size-full overflow-hidden'
+              ref={setContainer}
             >
-              <div>{label}</div>
-              <div>{value}</div>
+              <div className='flex h-full w-fit'>
+                {options.map((option) => (
+                  <div
+                    key={option}
+                    className='flex h-full items-center text-clip bg-white px-4'
+                    style={{
+                      transform: `translateX(-${scrollX * normalScrollOffset}px)`,
+                      filter: `invert(${option === value ? '1' : '0'})`,
+                      color: dragging ? 'black' : 'transparent',
+                      transition: 'color 0.1s',
+                    }}
+                  >
+                    {option}
+                  </div>
+                ))}
+              </div>
+              <div
+                style={{ opacity: dragging ? 0 : 1, transition: 'opacity 0.1s' }}
+                className='absolute right-1 top-0 flex h-full items-center text-white mix-blend-difference'
+              >
+                {value}
+              </div>
             </div>
           </div>
         );
