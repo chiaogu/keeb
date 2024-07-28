@@ -2,6 +2,7 @@ import {
   PointerEventHandler,
   ReactNode,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -27,56 +28,63 @@ export default function SliderBase({
   render,
 }: SliderBaseProps) {
   const container = useRef<HTMLDivElement>(null);
+  const startPos = useRef({ x: 0, y: 0 });
+  const thresholdPassed = useRef(false);
   const [dragging, setDragging] = useState(false);
 
   const normalValue = useMemo(() => {
     return (value - min) / (max - min);
   }, [max, min, value]);
 
-  const handlePointerDown: PointerEventHandler = useCallback(
-    (downEvent) => {
-      let startPos = { x: downEvent.clientX, y: downEvent.clientY };
-      let thresholdPassed = false;
-      setDragging(true);
+  useEffect(() => {
+    const cancel = () => setDragging(false);
 
-      const cancel = () => {
-        setDragging(false);
-        removeEventListener('pointermove', handlePointerMove);
-      };
+    const handlePointerMove = (moveEvent: PointerEvent) => {
+      if (!dragging) {
+        return;
+      }
 
-      const handlePointerMove = (moveEvent: PointerEvent) => {
-        const xDelta = moveEvent.clientX - startPos.x;
-        const yDelta = moveEvent.clientY - startPos.y;
-        
-        if (!thresholdPassed && Math.abs(yDelta) > DRAG_THRESHOLD) {
-          cancel();
-          return;
-        }
+      const xDelta = moveEvent.clientX - startPos.current.x;
+      const yDelta = moveEvent.clientY - startPos.current.y;
 
-        if (!thresholdPassed && Math.abs(xDelta) > DRAG_THRESHOLD) {
-          thresholdPassed = true;
-          startPos = { x: moveEvent.clientX, y: moveEvent.clientY };
-          handlePointerMove(moveEvent);
-          return;
-        }
+      if (!thresholdPassed.current && Math.abs(yDelta) > DRAG_THRESHOLD) {
+        cancel();
+        return;
+      }
 
-        if (!container.current || !thresholdPassed) {
-          return;
-        }
+      if (!thresholdPassed.current && Math.abs(xDelta) > DRAG_THRESHOLD) {
+        thresholdPassed.current = true;
+        startPos.current = { x: moveEvent.clientX, y: moveEvent.clientY };
+        handlePointerMove(moveEvent);
+        return;
+      }
 
-        const { clientWidth } = container.current;
-        const normalDelta = (xDelta / clientWidth) * 1.5;
-        const denormalizedNewValue =
-          min +
-          (max - min) * Math.max(0, Math.min(1, normalValue + normalDelta));
-        onChange(denormalizedNewValue);
-      };
+      if (!container.current || !thresholdPassed.current) {
+        return;
+      }
 
-      addEventListener('pointermove', handlePointerMove);
-      addEventListener('pointerup', cancel, { once: true });
-    },
-    [max, min, normalValue, onChange],
-  );
+      const { clientWidth } = container.current;
+      const normalDelta = moveEvent.movementX / clientWidth;
+      const denormalizedNewValue =
+        min + (max - min) * Math.max(0, Math.min(1, normalValue + normalDelta));
+      onChange(denormalizedNewValue);
+    };
+
+    addEventListener('pointermove', handlePointerMove);
+    addEventListener('pointerup', cancel);
+    addEventListener('pointercancel', cancel);
+    return () => {
+      removeEventListener('pointermove', handlePointerMove);
+      removeEventListener('pointerup', cancel);
+      removeEventListener('pointercancel', cancel);
+    };
+  }, [dragging, max, min, normalValue, onChange]);
+
+  const handlePointerDown: PointerEventHandler = useCallback((downEvent) => {
+    thresholdPassed.current = false;
+    startPos.current = { x: downEvent.clientX, y: downEvent.clientY };
+    setDragging(true);
+  }, []);
 
   return (
     <div

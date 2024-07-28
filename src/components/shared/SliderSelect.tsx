@@ -23,8 +23,10 @@ export default function SliderSelect({
     : container.scrollWidth - container.clientWidth;
 
   useEffect(() => {
-    setSliderValue(options.indexOf(value));
-  }, [options, value]);
+    if (options.indexOf(value) !== Math.round(sliderValue)) {
+      setSliderValue(options.indexOf(value));
+    }
+  }, [options, sliderValue, value]);
 
   return (
     <SliderBase
@@ -34,7 +36,9 @@ export default function SliderSelect({
       min={0}
       onChange={(v) => {
         setSliderValue(v);
-        onChange(options[Math.round(v)]);
+        if (options.indexOf(value) !== Math.round(v)) {
+          onChange(options[Math.round(v)]);
+        }
       }}
       render={({ normalValue, dragging }) => {
         return (
