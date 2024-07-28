@@ -16,9 +16,9 @@ export default function SectionHeader({
   labelClassName,
 }: SectionHeaderProps) {
   return (
-    <div className={`flex w-full items-end justify-between ${className}`}>
+    <div className={`flex w-full h-8 items-center justify-between ${className}`}>
       {onLabelChange ? (
-        <input value={label} onChange={(e) => onLabelChange(e.target.value)} />
+        <input className='h-full' value={label} onChange={(e) => onLabelChange(e.target.value)} />
       ) : (
         <label className={`shrink-0 ${labelClassName}`}>
           {label}

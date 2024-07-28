@@ -90,7 +90,7 @@ export default function SliderBase({
 
   return (
     <div
-      className='relative mb-2 flex h-8 w-full touch-none items-center'
+      className='relative mb-2 flex h-8 w-full touch-none items-center last:mb-0'
       style={{
         marginLeft: Math.max(0, indent ?? 0) * 8,
       }}

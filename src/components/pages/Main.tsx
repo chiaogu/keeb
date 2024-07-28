@@ -23,7 +23,7 @@ function Main() {
       <div className='my-4 flex w-full max-w-[500px] flex-col items-center'>
         <div
           style={{ background: COLOR.BG }}
-          className='flex w-full flex-col items-center border-2 border-black p-8'
+          className='flex w-full flex-col items-center p-8'
         >
           <SectionHeader
             label={keyboard.name}

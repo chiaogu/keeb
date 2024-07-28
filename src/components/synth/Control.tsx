@@ -41,7 +41,7 @@ export default function Control({
   const innerSchema = useMemo(() => removeDefault(schema), [schema]);
 
   if (innerSchema instanceof z.ZodNumber) {
-    const { min, max, step } = getNumberDef(innerSchema);
+    const { min, max } = getNumberDef(innerSchema);
     return (
       <Slider
         indent={indent}
@@ -50,7 +50,6 @@ export default function Control({
         onChange={onChange}
         min={min}
         max={max}
-        step={step}
       />
     );
   } else if (innerSchema instanceof z.ZodEnum) {

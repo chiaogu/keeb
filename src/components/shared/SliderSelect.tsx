@@ -47,14 +47,11 @@ export default function SliderSelect({
           Math.min(1, normalValue * 1.8 - 0.4),
         );
         return (
-          <div className='flex size-full overflow-hidden'>
+          <div className='relative flex size-full justify-between overflow-hidden'>
             <div className='flex h-full items-center justify-between bg-white pl-1 pr-4'>
               {label}
             </div>
-            <div
-              className='relative size-full overflow-hidden'
-              ref={setContainer}
-            >
+            <div className='size-full w-fit overflow-hidden' ref={setContainer}>
               <div className='flex h-full w-fit'>
                 {options.map((option) => (
                   <div
@@ -71,12 +68,12 @@ export default function SliderSelect({
                   </div>
                 ))}
               </div>
-              <div
-                style={{ opacity: dragging ? 0 : 1, transition: 'opacity 0.1s' }}
-                className='absolute right-1 top-0 flex h-full items-center text-white mix-blend-difference'
-              >
-                {value}
-              </div>
+            </div>
+            <div
+              style={{ opacity: dragging ? 0 : 1, transition: 'opacity 0.1s' }}
+              className='absolute right-1 top-0 flex h-full items-center text-white mix-blend-difference'
+            >
+              {value}
             </div>
           </div>
         );

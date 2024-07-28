@@ -9,5 +9,5 @@ export const channels = {
 };
 
 export const COLOR = {
-  BG: '#f3f4f6',
+  BG: '#f5f5f5',
 };

@@ -29,10 +29,10 @@ export default function SynthControl({
   return (
     <div
       style={{ background: COLOR.BG }}
-      className='flex w-full flex-col items-center border-2 border-black p-8'
+      className='flex w-full flex-col items-center p-8'
     >
       <SectionHeader
-        className='font-bold'
+        className='font-bold mb-2'
         label={synth.name ?? 'untitled'}
         onLabelChange={onNameChange}
       >
