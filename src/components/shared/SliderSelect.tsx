@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import SliderBase, { SliderBaseProps } from './SliderBase';
 
 type SliderSelectProps = {
@@ -15,24 +15,29 @@ export default function SliderSelect({
   onChange,
   indent,
 }: SliderSelectProps) {
+  const [sliderValue, setSliderValue] = useState(options.indexOf(value));
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   const scrollX = !container
     ? 0
     : container.scrollWidth - container.clientWidth;
 
-  const index = useMemo(() => options.indexOf(value), [options, value]);
+  useEffect(() => {
+    setSliderValue(options.indexOf(value));
+  }, [options, value]);
 
   return (
     <SliderBase
       indent={indent}
-      value={index}
+      value={sliderValue}
       max={options.length - 1}
       min={0}
-      step={1}
-      onChange={(v) => onChange(options[Math.floor(v)])}
-      render={({ normalValue, dragging }) => (
-        <>
+      onChange={(v) => {
+        setSliderValue(v);
+        onChange(options[Math.round(v)]);
+      }}
+      render={({ normalValue, dragging }) => {
+        return (
           <div
             className='relative size-full overflow-hidden'
             ref={setContainer}
@@ -45,7 +50,6 @@ export default function SliderSelect({
                   style={{
                     color: dragging ? 'black' : 'transparent',
                     transform: `translateX(-${scrollX * Math.max(0, Math.min(1, normalValue * 1.8 - 0.4))}px)`,
-                    transition: 'transform 0.1s linear, color 0.1s',
                     filter: `invert(${option === value ? '1' : '0'})`,
                   }}
                 >
@@ -61,11 +65,11 @@ export default function SliderSelect({
               className='absolute top-0 flex size-full items-center justify-between px-1 text-white mix-blend-difference'
             >
               <div>{label}</div>
-              <div>{options[index]}</div>
+              <div>{value}</div>
             </div>
           </div>
-        </>
-      )}
+        );
+      }}
     />
   );
 }

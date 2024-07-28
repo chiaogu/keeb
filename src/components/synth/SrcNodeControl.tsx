@@ -24,7 +24,7 @@ export default function SrcNodeControl({ src, onChange }: SrcNodeControlProps) {
           onChange({
             id: src.id,
             type: type as SrcNodeType,
-            data: {},
+            data: zBaseSynthSrc.parse(src.data),
           })
         }
       />
