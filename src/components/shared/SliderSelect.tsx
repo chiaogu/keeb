@@ -30,7 +30,7 @@ export default function SliderSelect({
 
   return (
     <SliderBase
-      sensitivity={1.5}
+      sensitivity={1.2}
       indent={indent}
       value={sliderValue}
       max={options.length - 1}

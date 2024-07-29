@@ -1,9 +1,9 @@
+import { scale } from '@src/utils/utils';
 import {
   PointerEventHandler,
   ReactNode,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -30,13 +30,10 @@ export default function SliderBase({
   sensitivity = 1,
 }: SliderBaseProps) {
   const container = useRef<HTMLDivElement>(null);
+  const startValue = useRef(value);
   const startPos = useRef({ x: 0, y: 0 });
   const thresholdPassed = useRef(false);
   const [dragging, setDragging] = useState(false);
-
-  const normalValue = useMemo(() => {
-    return (value - min) / (max - min);
-  }, [max, min, value]);
 
   useEffect(() => {
     const cancel = () => setDragging(false);
@@ -66,9 +63,14 @@ export default function SliderBase({
       }
 
       const { clientWidth } = container.current;
-      const normalDelta = moveEvent.movementX / clientWidth * sensitivity;
+      const normalDelta = (xDelta / clientWidth) * sensitivity;
       const denormalizedNewValue =
-        min + (max - min) * Math.max(0, Math.min(1, normalValue + normalDelta));
+        min +
+        (max - min) *
+          Math.max(
+            0,
+            Math.min(1, scale(startValue.current, min, max) + normalDelta),
+          );
       onChange(denormalizedNewValue);
     };
 
@@ -80,13 +82,17 @@ export default function SliderBase({
       removeEventListener('pointerup', cancel);
       removeEventListener('pointercancel', cancel);
     };
-  }, [dragging, max, min, normalValue, onChange, sensitivity]);
+  }, [dragging, max, min, onChange, sensitivity]);
 
-  const handlePointerDown: PointerEventHandler = useCallback((downEvent) => {
-    thresholdPassed.current = false;
-    startPos.current = { x: downEvent.clientX, y: downEvent.clientY };
-    setDragging(true);
-  }, []);
+  const handlePointerDown: PointerEventHandler = useCallback(
+    (downEvent) => {
+      thresholdPassed.current = false;
+      startPos.current = { x: downEvent.clientX, y: downEvent.clientY };
+      startValue.current = value;
+      setDragging(true);
+    },
+    [value],
+  );
 
   return (
     <div
@@ -98,7 +104,7 @@ export default function SliderBase({
       ref={container}
     >
       <div className='pointer-events-none absolute top-0 size-full bg-white'>
-        {render({ normalValue, dragging })}
+        {render({ normalValue: scale(value, min, max), dragging })}
       </div>
     </div>
   );
