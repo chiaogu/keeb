@@ -4,6 +4,7 @@ import { channels, COLOR } from '@src/utils/constants';
 import { useMemo, useState } from 'react';
 import KeyEvents from '../keyboard/KeyEvents';
 import KeySoundModifier from '../keyboard/KeySoundModifier';
+import TestButton from '../keyboard/TestButton';
 import IconButton from '../shared/IconButton';
 import RadioGroup from '../shared/RadioGroup';
 import SectionHeader from '../shared/SectionHeader';
@@ -70,6 +71,7 @@ function Main() {
       {tab === 'modifier' && (
         <KeySoundModifier keyboard={keyboard} keyEvent={keyEvent} />
       )}
+      <TestButton keyboard={keyboard} />
     </div>
   );
 }

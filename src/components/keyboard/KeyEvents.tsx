@@ -23,9 +23,9 @@ export default function KeyEvents() {
       time: Date.now(),
       seed: Math.random(),
     });
-    if (e.key === ' ' || e.key === 'Enter') {
-      e.preventDefault();
-    }
+    // if (e.key === ' ' || e.key === 'Enter') {
+    //   e.preventDefault();
+    // }
   }, []);
 
   useKeyEvents({ onKeydown });
