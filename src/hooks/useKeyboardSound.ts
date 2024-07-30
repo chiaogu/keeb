@@ -21,6 +21,8 @@ import { v4 as uuid } from 'uuid';
 import { KeyEvent } from './useKeyboard';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
+import useThrottleCallback from './useThrottleCallback';
+import { useDebounceCallback } from '@react-hook/debounce';
 
 const throttleCall = throttle(
   (callback) => {
@@ -45,10 +47,19 @@ export default function useKeyboardSound(
     },
     [modifiers, soundCache, synths],
   );
+  
+  const triggerRelease = useDebounceCallback(() => {
+    dispatchEvent(
+      new KeyboardEvent('keyup', {
+        code: getRandomKeyCode(),
+        key: getRandomKeyCode(),
+        repeat: true // avoid trigger sound
+      }),
+    );
+  }, 300);
 
-  useEffect(() => {
-    soundCache.clear();
-    throttleCall(() => {
+  const triggerKeyEvent = useThrottleCallback(
+    useCallback(() => {
       requestAnimationFrame(() => {
         dispatchEvent(
           new KeyboardEvent(keyEvent === 'up' ? 'keyup' : 'keydown', {
@@ -57,8 +68,17 @@ export default function useKeyboardSound(
           }),
         );
       });
-    });
-  }, [keyEvent, soundCache, trigger]);
+      if (keyEvent === 'down') {
+        triggerRelease();
+      }
+    }, [keyEvent, triggerRelease]),
+    100,
+  );
+
+  useEffect(() => {
+    soundCache.clear();
+    triggerKeyEvent();
+  }, [soundCache, triggerKeyEvent, trigger]);
 
   const sound = useMemo(
     () => ({

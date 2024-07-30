@@ -48,7 +48,9 @@ export default function useKeyboard() {
 
   const onKeyUp = useCallback(
     (e: KeyboardEvent) => {
-      up.sound.trigger(e.code);
+      if (!e.repeat) {
+        up.sound.trigger(e.code);
+      }
     },
     [up],
   );

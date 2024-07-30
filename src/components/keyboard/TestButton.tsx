@@ -25,9 +25,21 @@ export default function TestButton({ className }: TestButtonProps) {
     }
   }, [pressed]);
 
+  const createKetEventHandler = useCallback(
+    (newPressed: boolean) => () => {
+      if (pressed === newPressed) {
+        setPressed(!newPressed);
+        setTimeout(() => setPressed(newPressed), 50);
+      } else {
+        setPressed(newPressed);
+      }
+    },
+    [pressed],
+  );
+
   useKeyEvents({
-    onKeydown: () => setPressed(true),
-    onKeyUp: () => setPressed(false),
+    onKeydown: createKetEventHandler(true),
+    onKeyUp: createKetEventHandler(false),
   });
 
   return (

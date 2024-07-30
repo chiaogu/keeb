@@ -59,7 +59,7 @@ export default function KeyEvents() {
       }
     }
 
-    loop();
+    requestAnimationFrame(loop);
   }, [enabled]);
 
   return <canvas className='h-8 w-full' ref={canvas} />;
