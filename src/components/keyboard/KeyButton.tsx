@@ -1,4 +1,6 @@
 import keyCapImg from '@assets/keycap.png';
+import usePreventDefaultTouchStart from '@src/hooks/usePreventDefaultTouchStart';
+import { useEffect, useState } from 'react';
 
 type TestButtonProps = {
   className?: string;
@@ -13,10 +15,13 @@ export default function KeyButton({
   onPress,
   onRelease,
 }: TestButtonProps) {
+  const setElement = usePreventDefaultTouchStart();
+
   return (
     <div
+      ref={setElement}
       style={{
-        filter: `drop-shadow(rgba(0,0,0,0.25) 0 ${pressed ? 5 : 20}px ${pressed ? 2 : 8}px)`,
+        filter: `drop-shadow(rgba(0,0,0,0.25) 0 ${pressed ? 5 : 16}px ${pressed ? 2 : 6}px)`,
         transform: `translateY(-${pressed ? 5 : 20}px)`,
         transition: pressed
           ? undefined

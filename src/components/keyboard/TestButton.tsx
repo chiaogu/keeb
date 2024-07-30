@@ -26,9 +26,9 @@ export default function TestButton({ className, keyboard }: TestButtonProps) {
     if (!pressed) return;
     setPressed(false);
     if (pressedKey.current) {
-      keyboard.down.sound.trigger(pressedKey.current);
+      keyboard.up.sound.trigger(pressedKey.current);
     }
-  }, [keyboard.down.sound, pressed]);
+  }, [keyboard.up.sound, pressed]);
 
   useKeyEvents({
     onKeydown: () => setPressed(true),

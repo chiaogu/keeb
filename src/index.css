@@ -10,4 +10,5 @@
   font-variant-ligatures: no-common-ligatures;
   
   user-select: none;
+  -webkit-user-select: none;
 }
