@@ -1,3 +1,4 @@
+import { scale } from '@src/utils/utils';
 import { useEffect, useMemo, useState } from 'react';
 import SliderBase, { SliderBaseProps } from './SliderBase';
 
@@ -7,6 +8,28 @@ type SliderSelectProps = {
   value: string;
   onChange: (value: string) => void;
 } & Pick<SliderBaseProps, 'indent'>;
+
+function easeInOutCirc(x: number, hardness: number = 2): number {
+  return x < 0.5
+    ? (1 - Math.sqrt(1 - Math.pow(2 * x, hardness))) / 2
+    : (Math.sqrt(1 - Math.pow(-2 * x + 2, hardness)) + 1) / 2;
+}
+
+function ease(value: number, optionElementWidths: number[]) {
+  const lower = optionElementWidths[Math.floor(value)];
+  const upper = optionElementWidths[Math.floor(value) + 1];
+  const normalInRange = easeInOutCirc(value % 1, 3);
+  const easedValue = scale(normalInRange, 0, 1, lower, upper);
+
+  const currentWidth = upper - lower;
+  const nextWidth =
+    optionElementWidths[
+      Math.min(optionElementWidths.length - 1, Math.floor(value) + 2)
+    ] - upper;
+  const easedWidth = scale(normalInRange, 0, 1, currentWidth, nextWidth);
+
+  return { value: easedValue, width: easedWidth };
+}
 
 export default function SliderSelect({
   label,
@@ -22,10 +45,21 @@ export default function SliderSelect({
     ? 0
     : container.scrollWidth - container.clientWidth;
 
-  const selectedOptionElement = useMemo(() => {
-    const index = options.indexOf(value);
-    return container?.children[0].children?.[index] as HTMLDivElement;
-  }, [container?.children, options, value]);
+  const eased = useMemo(() => {
+    const widths = Array.from(
+      container?.querySelectorAll('.slider-option') ?? [],
+    ).map(({ clientWidth }) => clientWidth);
+    const widthSum = widths.reduce((sum, w) => sum + w, 0);
+
+    let normalSum = 0;
+    const normalWidths: number[] = [0];
+    widths.forEach((w) => {
+      normalSum += w / widthSum;
+      normalWidths.push(normalSum);
+    });
+
+    return ease(sliderValue, normalWidths);
+  }, [container, sliderValue]);
 
   useEffect(() => {
     if (options.indexOf(value) !== Math.round(sliderValue)) {
@@ -66,7 +100,7 @@ export default function SliderSelect({
                 {options.map((option) => (
                   <div
                     key={option}
-                    className='flex h-full items-center text-clip bg-white px-4'
+                    className='slider-option flex h-full items-center text-clip bg-white px-4'
                     style={{
                       color: dragging ? 'black' : 'transparent',
                       transition: 'color 0.1s',
@@ -78,9 +112,10 @@ export default function SliderSelect({
                 <div
                   style={{
                     width: '100px',
-                    transform: `translateX(${selectedOptionElement?.offsetLeft ?? 0}px) scaleX(${selectedOptionElement?.clientWidth}%)`,
+                    left: `${(container?.scrollWidth ?? 0) * eased.value}px`,
+                    transform: `scaleX(${(container?.scrollWidth ?? 0) * (eased.width)}%)`,
                     transformOrigin: '0 0',
-                    transition: 'transform 0.1s ease-in-out',
+                    // transition: 'transform 0.1s ease-out',
                   }}
                   className='absolute left-0 top-0 h-full w-16 bg-white mix-blend-difference'
                 ></div>
