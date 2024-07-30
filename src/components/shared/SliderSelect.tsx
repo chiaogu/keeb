@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import SliderBase, { SliderBaseProps } from './SliderBase';
 
 type SliderSelectProps = {
@@ -21,6 +21,11 @@ export default function SliderSelect({
   const scrollX = !container
     ? 0
     : container.scrollWidth - container.clientWidth;
+
+  const selectedOptionElement = useMemo(() => {
+    const index = options.indexOf(value);
+    return container?.children[0].children?.[index] as HTMLDivElement;
+  }, [container?.children, options, value]);
 
   useEffect(() => {
     if (options.indexOf(value) !== Math.round(sliderValue)) {
@@ -51,15 +56,18 @@ export default function SliderSelect({
             <div className='flex h-full items-center justify-between bg-white pl-1 pr-4'>
               {label}
             </div>
-            <div className='size-full w-fit overflow-hidden' ref={setContainer}>
-              <div className='flex h-full w-fit'>
+            <div className='h-full w-fit overflow-hidden' ref={setContainer}>
+              <div
+                className='relative flex h-full w-fit'
+                style={{
+                  transform: `translateX(-${scrollX * normalScrollOffset}px)`,
+                }}
+              >
                 {options.map((option) => (
                   <div
                     key={option}
                     className='flex h-full items-center text-clip bg-white px-4'
                     style={{
-                      transform: `translateX(-${scrollX * normalScrollOffset}px)`,
-                      filter: `invert(${option === value ? '1' : '0'})`,
                       color: dragging ? 'black' : 'transparent',
                       transition: 'color 0.1s',
                     }}
@@ -67,6 +75,15 @@ export default function SliderSelect({
                     {option}
                   </div>
                 ))}
+                <div
+                  style={{
+                    width: '100px',
+                    transform: `translateX(${selectedOptionElement?.offsetLeft ?? 0}px) scaleX(${selectedOptionElement?.clientWidth}%)`,
+                    transformOrigin: '0 0',
+                    transition: 'transform 0.1s ease-in-out',
+                  }}
+                  className='absolute left-0 top-0 h-full w-16 bg-white mix-blend-difference'
+                ></div>
               </div>
             </div>
             <div
