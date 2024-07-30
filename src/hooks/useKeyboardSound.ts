@@ -7,40 +7,66 @@ import {
   ModifierOp,
   SoundModifier,
 } from '@src/keyboard/keySoundModifier';
-import * as Tone from '@src/tone';
 import { KeySoundConfig, ModifierLayer, RandomizationConfig } from '@src/types';
+import { channels } from '@src/utils/constants';
 import {
+  getRandomKeyCode,
   getSoundStructureFieldPath,
   replaceSoundStructureField,
 } from '@src/utils/utils';
-import { isEmpty, set } from 'lodash';
+import { isEmpty, set, throttle } from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import { v4 as uuid } from 'uuid';
+import { KeyEvent } from './useKeyboard';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
 
+const throttleCall = throttle(
+  (callback) => {
+    callback();
+  },
+  100,
+  { leading: true, trailing: true },
+);
+
 export default function useKeyboardSound(
   keySound: KeySoundConfig,
-  channel: Tone.ToneAudioNode,
+  keyEvent: KeyEvent,
 ) {
+  const channel = useMemo(() => channels[keyEvent], [keyEvent]);
   const soundCache = useSoundCache(channel);
   const { synths, states, ...rest } = useSound(keySound.config, channel);
   const [modifiers, setModifiers] = useImmer(keySound.modifiers);
 
+  const trigger = useCallback(
+    (key: string) => {
+      soundCache.trigger(key, synths, findSoundModifiers(modifiers, key));
+    },
+    [modifiers, soundCache, synths],
+  );
+
   useEffect(() => {
     soundCache.clear();
-  }, [soundCache, states, modifiers]);
+    throttleCall(() => {
+      requestAnimationFrame(() => {
+        dispatchEvent(
+          new KeyboardEvent(keyEvent === 'up' ? 'keyup' : 'keydown', {
+            code: getRandomKeyCode(),
+            key: getRandomKeyCode(),
+          }),
+        );
+      });
+    });
+  }, [keyEvent, soundCache, trigger]);
 
   const sound = useMemo(
     () => ({
       ...rest,
       synths: states,
-      trigger(key: string) {
-        soundCache.trigger(key, synths, findSoundModifiers(modifiers, key));
-      },
+      trigger,
     }),
-    [modifiers, rest, soundCache, states, synths],
+    [rest, states, trigger],
   );
 
   const loadModifierLayers = useCallback(

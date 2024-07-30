@@ -7,6 +7,7 @@ import { WritableDraft } from 'immer';
 import { get, isEmpty, isEqual, set, unset } from 'lodash';
 import React from 'react';
 import { MAX_SAMPLE_SIZE } from './constants';
+import { keys } from '@src/keyboard/keys';
 
 export function frequencyToHertz(value: Tone.Unit.Frequency): number {
   const frequency = value.valueOf();
@@ -160,4 +161,9 @@ export function calculateEnvelope(
     decay: decay * duration,
     release: release * duration,
   };
+}
+
+const allKeys = keys.flat();
+export function getRandomKeyCode() {
+  return allKeys[Math.round((allKeys.length - 1) * Math.random())];
 }

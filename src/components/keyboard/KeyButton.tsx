@@ -16,24 +16,26 @@ export default function KeyButton({
   onRelease,
 }: TestButtonProps) {
   const setElement = usePreventDefaultTouchStart();
+  const [loaded, setLoaded] = useState(false);
 
   return (
     <div
       ref={setElement}
       style={{
-        filter: `drop-shadow(rgba(0,0,0,0.25) 0 ${pressed ? 5 : 16}px ${pressed ? 2 : 6}px)`,
-        transform: `translateY(-${pressed ? 5 : 20}px)`,
+        opacity: loaded ? 1 : 0,
+        filter: `drop-shadow(rgba(0,0,0,0.2) 0 ${pressed ? 5 : 16}px ${pressed ? 2 : 6}px)`,
+        transform: `translateY(-${pressed ? 5 : 20}px) translateZ(0)`,
         transition: pressed
           ? undefined
-          : 'filter 0.05s ease-out, transform 0.05s ease-out',
+          : 'filter 0.05s ease-out, transform 0.05s ease-out, opacity 0.2s',
       }}
-      className={`size-16 cursor-pointer touch-none ${className} bg-transparent`}
+      className={`size-16 cursor-pointer touch-none ${className} transform-gpu overflow-visible bg-transparent`}
       onPointerDown={onPress}
       onPointerUp={onRelease}
       onPointerCancel={onRelease}
       onPointerLeave={onRelease}
     >
-      <img className='pointer-events-none' src={keyCapImg} />
+      <img className='pointer-events-none' src={keyCapImg} onLoad={() => setLoaded(true)}/>
     </div>
   );
 }

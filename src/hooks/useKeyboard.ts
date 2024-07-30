@@ -6,7 +6,6 @@ import { useKeyEvents } from './useKeyEvents';
 import useKeyboardSound from './useKeyboardSound';
 import useUplodaFile from './useUplodaFile';
 import { KeyboardConfig } from '@src/types';
-import { channels } from '@src/utils/constants';
 
 function getKeyboardConfig() {
   return storage.getKeyboardConfig() ?? getDefaultKeyboard();
@@ -16,8 +15,8 @@ export type KeyEvent = 'down' | 'up';
 
 export default function useKeyboard() {
   const initConfig = useRef(getKeyboardConfig());
-  const down = useKeyboardSound(initConfig.current.sound.down, channels.down);
-  const up = useKeyboardSound(initConfig.current.sound.up, channels.up);
+  const down = useKeyboardSound(initConfig.current.sound.down, 'down');
+  const up = useKeyboardSound(initConfig.current.sound.up, 'up');
   const [name, setName] = useState(initConfig.current.name);
   const currentConfig = useMemo(
     () => ({

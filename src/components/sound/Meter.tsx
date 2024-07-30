@@ -24,7 +24,6 @@ export default function Meter<T extends Tone.ToneAudioNode>({
   const [enabled, setEnabled] = useState(true);
 
   const stop = useDebounceCallback(() => {
-    // TODO: uncomment when performance becomes an issue
     setEnabled(false);
   }, 10000);
 

@@ -21,7 +21,7 @@ export default function Title({ onStart }: TitleProps) {
 
   return (
     <div
-      className='flex h-screen w-full transform-gpu cursor-pointer items-center justify-center'
+      className='flex h-screen w-full cursor-pointer items-center justify-center'
       onPointerDown={handlePress}
       onPointerUp={async () => {
         handleRelease();
