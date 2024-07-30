@@ -4,7 +4,7 @@ import { SynthConfig } from '@src/synth';
 import { Envelope, zEnvelope } from '@src/synth/config/envelope';
 import * as Tone from '@src/tone';
 import { WritableDraft } from 'immer';
-import { get, isEmpty, isEqual, set, unset } from 'lodash';
+import { get, isEmpty, isEqual, set, unset } from 'lodash-es';
 import React from 'react';
 import { MAX_SAMPLE_SIZE } from './constants';
 import { keys } from '@src/keyboard/keys';

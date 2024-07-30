@@ -7,7 +7,7 @@ import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
 import { getNestedFieldSchema } from '@src/utils/schema';
 import { formatModifierValue } from '@src/utils/utils';
-import { get } from 'lodash';
+import { get } from 'lodash-es';
 import { z } from 'zod';
 import InvalidFieldModifier from './InvalidFieldModifier';
 

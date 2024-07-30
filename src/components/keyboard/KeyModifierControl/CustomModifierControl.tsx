@@ -1,5 +1,5 @@
 import IconButton from '@src/components/shared/IconButton';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'lodash-es';
 import { useCallback, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import SectionHeader from '../../shared/SectionHeader';

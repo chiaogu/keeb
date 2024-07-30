@@ -12,7 +12,7 @@ import {
   getSoundStructureFieldPath,
   removeSoundStructureField,
 } from '@src/utils/utils';
-import { set } from 'lodash';
+import { set } from 'lodash-es';
 import {
   createContext,
   useCallback,

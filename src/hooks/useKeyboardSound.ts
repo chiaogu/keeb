@@ -14,7 +14,7 @@ import {
   getSoundStructureFieldPath,
   replaceSoundStructureField,
 } from '@src/utils/utils';
-import { isEmpty, set, throttle } from 'lodash';
+import { isEmpty, set, throttle } from 'lodash-es';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import { v4 as uuid } from 'uuid';

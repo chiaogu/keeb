@@ -8,7 +8,7 @@ import { nodeConfig } from '@src/synth/config';
 import { FieldRandomConfig, ModifierLayer } from '@src/types';
 import { getNestedFieldSchema, getNumberDef } from '@src/utils/schema';
 import { produce, WritableDraft } from 'immer';
-import { get, set } from 'lodash';
+import { get, set } from 'lodash-es';
 import { z } from 'zod';
 
 export type ModifierOp = ['add', number] | ['set', string];
