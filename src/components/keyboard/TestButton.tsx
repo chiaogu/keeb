@@ -1,34 +1,32 @@
-import { Keyboard } from '@src/hooks/useKeyboard';
 import { useKeyEvents } from '@src/hooks/useKeyEvents';
 import { keys } from '@src/keyboard/keys';
 import { useCallback, useRef, useState } from 'react';
 import KeyButton from './KeyButton';
+import getKeyCodeLabel from '@src/keyboard/getKeyLabel';
 
 type TestButtonProps = {
   className?: string;
-  keyboard: Keyboard;
 };
 
 const allKeys = keys.flat();
 
-export default function TestButton({ className, keyboard }: TestButtonProps) {
-  const pressedKey = useRef<string | null>(null);
+export default function TestButton({ className }: TestButtonProps) {
+  const pressedKey = useRef<{ key: string; code: string } | null>(null);
   const [pressed, setPressed] = useState(false);
 
   const handlePress = useCallback(() => {
-    pressedKey.current =
+    const code =
       allKeys[Math.round((allKeys.length - 1) * Math.random())];
-    setPressed(true);
-    keyboard.down.sound.trigger(pressedKey.current);
-  }, [keyboard.down.sound]);
+    pressedKey.current = { code, key: getKeyCodeLabel(code).toLowerCase() };
+    dispatchEvent(new KeyboardEvent('keydown', pressedKey.current));
+  }, []);
 
   const handleRelease = useCallback(() => {
     if (!pressed) return;
-    setPressed(false);
     if (pressedKey.current) {
-      keyboard.up.sound.trigger(pressedKey.current);
+      dispatchEvent(new KeyboardEvent('keyup', pressedKey.current));
     }
-  }, [keyboard.up.sound, pressed]);
+  }, [pressed]);
 
   useKeyEvents({
     onKeydown: () => setPressed(true),

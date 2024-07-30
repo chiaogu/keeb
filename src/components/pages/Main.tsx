@@ -20,7 +20,6 @@ function Main() {
 
   return (
     <div className='flex flex-col items-center pb-[70vh]'>
-      {/* <Keys /> */}
       <div className='my-4 flex w-full max-w-[500px] flex-col items-center'>
         <div
           style={{ background: COLOR.BG }}
@@ -71,7 +70,7 @@ function Main() {
       {tab === 'modifier' && (
         <KeySoundModifier keyboard={keyboard} keyEvent={keyEvent} />
       )}
-      <TestButton keyboard={keyboard} />
+      <TestButton />
     </div>
   );
 }

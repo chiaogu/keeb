@@ -48,7 +48,9 @@ export default function KeyEvents() {
           seed * (h - padding * 2) + padding,
         );
       });
-      events.current = events.current.filter(({ time }) => getTimeX(time) <= w);
+      events.current = events.current.filter(
+        ({ time }) => getTimeX(time) <= w * 1.2,
+      );
 
       if (events.current.length === 0) {
         setEnabled(false);
