@@ -1,3 +1,4 @@
+import usePreventDefaultTouchStart from '@src/hooks/usePreventDefaultTouchStart';
 import { scale } from '@src/utils/utils';
 import {
   PointerEventHandler,
@@ -29,7 +30,7 @@ export default function SliderBase({
   render,
   sensitivity = 1,
 }: SliderBaseProps) {
-  const container = useRef<HTMLDivElement>(null);
+  const container = useRef<HTMLDivElement | null>(null);
   const startValue = useRef(value);
   const startPos = useRef({ x: 0, y: 0 });
   const thresholdPassed = useRef(false);
@@ -93,6 +94,8 @@ export default function SliderBase({
     },
     [value],
   );
+  
+  const setElement = usePreventDefaultTouchStart();
 
   return (
     <div
@@ -101,7 +104,10 @@ export default function SliderBase({
         marginLeft: Math.max(0, indent ?? 0) * 8,
       }}
       onPointerDown={handlePointerDown}
-      ref={container}
+      ref={(element) => {
+        container.current = element;
+        setElement(element);
+      }}
     >
       <div className='pointer-events-none absolute top-0 size-full bg-white'>
         {render({ normalValue: scale(value, min, max), dragging })}

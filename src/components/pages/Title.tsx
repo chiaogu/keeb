@@ -1,4 +1,3 @@
-import * as Tone from '@src/tone';
 import { useCallback, useState } from 'react';
 import KeyButton from '../keyboard/KeyButton';
 
@@ -11,7 +10,6 @@ export default function Title({ onStart }: TitleProps) {
 
   const handlePress = useCallback(async () => {
     setPressed(true);
-    await Tone.start();
   }, []);
 
   const handleRelease = useCallback(async () => {
@@ -31,7 +29,7 @@ export default function Title({ onStart }: TitleProps) {
       onPointerCancel={handleRelease}
       onPointerLeave={handleRelease}
     >
-      <KeyButton pressed={pressed} />
+      <KeyButton className='fixed bottom-6 left-6' pressed={pressed} />
     </div>
   );
 }

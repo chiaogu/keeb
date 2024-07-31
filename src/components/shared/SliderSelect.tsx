@@ -41,13 +41,10 @@ export default function SliderSelect({
   const [sliderValue, setSliderValue] = useState(options.indexOf(value));
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
-  const { scrollWidth, clientWidth } = useMemo(
-    () => {
-      const { scrollWidth = 0, clientWidth = 0 } = container ?? {};
-      return { scrollWidth, clientWidth };
-    },
-    [container],
-  );
+  const { scrollWidth, clientWidth } = useMemo(() => {
+    const { scrollWidth = 0, clientWidth = 0 } = container ?? {};
+    return { scrollWidth, clientWidth };
+  }, [container]);
 
   const scrollX = useMemo(() => {
     return !container ? 0 : scrollWidth - clientWidth;

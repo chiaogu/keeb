@@ -27,7 +27,7 @@ export default function KeyButton({
         transform: `translateY(-${pressed ? 5 : 20}px) translateZ(0)`,
         transition: pressed
           ? undefined
-          : 'filter 0.05s ease-out, transform 0.05s ease-out, opacity 0.2s',
+          : 'filter 0.05s ease-out, transform 0.05s ease-out',
       }}
       className={`size-16 cursor-pointer touch-none ${className} transform-gpu overflow-visible bg-transparent`}
       onPointerDown={onPress}
