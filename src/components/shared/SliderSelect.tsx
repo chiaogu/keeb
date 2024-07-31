@@ -41,9 +41,17 @@ export default function SliderSelect({
   const [sliderValue, setSliderValue] = useState(options.indexOf(value));
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
-  const scrollX = !container
-    ? 0
-    : container.scrollWidth - container.clientWidth;
+  const { scrollWidth, clientWidth } = useMemo(
+    () => {
+      const { scrollWidth = 0, clientWidth = 0 } = container ?? {};
+      return { scrollWidth, clientWidth };
+    },
+    [container],
+  );
+
+  const scrollX = useMemo(() => {
+    return !container ? 0 : scrollWidth - clientWidth;
+  }, [clientWidth, container, scrollWidth]);
 
   const eased = useMemo(() => {
     const widths = Array.from(
@@ -90,9 +98,9 @@ export default function SliderSelect({
             <div className='flex h-full items-center justify-between bg-white pl-1 pr-4'>
               {label}
             </div>
-            <div className='h-full w-fit overflow-hidden' ref={setContainer}>
+            <div className='h-full overflow-hidden' ref={setContainer}>
               <div
-                className='relative flex h-full w-fit'
+                className='relative flex h-full w-fit bg-white '
                 style={{
                   transform: `translateX(-${scrollX * normalScrollOffset}px)`,
                 }}
@@ -100,7 +108,7 @@ export default function SliderSelect({
                 {options.map((option) => (
                   <div
                     key={option}
-                    className='slider-option flex h-full items-center text-clip bg-white px-4'
+                    className='slider-option flex h-full items-center text-clip px-4'
                     style={{
                       color: dragging ? 'black' : 'transparent',
                       transition: 'color 0.1s',
@@ -112,10 +120,9 @@ export default function SliderSelect({
                 <div
                   style={{
                     width: '100px',
-                    left: `${(container?.scrollWidth ?? 0) * eased.value}px`,
-                    transform: `scaleX(${(container?.scrollWidth ?? 0) * (eased.width)}%)`,
+                    left: `${(scrollWidth ?? 0) * eased.value}px`,
+                    transform: `scaleX(${(scrollWidth ?? 0) * eased.width}%)`,
                     transformOrigin: '0 0',
-                    // transition: 'transform 0.1s ease-out',
                   }}
                   className='absolute left-0 top-0 h-full w-16 bg-white mix-blend-difference'
                 ></div>
