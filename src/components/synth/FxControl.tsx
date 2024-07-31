@@ -26,7 +26,7 @@ export default function FxControl({
       {newFxOpen && (
         <NewFx open={newFxOpen} setOpen={setNewFxOpen} onSelect={onAdd} />
       )}
-      <SectionHeader className='mt-4 font-bold' label={splitCamelCase(fx.type)}>
+      <SectionHeader className='mb-2 mt-4 font-bold' label={splitCamelCase(fx.type)}>
         <IconButton icon='remove' onClick={onRemove} />
         <IconButton icon='add' onClick={() => setNewFxOpen(true)} />
       </SectionHeader>

@@ -23,13 +23,13 @@ export default function Slider({
           ></div>
           <div
             style={{ transform: 'translateY(-50%)' }}
-            className='absolute left-1 top-1/2 bg-black text-white mix-blend-difference'
+            className='absolute left-2 top-1/2 bg-black text-white mix-blend-difference'
           >
             {label}
           </div>
           <div
             style={{ transform: 'translateY(-50%)' }}
-            className='absolute right-1 top-1/2 text-white mix-blend-difference'
+            className='absolute right-2 top-1/2 text-white mix-blend-difference'
           >
             {renderValue(normalValue)}
           </div>

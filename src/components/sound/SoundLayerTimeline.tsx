@@ -1,7 +1,6 @@
 import { zBaseSynthSrc } from '@src/synth/config/shared';
 import { SoundConfig } from '@src/types';
 import { useMemo } from 'react';
-import LabelField from '../shared/LabelField';
 import SectionHeader from '../shared/SectionHeader';
 import TimelineBlock from './TimelineBlock';
 
@@ -14,21 +13,15 @@ export function SoundLayerTimeline({
   sound,
   className,
 }: SoundLayerTimelineProps) {
-  const { maxDuration, maxDelayAndDuration } = useMemo(
-    () => ({
-      maxDuration: Math.max(
-        ...sound.synths.map(
-          ({ src }) => zBaseSynthSrc.parse(src.data).duration,
-        ),
-      ),
-      maxDelayAndDuration: Math.max(
+  const maxDelayAndDuration = useMemo(
+    () =>
+      Math.max(
         ...sound.synths.map(
           ({ src }) =>
             zBaseSynthSrc.parse(src.data).delay +
             zBaseSynthSrc.parse(src.data).duration,
         ),
       ),
-    }),
     [sound.synths],
   );
   return (
@@ -39,18 +32,12 @@ export function SoundLayerTimeline({
         </div>
       </SectionHeader>
       {sound.synths.map((synth) => (
-        <LabelField
+        <TimelineBlock
           key={synth.id}
-          label={synth.name}
-          containerClassName='items-center mb-2'
-        >
-          <TimelineBlock
-            synth={synth}
-            maxDuration={maxDuration}
-            maxDelayAndDuration={maxDelayAndDuration}
-          />
-        </LabelField>
+          synth={synth}
+          maxDelayAndDuration={maxDelayAndDuration}
+        />
       ))}
-    </ div>
+    </div>
   );
 }

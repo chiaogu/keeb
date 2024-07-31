@@ -16,15 +16,15 @@ export default function SectionHeader({
   labelClassName,
 }: SectionHeaderProps) {
   return (
-    <div className={`flex w-full h-8 items-center justify-between ${className}`}>
+    <div className={`flex h-8 w-full items-center justify-between ${className}`}>
       {onLabelChange ? (
-        <input className='h-full rounded-none bg-white caret-black focus:outline-none' value={label} onChange={(e) => onLabelChange(e.target.value)} />
+        <input className='h-full rounded-none bg-white pl-2 caret-black focus:outline-none' value={label} onChange={(e) => onLabelChange(e.target.value)} />
       ) : (
         <label className={`shrink-0 ${labelClassName}`}>
           {label}
         </label>
       )}
-      <div className='flex space-x-4'>{children}</div>
+      <div className='flex space-x-2'>{children}</div>
     </div>
   );
 }

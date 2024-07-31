@@ -38,7 +38,7 @@ export default function SrcNodeControl({ src, onChange }: SrcNodeControlProps) {
           })
         }
       />
-      <SectionHeader className='mt-4 font-bold' label={src.type} />
+      <SectionHeader className='mb-2 mt-4 font-bold' label={src.type} />
       <Controls
         schema={omit(
           nodeConfig[src.type].schema,
