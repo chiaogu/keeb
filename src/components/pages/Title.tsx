@@ -3,9 +3,10 @@ import KeyButton from '../keyboard/KeyButton';
 
 type TitleProps = {
   onStart: () => void;
+  message: React.ReactNode;
 };
 
-export default function Title({ onStart }: TitleProps) {
+export default function Title({ onStart, message }: TitleProps) {
   const [pressed, setPressed] = useState(false);
 
   const handlePress = useCallback(async () => {
@@ -29,6 +30,7 @@ export default function Title({ onStart }: TitleProps) {
       onPointerCancel={handleRelease}
       onPointerLeave={handleRelease}
     >
+      {message}
       <KeyButton className='fixed bottom-6 left-6' pressed={pressed} />
     </div>
   );

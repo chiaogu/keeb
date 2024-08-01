@@ -21,10 +21,10 @@ export default function TimelineBlock({
     <div
       className='mb-2 flex h-8 w-full items-center'
     >
-      <div className='flex h-full shrink-0 items-center bg-white px-2'>
+      <div className='relative size-full'>
+      <div className='absolute top-0 z-10 flex size-full shrink-0 items-center justify-end truncate whitespace-nowrap px-2 text-white mix-blend-difference'>
         {synth.name}
       </div>
-      <div className='relative size-full'>
         <div
           style={{
             width: `${Math.max(1, ((duration + delay) / maxDelayAndDuration) * 100)}%`,
