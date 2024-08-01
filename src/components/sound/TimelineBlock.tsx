@@ -1,6 +1,5 @@
 import { SynthConfig } from '@src/synth';
 import { zBaseSynthSrc } from '@src/synth/config/shared';
-import { COLOR } from '@src/utils/constants';
 import { findEnvelope } from '@src/utils/utils';
 import IconButton from '../shared/IconButton';
 import Adsr from './Adsr';
@@ -8,23 +7,31 @@ import Adsr from './Adsr';
 type TimelineBlockProps = {
   synth: SynthConfig;
   maxDelayAndDuration: number;
+  selected: boolean;
+  onRemove: () => void;
+  onClickWatch: () => void;
+  onClickListen: () => void;
+  removable: boolean;
 };
 
 export default function TimelineBlock({
   synth,
   maxDelayAndDuration,
+  selected,
+  onRemove,
+  onClickWatch,
+  onClickListen,
+  removable,
 }: TimelineBlockProps) {
   const { duration, delay } = zBaseSynthSrc.parse(synth.src.data);
   const envelope = findEnvelope(synth);
 
   return (
-    <div
-      className='mb-2 flex h-8 w-full items-center'
-    >
-      <div className='relative size-full'>
-      <div className='absolute top-0 z-10 flex size-full shrink-0 items-center justify-end truncate whitespace-nowrap px-2 text-white mix-blend-difference'>
-        {synth.name}
-      </div>
+    <div className='mb-2 flex h-8 w-full items-center'>
+      <div className='relative size-full cursor-pointer' onClick={onClickWatch}>
+        <div className='absolute top-0 z-10 flex size-full shrink-0 items-center justify-end truncate whitespace-nowrap px-2 text-white mix-blend-difference'>
+          {synth.name}
+        </div>
         <div
           style={{
             width: `${Math.max(1, ((duration + delay) / maxDelayAndDuration) * 100)}%`,
@@ -48,7 +55,25 @@ export default function TimelineBlock({
           </div>
         </div>
       </div>
-      <IconButton className='ml-4 shrink-0' icon='remove' />
+      <IconButton
+        className={`ml-2 shrink-0 ${selected ? 'bg-white invert' : ''}`}
+        icon='visibility'
+        onClick={onClickWatch}
+      />
+      <IconButton
+        className='ml-2 shrink-0'
+        icon='hearing'
+        onClick={onClickListen}
+      />
+      <IconButton
+        style={{
+          opacity: removable ? 1 : 0.3,
+          pointerEvents: removable ? undefined : 'none',
+        }}
+        className='ml-2 shrink-0'
+        icon='remove'
+        onClick={onRemove}
+      />
     </div>
   );
 }

@@ -52,6 +52,12 @@ export default function SoundControl({
         onNameChange={onNameChange}
         onLoadSound={onLoadSound}
         onSelectLayer={setSelectedLayerIndex}
+        onRemoveLayer={(index) => {
+          onRemoveLayer(index);
+          setSelectedLayerIndex(
+            Math.max(Math.min(selectedLayerIndex, sound.synths.length - 2), 0),
+          );
+        }}
       />
       <SynthControl
         key={selectedSynth.id}

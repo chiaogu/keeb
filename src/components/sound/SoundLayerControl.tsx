@@ -1,15 +1,16 @@
 import { Sound } from '@src/hooks/useSound';
 import useUplodaFile from '@src/hooks/useUplodaFile';
 import { SynthConfig } from '@src/synth';
+import { zBaseSynthSrc } from '@src/synth/config/shared';
 import * as Tone from '@src/tone';
 import { SoundConfig } from '@src/types';
 import { COLOR } from '@src/utils/constants';
 import { downloadSound } from '@src/utils/file';
+import { useMemo } from 'react';
 import IconButton from '../shared/IconButton';
-import RadioGroup from '../shared/RadioGroup';
 import SectionHeader from '../shared/SectionHeader';
 import FFT from './FFT';
-import { SoundLayerTimeline } from './SoundLayerTimeline';
+import TimelineBlock from './TimelineBlock';
 import VolumeMeter from './VolumeMeter';
 import Waveform from './Waveform';
 
@@ -21,6 +22,7 @@ type SoundLayerControlProps = {
   onNameChange: Sound['setName'];
   onLoadSound: (sound: SoundConfig) => void;
   onSelectLayer: (index: number) => void;
+  onRemoveLayer: (index: number) => void;
 };
 
 export function SoundLayerControl({
@@ -31,9 +33,22 @@ export function SoundLayerControl({
   onNameChange,
   onLoadSound,
   onSelectLayer,
+  onRemoveLayer,
 }: SoundLayerControlProps) {
   // TODO: Validation
   const { load } = useUplodaFile(onLoadSound);
+
+  const maxDelayAndDuration = useMemo(
+    () =>
+      Math.max(
+        ...sound.synths.map(
+          ({ src }) =>
+            zBaseSynthSrc.parse(src.data).delay +
+            zBaseSynthSrc.parse(src.data).duration,
+        ),
+      ),
+    [sound.synths],
+  );
 
   return (
     <div
@@ -45,34 +60,37 @@ export function SoundLayerControl({
         label={sound.name}
         onLabelChange={onNameChange}
       >
+        {/* <div className='font-normal'>{Math.round(maxDelayAndDuration * 1000)}ms</div> */}
+
         <IconButton icon='upload' onClick={load} />
         <IconButton icon='download' onClick={() => downloadSound(sound)} />
-      </SectionHeader>
-      <div className='flex w-full flex-col mt-2'>
-        <RadioGroup
-          label='layers'
-          values={[selectedSynth.id]}
-          onChange={([id]) =>
-            onSelectLayer(sound.synths.findIndex((s) => s.id === id))
-          }
-          options={sound.synths.map(({ id, name }) => ({
-            key: id,
-            label: name,
-          }))}
+        <IconButton
+          icon='add'
+          onClick={() => {
+            onAddLayer();
+            onSelectLayer(sound.synths.length);
+          }}
         />
-        <SectionHeader label='new'>
-          <IconButton
-            icon='add'
-            onClick={() => {
-              onAddLayer();
-              onSelectLayer(sound.synths.length);
-            }}
-          />
-        </SectionHeader>
-        
-    {/* // <div className='fixed bottom-4 left-6 flex items-center rounded-md bg-[rgba(255,255,255,0.5)] px-2 pb-2 backdrop-blur-sm'>
+      </SectionHeader>
+      <div className='mt-2 flex w-full flex-col'>
+        {/* // <div className='fixed bottom-4 left-6 flex items-center rounded-md bg-[rgba(255,255,255,0.5)] px-2 pb-2 backdrop-blur-sm'>
     // </div> */}
-        <SoundLayerTimeline sound={sound} />
+        {sound.synths.map((synth) => (
+          <TimelineBlock
+            key={synth.id}
+            synth={synth}
+            maxDelayAndDuration={maxDelayAndDuration}
+            selected={synth.id === selectedSynth.id}
+            onClickWatch={() =>
+              onSelectLayer(sound.synths.findIndex((s) => s.id === synth.id))
+            }
+            onClickListen={() => {}}
+            onRemove={() =>
+              onRemoveLayer(sound.synths.findIndex((s) => s.id === synth.id))
+            }
+            removable={sound.synths.length > 1}
+          />
+        ))}
         <VolumeMeter channel={channel} />
         <FFT channel={channel} />
         <div className='mt-3'>
