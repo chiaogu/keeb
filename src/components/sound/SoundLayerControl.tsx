@@ -53,7 +53,7 @@ export function SoundLayerControl({
   return (
     <div
       style={{ background: COLOR.BG }}
-      className='flex w-full flex-col items-center p-8'
+      className='flex w-full flex-col items-center p-8 pb-0'
     >
       <SectionHeader
         className='font-bold'
@@ -91,11 +91,6 @@ export function SoundLayerControl({
             removable={sound.synths.length > 1}
           />
         ))}
-        <VolumeMeter channel={channel} />
-        <FFT channel={channel} />
-        <div className='mt-3'>
-          <Waveform channel={channel} />
-        </div>
       </div>
     </div>
   );
