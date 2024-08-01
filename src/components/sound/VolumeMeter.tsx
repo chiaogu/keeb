@@ -29,8 +29,8 @@ export default function VolumeMeter({ channel }: VolumeMeterProps) {
       const values = level.current;
       const { clientWidth: w, clientHeight: h } = ctx.canvas;
 
-      ctx.fillStyle = COLOR.BG;
-      ctx.fillRect(0, 0, w, h);
+      // ctx.fillStyle = COLOR.BG;
+      // ctx.fillRect(0, 0, w, h);
 
       ctx.lineWidth = 1;
       ctx.beginPath();

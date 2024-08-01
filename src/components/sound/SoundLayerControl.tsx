@@ -48,7 +48,7 @@ export function SoundLayerControl({
         <IconButton icon='upload' onClick={load} />
         <IconButton icon='download' onClick={() => downloadSound(sound)} />
       </SectionHeader>
-      <div className='flex w-full flex-col'>
+      <div className='flex w-full flex-col mt-2'>
         <RadioGroup
           label='layers'
           values={[selectedSynth.id]}
@@ -69,6 +69,9 @@ export function SoundLayerControl({
             }}
           />
         </SectionHeader>
+        
+    {/* // <div className='fixed bottom-4 left-6 flex items-center rounded-md bg-[rgba(255,255,255,0.5)] px-2 pb-2 backdrop-blur-sm'>
+    // </div> */}
         <SoundLayerTimeline sound={sound} />
         <VolumeMeter channel={channel} />
         <FFT channel={channel} />

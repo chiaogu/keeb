@@ -37,7 +37,10 @@ export default function SliderBase({
   const [dragging, setDragging] = useState(false);
 
   useEffect(() => {
-    const cancel = () => setDragging(false);
+    const cancel = () => {
+      setDragging(false);
+      document.body.style.cursor = '';
+    };
 
     const handlePointerMove = (moveEvent: PointerEvent) => {
       if (!dragging) {
@@ -87,6 +90,7 @@ export default function SliderBase({
 
   const handlePointerDown: PointerEventHandler = useCallback(
     (downEvent) => {
+      document.body.style.cursor = 'grabbing';
       thresholdPassed.current = false;
       startPos.current = { x: downEvent.clientX, y: downEvent.clientY };
       startValue.current = value;
@@ -99,9 +103,10 @@ export default function SliderBase({
 
   return (
     <div
-      className='relative mb-2 flex h-8 w-full cursor-ew-resize touch-none items-center last:mb-0'
+      className='relative mb-2 flex h-8 w-full touch-none items-center last:mb-0'
       style={{
         marginLeft: Math.max(0, indent ?? 0) * 8,
+        cursor: dragging ? '' : 'grab',
       }}
       onPointerDown={handlePointerDown}
       ref={(element) => {

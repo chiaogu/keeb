@@ -1,14 +1,14 @@
 import { useKeyEvents } from '@src/hooks/useKeyEvents';
 import getKeyCodeLabel from '@src/keyboard/getKeyLabel';
+import { channels } from '@src/utils/constants';
 import { getRandomKeyCode } from '@src/utils/utils';
 import { useCallback, useRef, useState } from 'react';
+import FFT from '../sound/FFT';
+import VolumeMeter from '../sound/VolumeMeter';
+import Waveform from '../sound/Waveform';
 import KeyButton from './KeyButton';
 
-type TestButtonProps = {
-  className?: string;
-};
-
-export default function TestButton({ className }: TestButtonProps) {
+export default function TestButton() {
   const pressedKey = useRef<{ key: string; code: string } | null>(null);
   const [pressed, setPressed] = useState(false);
 
@@ -44,7 +44,7 @@ export default function TestButton({ className }: TestButtonProps) {
 
   return (
     <KeyButton
-      className={`fixed bottom-6 left-6 ${className}`}
+      className='fixed bottom-4 left-6'
       pressed={pressed}
       onPress={handlePress}
       onRelease={handleRelease}

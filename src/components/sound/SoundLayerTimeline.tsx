@@ -26,7 +26,7 @@ export function SoundLayerTimeline({
   );
   return (
     <div className={className}>
-      <SectionHeader className='mt-4 font-bold' label='timeline'>
+      <SectionHeader className='mt-4' label='layers'>
         <div className='font-normal'>
           {Math.round(maxDelayAndDuration * 1000)}ms
         </div>

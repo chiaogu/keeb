@@ -15,8 +15,8 @@ function draw(
 
   const { resampled, min, max } = downSample(values.slice(0, 500));
 
-  ctx.fillStyle = COLOR.BG;
-  ctx.fillRect(0, 0, w, h);
+  // ctx.fillStyle = COLOR.BG;
+  // ctx.fillRect(0, 0, w, h);
   
   ctx.lineWidth = 1;
   ctx.beginPath();
