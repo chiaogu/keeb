@@ -9,15 +9,11 @@ import { downloadSound } from '@src/utils/file';
 import { useMemo } from 'react';
 import IconButton from '../shared/IconButton';
 import SectionHeader from '../shared/SectionHeader';
-import FFT from './FFT';
 import TimelineBlock from './TimelineBlock';
-import VolumeMeter from './VolumeMeter';
-import Waveform from './Waveform';
 
 type SoundLayerControlProps = {
   sound: SoundConfig;
   selectedSynth: SynthConfig;
-  channel: Tone.ToneAudioNode;
   onAddLayer: Sound['addLayer'];
   onNameChange: Sound['setName'];
   onLoadSound: (sound: SoundConfig) => void;
@@ -28,7 +24,6 @@ type SoundLayerControlProps = {
 export function SoundLayerControl({
   sound,
   selectedSynth,
-  channel,
   onAddLayer,
   onNameChange,
   onLoadSound,

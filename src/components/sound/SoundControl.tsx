@@ -1,13 +1,10 @@
 import { Sound } from '@src/hooks/useSound';
 import * as Tone from '@src/tone';
 import { SoundConfig } from '@src/types';
-import { COLOR } from '@src/utils/constants';
 import { useEffect, useMemo, useState } from 'react';
 import SynthControl from '../synth/SynthControl';
-import FFT from './FFT';
 import { SoundLayerControl } from './SoundLayerControl';
-import VolumeMeter from './VolumeMeter';
-import Waveform from './Waveform';
+import StickyHeader from './StickyHeader';
 
 type SoundControlProps = {
   sound: SoundConfig;
@@ -50,7 +47,6 @@ export default function SoundControl({
     <div className='flex w-full max-w-[500px] flex-col items-center space-y-5 overflow-x-visible'>
       <SoundLayerControl
         sound={sound}
-        channel={channel}
         selectedSynth={selectedSynth}
         onAddLayer={onAddLayer}
         onNameChange={onNameChange}
@@ -63,30 +59,14 @@ export default function SoundControl({
           );
         }}
       />
-      <div
-        style={{ marginTop: 0, background: COLOR.BG }}
-        className='sticky top-0 z-10 flex w-full items-center space-x-2 px-8 pb-6 pt-0'
-      >
-        <div className='h-[28px] flex-1'>
-          <FFT channel={channel} />
-        </div>
-        <div className='mt-3 h-[14px] flex-1'>
-          <Waveform channel={channel} />
-        </div>
-        <div className='flex-1'>
-          <VolumeMeter channel={channel} />
-        </div>
-      </div>
+      <StickyHeader
+        sound={sound}
+        channel={channel}
+        selectedSynth={selectedSynth}
+      />
       <SynthControl
         key={selectedSynth.id}
         synth={selectedSynth}
-        removable={sound.synths.length > 1}
-        onRemove={() => {
-          onRemoveLayer(selectedLayerIndex);
-          setSelectedLayerIndex(
-            Math.max(Math.min(selectedLayerIndex, sound.synths.length - 2), 0),
-          );
-        }}
         onSrcChange={(src) => {
           onSrcChange(selectedLayerIndex, src);
         }}

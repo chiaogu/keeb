@@ -23,8 +23,6 @@ export default function SectionHeader({
     setWidth(span?.clientWidth ?? 0);
   }, [span?.clientWidth, label]);
 
-  console.log(label, width);
-
   return (
     <div
       className={`flex h-8 w-full items-center justify-between ${className}`}

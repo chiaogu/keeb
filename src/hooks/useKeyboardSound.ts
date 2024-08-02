@@ -51,8 +51,8 @@ export default function useKeyboardSound(
   const triggerRelease = useDebounceCallback(() => {
     dispatchEvent(
       new KeyboardEvent('keyup', {
-        code: getRandomKeyCode(),
-        key: getRandomKeyCode(),
+        code: 'KeyQ',
+        key: 'q',
         repeat: true // avoid trigger sound
       }),
     );
@@ -63,8 +63,8 @@ export default function useKeyboardSound(
       requestAnimationFrame(() => {
         dispatchEvent(
           new KeyboardEvent(keyEvent === 'up' ? 'keyup' : 'keydown', {
-            code: getRandomKeyCode(),
-            key: getRandomKeyCode(),
+            code: 'KeyQ',
+            key: 'q',
           }),
         );
       });

@@ -1,14 +1,11 @@
 import { Synth, SynthConfig } from '@src/synth';
-import IconButton from '../shared/IconButton';
+import { COLOR } from '@src/utils/constants';
 import SectionHeader from '../shared/SectionHeader';
 import FxsControl from './FxsControl';
 import SrcNodeControl from './SrcNodeControl';
-import { COLOR } from '@src/utils/constants';
 
 type SynthControlProps = {
   synth: SynthConfig;
-  removable: boolean;
-  onRemove: () => void;
   onSrcChange: Synth['setSrcState'];
   onFxChange: Synth['setFxState'];
   onAddFx: Synth['addFx'];
@@ -18,8 +15,6 @@ type SynthControlProps = {
 
 export default function SynthControl({
   synth,
-  removable,
-  onRemove,
   onSrcChange,
   onFxChange,
   onAddFx,
@@ -35,9 +30,7 @@ export default function SynthControl({
         className='mb-2 font-bold'
         label={synth.name ?? 'untitled'}
         onLabelChange={onNameChange}
-      >
-        {removable && <IconButton icon='remove' onClick={onRemove} />}
-      </SectionHeader>
+      ></SectionHeader>
       <SrcNodeControl src={synth.src} onChange={onSrcChange} />
       <FxsControl
         fxs={synth.fxs}

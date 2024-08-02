@@ -1,11 +1,7 @@
 import { useKeyEvents } from '@src/hooks/useKeyEvents';
 import getKeyCodeLabel from '@src/keyboard/getKeyLabel';
-import { channels } from '@src/utils/constants';
 import { getRandomKeyCode } from '@src/utils/utils';
 import { useCallback, useRef, useState } from 'react';
-import FFT from '../sound/FFT';
-import VolumeMeter from '../sound/VolumeMeter';
-import Waveform from '../sound/Waveform';
 import KeyButton from './KeyButton';
 
 export default function TestButton() {

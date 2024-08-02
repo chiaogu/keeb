@@ -1,8 +1,9 @@
 import { SynthConfig } from '@src/synth';
 import { zBaseSynthSrc } from '@src/synth/config/shared';
 import { findEnvelope } from '@src/utils/utils';
+import { useMemo } from 'react';
 import IconButton from '../shared/IconButton';
-import Adsr from './Adsr';
+import TimelineBlockEnvelope from './TimelineBlockEnvelope';
 import { CONTROL_SHADOW } from '@src/utils/constants';
 
 type TimelineBlockProps = {
@@ -24,38 +25,20 @@ export default function TimelineBlock({
   onClickListen,
   removable,
 }: TimelineBlockProps) {
-  const { duration, delay } = zBaseSynthSrc.parse(synth.src.data);
-  const envelope = findEnvelope(synth);
-
   return (
     <div className='mb-2 flex h-8 w-full items-center'>
       <div className='relative size-full cursor-pointer' onClick={onClickWatch}>
         <div className='absolute top-0 z-10 flex size-full shrink-0 items-center justify-end truncate whitespace-nowrap px-2 text-white mix-blend-difference'>
           {synth.name}
         </div>
-        <div
-          style={{
-            width: `${Math.max(1, ((duration + delay) / maxDelayAndDuration) * 100)}%`,
+        <TimelineBlockEnvelope
+          synth={synth}
+          maxDelayAndDuration={maxDelayAndDuration}
+          bgStyle={{
             boxShadow: CONTROL_SHADOW,
+            background: 'white',
           }}
-          className='absolute bottom-0 size-full bg-white'
-        ></div>
-        <div
-          style={{
-            width: `${Math.max(1, (duration / maxDelayAndDuration) * 100)}%`,
-            left: `${(delay / maxDelayAndDuration) * 100}%`,
-          }}
-          className='absolute  h-full overflow-hidden '
-        >
-          <div className='absolute flex size-full'>
-            {envelope && (
-              <Adsr envelope={envelope} maxDuration={maxDelayAndDuration} />
-            )}
-            {!envelope && (
-              <div className='absolute flex size-full bg-black'></div>
-            )}
-          </div>
-        </div>
+        />
       </div>
       <IconButton
         className={`ml-2 shrink-0 ${selected ? 'bg-white invert' : ''}`}
