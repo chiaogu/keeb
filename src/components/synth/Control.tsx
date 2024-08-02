@@ -24,6 +24,8 @@ type ControlProps = {
   onChange: (v: unknown) => void;
   schema: z.ZodTypeAny;
   indent: number;
+  onDrag?: () => void;
+  onRelease?: () => void;
 };
 
 export default function Control({
@@ -33,6 +35,8 @@ export default function Control({
   onChange,
   schema,
   indent,
+  onDrag,
+  onRelease,
 }: ControlProps) {
   const label = useMemo(
     () => (config?.label == undefined ? splitCamelCase(name) : config?.label),
@@ -50,6 +54,8 @@ export default function Control({
         onChange={onChange}
         min={min}
         max={max}
+        onDrag={onDrag}
+        onRelease={onRelease}
       />
     );
   } else if (innerSchema instanceof z.ZodEnum) {
@@ -61,6 +67,8 @@ export default function Control({
         value={value as string}
         onChange={onChange}
         options={options}
+        onDrag={onDrag}
+        onRelease={onRelease}
       />
     );
   } else if (instanceOf(zEnvelope, schema)) {
@@ -81,6 +89,8 @@ export default function Control({
           value={value as Record<string, unknown>}
           onChange={onChange}
           indent={indent + 1}
+          onDrag={onDrag}
+          onRelease={onRelease}
         />
       </>
     );

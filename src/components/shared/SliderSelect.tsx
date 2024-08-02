@@ -7,7 +7,7 @@ type SliderSelectProps = {
   options: string[];
   value: string;
   onChange: (value: string) => void;
-} & Pick<SliderBaseProps, 'indent'>;
+} & Pick<SliderBaseProps, 'indent' | 'onDrag' | 'onRelease'>;
 
 function easeInOutCirc(x: number, hardness: number = 2): number {
   return x < 0.5

@@ -11,6 +11,8 @@ type ControlsProps<T extends z.ZodTypeAny> = {
   value: Record<string, unknown>;
   onChange: (value: Record<string, unknown>) => void;
   indent?: number;
+  onDrag?: () => void;
+  onRelease?: () => void;
 };
 
 export default function Controls<T extends z.ZodTypeAny>({
@@ -20,6 +22,8 @@ export default function Controls<T extends z.ZodTypeAny>({
   onChange,
   controls,
   indent = 0,
+  onDrag,
+  onRelease,
 }: ControlsProps<T>) {
   const innerSchema = useMemo(() => removeDefault(schema), [schema]);
 
@@ -45,6 +49,8 @@ export default function Controls<T extends z.ZodTypeAny>({
           schema={fieldSchema as z.ZodTypeAny}
           config={controls?.[key]}
           indent={indent}
+          onDrag={onDrag}
+          onRelease={onRelease}
         />
       ))}
     </div>

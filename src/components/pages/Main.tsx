@@ -6,6 +6,7 @@ import KeyEvents from '../keyboard/KeyEvents';
 import KeySoundModifier from '../keyboard/KeySoundModifier';
 import TestButton from '../keyboard/TestButton';
 import IconButton from '../shared/IconButton';
+import { MainContextProvider } from '../shared/MainContext';
 import RadioGroup from '../shared/RadioGroup';
 import SectionHeader from '../shared/SectionHeader';
 import SoundControl from '../sound/SoundControl';
@@ -75,4 +76,10 @@ function Main() {
   );
 }
 
-export default Main;
+export default function MainWithContext() {
+  return (
+    <MainContextProvider>
+      <Main />
+    </MainContextProvider>
+  );
+}

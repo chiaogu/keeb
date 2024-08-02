@@ -18,9 +18,76 @@ export type SliderBaseProps = {
   onChange: (v: number) => void;
   render: (props: { normalValue: number; dragging: boolean }) => ReactNode;
   sensitivity?: number;
+  onDrag?: () => void;
+  onRelease?: () => void;
 };
 
 const DRAG_THRESHOLD = 20;
+
+// type UsePointerMovementProps = {
+//   dragThreshold: number;
+//   onDrag: (args: { x: number; y: number }) => void;
+// };
+
+// function useDrag({ dragThreshold, onDrag }: UsePointerMovementProps) {
+//   const [dragging, setDragging] = useState(false);
+//   const startPos = useRef({ x: 0, y: 0 });
+//   const thresholdPassed = useRef(false);
+
+//   useEffect(() => {
+//     const cancel = () => {
+//       setDragging(false);
+//     };
+
+//     const handlePointerMove = (moveEvent: PointerEvent) => {
+//       if (!dragging) {
+//         return;
+//       }
+
+//       const xDelta = moveEvent.clientX - startPos.current.x;
+//       const yDelta = moveEvent.clientY - startPos.current.y;
+
+//       if (!thresholdPassed.current && Math.abs(yDelta) > dragThreshold) {
+//         cancel();
+//         return;
+//       }
+
+//       if (!thresholdPassed.current && Math.abs(xDelta) > dragThreshold) {
+//         thresholdPassed.current = true;
+//         startPos.current = { x: moveEvent.clientX, y: moveEvent.clientY };
+//         handlePointerMove(moveEvent);
+//         return;
+//       }
+
+//       if (!thresholdPassed.current) {
+//         return;
+//       }
+
+//       onDrag({ x: xDelta, y: yDelta });
+//     };
+
+//     addEventListener('pointermove', handlePointerMove);
+//     addEventListener('pointerup', cancel);
+//     addEventListener('pointercancel', cancel);
+//     return () => {
+//       removeEventListener('pointermove', handlePointerMove);
+//       removeEventListener('pointerup', cancel);
+//       removeEventListener('pointercancel', cancel);
+//     };
+//   }, [dragThreshold, dragging, onDrag]);
+
+//   const handlePointerDown: PointerEventHandler = useCallback((downEvent) => {
+//     document.body.style.cursor = 'grabbing';
+//     thresholdPassed.current = false;
+//     startPos.current = { x: downEvent.clientX, y: downEvent.clientY };
+//     setDragging(true);
+//   }, []);
+
+//   return useMemo(() => ({
+//     dragging,
+//     handlePointerDown,
+//   }), [dragging, handlePointerDown]);
+// }
 
 export default function SliderBase({
   value,
@@ -30,12 +97,22 @@ export default function SliderBase({
   indent = 0,
   render,
   sensitivity = 1,
+  onDrag,
+  onRelease,
 }: SliderBaseProps) {
   const container = useRef<HTMLDivElement | null>(null);
   const startValue = useRef(value);
   const startPos = useRef({ x: 0, y: 0 });
   const thresholdPassed = useRef(false);
   const [dragging, setDragging] = useState(false);
+  
+  useEffect(() => {
+    if (dragging) {
+      onDrag?.();
+    } else {
+      onRelease?.();
+    }
+  }, [dragging, onDrag, onRelease]);
 
   useEffect(() => {
     const cancel = () => {
@@ -99,11 +176,11 @@ export default function SliderBase({
     },
     [value],
   );
-  
+
   const setElement = usePreventDefaultTouchStart();
 
   const marginLeft = Math.max(0, indent ?? 0) * 8;
-  
+
   return (
     <div
       className='relative mb-2 flex h-8 touch-none items-center last:mb-0'

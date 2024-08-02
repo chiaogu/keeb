@@ -31,7 +31,7 @@ export default function Title({ onStart, message }: TitleProps) {
       onPointerLeave={handleRelease}
     >
       {message}
-      <KeyButton className='fixed bottom-6 left-6' pressed={pressed} />
+      <KeyButton className='fixed bottom-4 left-6' pressed={pressed} />
     </div>
   );
 }
