@@ -1,5 +1,5 @@
 import { CONTROL_SHADOW } from '@src/utils/constants';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
 type SectionHeaderProps = {
   label: string;
@@ -16,17 +16,37 @@ export default function SectionHeader({
   onLabelChange,
   labelClassName,
 }: SectionHeaderProps) {
+  const [span, setSpan] = useState<HTMLSpanElement | null>(null);
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    setWidth(span?.clientWidth ?? 0);
+  }, [span?.clientWidth, label]);
+
+  console.log(label, width);
+
   return (
     <div
       className={`flex h-8 w-full items-center justify-between ${className}`}
     >
       {onLabelChange ? (
-        <input
+        <div
+          className='relative mr-2 h-full w-fit overflow-hidden bg-white'
           style={{ boxShadow: CONTROL_SHADOW }}
-          className='h-full rounded-none bg-white pl-2 caret-black focus:outline-none'
-          value={label}
-          onChange={(e) => onLabelChange(e.target.value)}
-        />
+        >
+          <span
+            className='pointer-events-none absolute flex h-full min-w-8 items-center whitespace-nowrap p-2'
+            ref={setSpan}
+          >
+            {label}
+          </span>
+          <input
+            style={{ width }}
+            className='h-full rounded-none pl-2 text-transparent caret-black focus:outline-none'
+            value={label}
+            onChange={(e) => onLabelChange(e.target.value)}
+          />
+        </div>
       ) : (
         <label className={`shrink-0 ${labelClassName}`}>{label}</label>
       )}
