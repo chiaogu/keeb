@@ -32,7 +32,7 @@ export default function SynthControl({
       className='flex w-full flex-col items-center p-8'
     >
       <SectionHeader
-        className='font-bold mb-2'
+        className='mb-2 font-bold'
         label={synth.name ?? 'untitled'}
         onLabelChange={onNameChange}
       >

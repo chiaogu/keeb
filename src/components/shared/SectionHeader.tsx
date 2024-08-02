@@ -1,3 +1,4 @@
+import { CONTROL_SHADOW } from '@src/utils/constants';
 import { ReactNode } from 'react';
 
 type SectionHeaderProps = {
@@ -16,13 +17,18 @@ export default function SectionHeader({
   labelClassName,
 }: SectionHeaderProps) {
   return (
-    <div className={`flex h-8 w-full items-center justify-between ${className}`}>
+    <div
+      className={`flex h-8 w-full items-center justify-between ${className}`}
+    >
       {onLabelChange ? (
-        <input className='h-full rounded-none bg-white pl-2 caret-black focus:outline-none' value={label} onChange={(e) => onLabelChange(e.target.value)} />
+        <input
+          style={{ boxShadow: CONTROL_SHADOW }}
+          className='h-full rounded-none bg-white pl-2 caret-black focus:outline-none'
+          value={label}
+          onChange={(e) => onLabelChange(e.target.value)}
+        />
       ) : (
-        <label className={`shrink-0 ${labelClassName}`}>
-          {label}
-        </label>
+        <label className={`shrink-0 ${labelClassName}`}>{label}</label>
       )}
       <div className='flex items-center space-x-2'>{children}</div>
     </div>

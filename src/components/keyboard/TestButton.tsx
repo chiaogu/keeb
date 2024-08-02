@@ -44,7 +44,7 @@ export default function TestButton() {
 
   return (
     <KeyButton
-      className='fixed bottom-4 left-6'
+      className='fixed bottom-4 left-6 z-10'
       pressed={pressed}
       onPress={handlePress}
       onRelease={handleRelease}

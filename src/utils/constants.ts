@@ -11,3 +11,5 @@ export const channels = {
 export const COLOR = {
   BG: '#f5f5f5',
 };
+
+export const CONTROL_SHADOW = '0 5px 10px 0px rgba(0,0,0,0.05)';

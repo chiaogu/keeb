@@ -1,4 +1,5 @@
 import usePreventDefaultTouchStart from '@src/hooks/usePreventDefaultTouchStart';
+import { CONTROL_SHADOW } from '@src/utils/constants';
 import { scale } from '@src/utils/utils';
 import {
   PointerEventHandler,
@@ -101,12 +102,16 @@ export default function SliderBase({
   
   const setElement = usePreventDefaultTouchStart();
 
+  const marginLeft = Math.max(0, indent ?? 0) * 8;
+  
   return (
     <div
-      className='relative mb-2 flex h-8 w-full touch-none items-center last:mb-0'
+      className='relative mb-2 flex h-8 touch-none items-center last:mb-0'
       style={{
-        marginLeft: Math.max(0, indent ?? 0) * 8,
+        width: `calc(100% - ${marginLeft}px)`,
+        marginLeft,
         cursor: dragging ? '' : 'grab',
+        boxShadow: CONTROL_SHADOW,
       }}
       onPointerDown={handlePointerDown}
       ref={(element) => {

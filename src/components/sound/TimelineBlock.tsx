@@ -3,6 +3,7 @@ import { zBaseSynthSrc } from '@src/synth/config/shared';
 import { findEnvelope } from '@src/utils/utils';
 import IconButton from '../shared/IconButton';
 import Adsr from './Adsr';
+import { CONTROL_SHADOW } from '@src/utils/constants';
 
 type TimelineBlockProps = {
   synth: SynthConfig;
@@ -35,15 +36,16 @@ export default function TimelineBlock({
         <div
           style={{
             width: `${Math.max(1, ((duration + delay) / maxDelayAndDuration) * 100)}%`,
+            boxShadow: CONTROL_SHADOW,
           }}
-          className='absolute bottom-0 size-full bg-white '
+          className='absolute bottom-0 size-full bg-white'
         ></div>
         <div
           style={{
             width: `${Math.max(1, (duration / maxDelayAndDuration) * 100)}%`,
             left: `${(delay / maxDelayAndDuration) * 100}%`,
           }}
-          className='absolute  h-full overflow-hidden bg-white '
+          className='absolute  h-full overflow-hidden '
         >
           <div className='absolute flex size-full'>
             {envelope && (

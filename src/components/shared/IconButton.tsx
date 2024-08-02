@@ -14,7 +14,7 @@ export default function IconButton({
   return (
     <button
       style={style}
-      className={`flex ${className} size-8 items-center justify-center hover:bg-white active:invert`}
+      className={`flex ${className} size-8 items-center justify-center active:bg-white active:invert`}
       onClick={onClick}
     >
       <span className='material-symbols-outlined'>{icon}</span>
