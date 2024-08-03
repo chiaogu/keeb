@@ -1,5 +1,5 @@
 import { Envelope, zEnvelope } from '@src/synth/config/envelope';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useMainContext } from '../shared/MainContext';
 import SectionHeader from '../shared/SectionHeader';
 import Controls from './Controls';
@@ -17,15 +17,19 @@ export default function EnvelopeControl({
   onChange,
   indent = 0,
 }: EnvelopeProps) {
-  const { setTimelineVisible } = useMainContext();
-  
+  const { setScreen } = useMainContext();
+  const { attack, decay, sustain, release } = envelope;
+
   const handleDrag = useCallback(() => {
-    setTimelineVisible(true);
-  }, [setTimelineVisible]);
+    setScreen({
+      type: 'adsr',
+      envelope: { attack, decay, sustain, release },
+    });
+  }, [attack, decay, sustain, release, setScreen]);
 
   const handleRelease = useCallback(() => {
-    setTimelineVisible(false);
-  }, [setTimelineVisible]);
+    setScreen({ type: 'meter' });
+  }, [setScreen]);
 
   return (
     <div className='flex w-full flex-col items-center'>

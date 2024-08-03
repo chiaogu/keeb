@@ -4,8 +4,8 @@ import * as Tone from '@src/tone';
 import { SoundConfig } from '@src/types';
 import { useMemo } from 'react';
 import { useMainContext } from '../shared/MainContext';
+import Adsr from './Adsr';
 import FFT from './FFT';
-import TimelineBlockEnvelope from './TimelineBlockEnvelope';
 import VolumeMeter from './VolumeMeter';
 import Waveform from './Waveform';
 
@@ -20,17 +20,10 @@ export default function StickyHeader({
   sound,
   selectedSynth,
 }: StickyHeaderProps) {
-  const { timelineVisible } = useMainContext();
-  const maxDelayAndDuration = useMemo(
-    () =>
-      Math.max(
-        ...sound.synths.map(
-          ({ src }) =>
-            zBaseSynthSrc.parse(src.data).delay +
-            zBaseSynthSrc.parse(src.data).duration,
-        ),
-      ),
-    [sound.synths],
+  const { screen } = useMainContext();
+  const { duration } = useMemo(
+    () => zBaseSynthSrc.parse(selectedSynth.src.data),
+    [selectedSynth.src.data],
   );
   return (
     <div
@@ -42,7 +35,7 @@ export default function StickyHeader({
       }}
       className='sticky top-2 z-20 mx-4 rounded-md backdrop-blur-md'
     >
-      {!timelineVisible && (
+      {screen.type === 'meter' && (
         <div className='flex w-full items-center space-x-2 px-8 pb-6 pt-0 invert'>
           <div className='h-[28px] flex-1'>
             <FFT channel={channel} />
@@ -55,13 +48,10 @@ export default function StickyHeader({
           </div>
         </div>
       )}
-      {timelineVisible && (
+      {screen.type === 'adsr' && (
         <div className='h-14 w-full px-8 py-3 invert'>
           <div className='relative size-full'>
-            <TimelineBlockEnvelope
-              synth={selectedSynth}
-              maxDelayAndDuration={maxDelayAndDuration}
-            />
+            <Adsr envelope={screen.envelope} maxDuration={duration} />
           </div>
         </div>
       )}

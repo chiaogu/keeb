@@ -1,10 +1,13 @@
+import { Envelope } from '@src/synth/config/envelope';
 import { createContext, useContext, useState } from 'react';
 
+type ScreenState = { type: 'meter' } | { type: 'adsr', envelope: Envelope };
+
 function useMainContextValue() {
-  const [timelineVisible, setTimelineVisible] = useState(false);
+  const [screen, setScreen] = useState<ScreenState>({ type: 'meter' });
   return {
-    timelineVisible,
-    setTimelineVisible,
+    screen,
+    setScreen,
   };
 }
 

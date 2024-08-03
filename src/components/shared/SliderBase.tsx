@@ -105,13 +105,17 @@ export default function SliderBase({
   const startPos = useRef({ x: 0, y: 0 });
   const thresholdPassed = useRef(false);
   const [dragging, setDragging] = useState(false);
+  const prviousDragging = useRef(dragging);
   
   useEffect(() => {
     if (dragging) {
       onDrag?.();
     } else {
-      onRelease?.();
+      if (prviousDragging.current !== dragging) {
+        onRelease?.();
+      }
     }
+    prviousDragging.current = dragging;
   }, [dragging, onDrag, onRelease]);
 
   useEffect(() => {
