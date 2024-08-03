@@ -9,7 +9,7 @@ type ControlsProps<T extends z.ZodTypeAny> = {
   schema: T;
   controls?: Partial<Record<string, NodeControlConfig>>;
   value: Record<string, unknown>;
-  onChange: (value: Record<string, unknown>) => void;
+  onChange: (value: Record<string, unknown>, key: string) => void;
   indent?: number;
   onDrag?: () => void;
   onRelease?: () => void;
@@ -44,7 +44,7 @@ export default function Controls<T extends z.ZodTypeAny>({
             onChange({
               ...value,
               [key]: v,
-            })
+            }, key)
           }
           schema={fieldSchema as z.ZodTypeAny}
           config={controls?.[key]}

@@ -31,6 +31,33 @@ export default function EnvelopeControl({
     setScreen({ type: 'meter' });
   }, [setScreen]);
 
+  const handleChange = useCallback(
+    (newEnvelope: Record<string, unknown>, key: string) => {
+      const e = newEnvelope as Envelope;
+      let { attack, decay, release } = e;
+
+      if (key !== 'attack') {
+        attack = Math.min(1 - release, Math.min(decay, attack));
+      }
+
+      if (key !== 'decay') {
+        decay = Math.min(1 - release, Math.max(attack, decay));
+      }
+
+      if (key !== 'release') {
+        release = 1 - Math.max(attack, Math.max(decay, 1 - release));
+      }
+
+      onChange({
+        ...e,
+        attack,
+        decay,
+        release,
+      });
+    },
+    [onChange],
+  );
+
   return (
     <div className='flex w-full flex-col items-center'>
       <SectionHeader label={label} />
@@ -38,7 +65,7 @@ export default function EnvelopeControl({
         indent={indent + 1}
         schema={zEnvelope}
         value={envelope}
-        onChange={(newEnvelope) => onChange(newEnvelope as Envelope)}
+        onChange={handleChange}
         onDrag={handleDrag}
         onRelease={handleRelease}
       />

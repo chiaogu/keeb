@@ -1,6 +1,5 @@
 import { SynthConfig } from '@src/synth';
 import { zBaseSynthSrc } from '@src/synth/config/shared';
-import { CONTROL_SHADOW } from '@src/utils/constants';
 import { findEnvelope } from '@src/utils/utils';
 import { useMemo } from 'react';
 import Adsr from './Adsr';
@@ -40,7 +39,7 @@ export default function TimelineBlockEnvelope({
       >
         <div className='absolute flex size-full'>
           {envelope && (
-            <Adsr envelope={envelope} maxDuration={maxDelayAndDuration} />
+            <Adsr envelope={envelope} />
           )}
           {!envelope && (
             <div className='absolute flex size-full bg-black'></div>

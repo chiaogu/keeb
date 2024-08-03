@@ -13,6 +13,7 @@ export default function Slider({
   return (
     <SliderBase
       {...sliderProps}
+      sensitivity={1.2}
       render={({ normalValue }) => (
         <>
           <div

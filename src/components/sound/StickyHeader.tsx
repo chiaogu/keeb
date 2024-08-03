@@ -21,10 +21,7 @@ export default function StickyHeader({
   selectedSynth,
 }: StickyHeaderProps) {
   const { screen } = useMainContext();
-  const { duration } = useMemo(
-    () => zBaseSynthSrc.parse(selectedSynth.src.data),
-    [selectedSynth.src.data],
-  );
+
   return (
     <div
       style={{
@@ -51,7 +48,7 @@ export default function StickyHeader({
       {screen.type === 'adsr' && (
         <div className='h-14 w-full px-8 py-3 invert'>
           <div className='relative size-full'>
-            <Adsr envelope={screen.envelope} maxDuration={duration} />
+            <Adsr envelope={screen.envelope} />
           </div>
         </div>
       )}
