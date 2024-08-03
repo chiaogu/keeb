@@ -14,9 +14,10 @@ export function getDefaultSynth(): SynthConfig {
 }
 
 export function getDefaultSound(): SoundConfig {
+  const id = uuid();
   return {
-    id: uuid(),
-    name: 'untitled',
+    id,
+    name: `sound ${id.slice(0, 5)}`,
     synths: [getDefaultSynth()],
   };
 }
@@ -58,7 +59,7 @@ function getDefaultKeySound(): KeySoundConfig {
 
 export function getDefaultKeyboard(): KeyboardConfig {
   return {
-    name: 'untitled',
+    name: `keyboard ${uuid().slice(0, 5)}`,
     sound: {
       up: getDefaultKeySound(),
       down: getDefaultKeySound(),

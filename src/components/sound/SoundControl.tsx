@@ -45,6 +45,11 @@ export default function SoundControl({
 
   return (
     <div className='flex w-full max-w-[500px] flex-col items-center space-y-5 overflow-x-visible'>
+      <StickyHeader
+        sound={sound}
+        channel={channel}
+        selectedSynth={selectedSynth}
+      />
       <SoundLayerControl
         sound={sound}
         selectedSynth={selectedSynth}
@@ -58,11 +63,6 @@ export default function SoundControl({
             Math.max(Math.min(selectedLayerIndex, sound.synths.length - 2), 0),
           );
         }}
-      />
-      <StickyHeader
-        sound={sound}
-        channel={channel}
-        selectedSynth={selectedSynth}
       />
       <SynthControl
         key={selectedSynth.id}

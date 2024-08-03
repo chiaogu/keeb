@@ -2,7 +2,6 @@ import { SynthConfig } from '@src/synth';
 import { zBaseSynthSrc } from '@src/synth/config/shared';
 import * as Tone from '@src/tone';
 import { SoundConfig } from '@src/types';
-import { COLOR } from '@src/utils/constants';
 import { useMemo } from 'react';
 import { useMainContext } from '../shared/MainContext';
 import FFT from './FFT';
@@ -35,11 +34,16 @@ export default function StickyHeader({
   );
   return (
     <div
-      style={{ marginTop: 0, background: COLOR.BG }}
-      className='sticky top-0 z-10 w-full'
+      style={{
+        marginTop: 0,
+        width: 'calc(100% - 2rem)',
+        background: 'rgba(0,0,0,0.6)',
+        boxShadow: '0 5px 10px 0px rgba(0,0,0,0.3)',
+      }}
+      className='sticky top-2 z-20 mx-4 rounded-md backdrop-blur-md'
     >
       {!timelineVisible && (
-        <div className='flex w-full items-center space-x-2 px-8 pb-6 pt-0'>
+        <div className='flex w-full items-center space-x-2 px-8 pb-6 pt-0 invert'>
           <div className='h-[28px] flex-1'>
             <FFT channel={channel} />
           </div>
@@ -52,7 +56,7 @@ export default function StickyHeader({
         </div>
       )}
       {timelineVisible && (
-        <div className='h-14 w-full px-8 py-3'>
+        <div className='h-14 w-full px-8 py-3 invert'>
           <div className='relative size-full'>
             <TimelineBlockEnvelope
               synth={selectedSynth}

@@ -29,7 +29,7 @@ export default function SectionHeader({
     >
       {onLabelChange ? (
         <div
-          className='relative mr-2 h-full w-fit overflow-hidden bg-white'
+          className='relative h-full w-fit overflow-hidden bg-white'
           style={{ boxShadow: CONTROL_SHADOW }}
         >
           <span
@@ -48,7 +48,7 @@ export default function SectionHeader({
       ) : (
         <label className={`shrink-0 ${labelClassName}`}>{label}</label>
       )}
-      <div className='flex items-center space-x-2'>{children}</div>
+      {children && <div className='ml-2 flex items-center space-x-2'>{children}</div>}
     </div>
   );
 }
