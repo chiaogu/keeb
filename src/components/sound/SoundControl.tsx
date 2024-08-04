@@ -4,7 +4,7 @@ import { SoundConfig } from '@src/types';
 import { useEffect, useMemo, useState } from 'react';
 import SynthControl from '../synth/SynthControl';
 import { SoundLayerControl } from './SoundLayerControl';
-import StickyHeader from './StickyHeader';
+import StickyHeader from '../pages/StickyHeader/StickyHeader';
 
 type SoundControlProps = {
   sound: SoundConfig;

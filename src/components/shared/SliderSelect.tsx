@@ -72,6 +72,8 @@ export default function SliderSelect({
   bgColor,
   bgStyle,
   indicatorStyle,
+  onDrag,
+  onRelease,
 }: SliderSelectProps) {
   const [sliderValue, setSliderValue] = useState(
     findOptionIndex(options, value),
@@ -106,7 +108,8 @@ export default function SliderSelect({
 
   const handleRelease = useCallback(() => {
     setSliderValue(Math.round(sliderValue));
-  }, [sliderValue]);
+    onRelease?.();
+  }, [onRelease, sliderValue]);
 
   useEffect(() => {
     const index = findOptionIndex(options, value);
@@ -128,6 +131,7 @@ export default function SliderSelect({
           onChange(getOptionValue(options[Math.round(v)]));
         }
       }}
+      onDrag={onDrag}
       onRelease={handleRelease}
       render={({ normalValue, dragging }) => {
         const normalScrollOffset = Math.max(
@@ -142,14 +146,14 @@ export default function SliderSelect({
             }}
             className='relative flex size-full justify-between overflow-hidden'
           >
-            <div
+            {label && <div
               style={{
                 background: bgColor,
               }}
               className='flex h-full items-center justify-between pl-2 pr-4'
             >
               {label}
-            </div>
+            </div>}
             <div className='h-full overflow-hidden' ref={ref}>
               <div
                 className='relative flex h-full w-fit'

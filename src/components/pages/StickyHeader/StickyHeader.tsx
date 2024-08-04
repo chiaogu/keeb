@@ -1,11 +1,10 @@
 import * as Tone from '@src/tone';
-import { useState } from 'react';
-import { useMainContext } from '../shared/MainContext';
-import SliderSelect from '../shared/SliderSelect';
-import Adsr from './Adsr';
-import FFT from './FFT';
-import VolumeMeter from './VolumeMeter';
-import Waveform from './Waveform';
+import { useMainContext } from '../../shared/MainContext';
+import Adsr from '../../sound/Adsr';
+import FFT from '../../sound/FFT';
+import VolumeMeter from '../../sound/VolumeMeter';
+import Waveform from '../../sound/Waveform';
+import Navigation from './Navigation';
 
 type StickyHeaderProps = {
   channel: Tone.ToneAudioNode;
@@ -20,7 +19,7 @@ function Meters({ channel }: { channel: Tone.ToneAudioNode }) {
 
   return (
     <div className='flex h-14 w-full items-center space-x-2 px-5 pb-6 pt-2 invert'>
-      <div className='h-full flex-1'>
+      <div className='h-[28px] flex-1'>
         <FFT channel={channel} />
       </div>
       <div className='mt-3 h-[14px] flex-1'>
@@ -45,38 +44,6 @@ function Envelope() {
       <div className='relative size-full'>
         <Adsr envelope={screen.envelope} />
       </div>
-    </div>
-  );
-}
-
-function Navigation() {
-  const [tab, setTab] = useState('synth');
-  return (
-    <div className='h-14 w-full px-4 py-3'>
-      <SliderSelect
-        label='sound'
-        options={[
-          {
-            value: 'back',
-            label: (
-              <span className='material-symbols-outlined -mx-2'>
-                chevron_backward
-              </span>
-            ),
-          },
-          'synth',
-          'tweaks',
-        ]}
-        value={tab}
-        onChange={setTab}
-        sensitivity={1.5}
-        showOptions
-        bgColor='transparent'
-        bgStyle={{
-          color: 'white',
-        }}
-        indicatorStyle={{ background: 'white', mixBlendMode: 'difference' }}
-      />
     </div>
   );
 }
