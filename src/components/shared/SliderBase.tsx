@@ -192,7 +192,6 @@ export default function SliderBase({
         width: `calc(100% - ${marginLeft}px)`,
         marginLeft,
         cursor: dragging ? '' : 'grab',
-        boxShadow: CONTROL_SHADOW,
       }}
       onPointerDown={handlePointerDown}
       ref={(element) => {
@@ -200,7 +199,7 @@ export default function SliderBase({
         setElement(element);
       }}
     >
-      <div className='pointer-events-none absolute top-0 size-full bg-white'>
+      <div className='pointer-events-none absolute top-0 size-full'>
         {render({ normalValue: scale(value, min, max), dragging })}
       </div>
     </div>

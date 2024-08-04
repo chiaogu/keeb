@@ -1,3 +1,4 @@
+import { CONTROL_SHADOW } from '@src/utils/constants';
 import { scale } from '@src/utils/utils';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
@@ -9,6 +10,9 @@ type SliderSelectProps = {
   value: string;
   onChange: (value: string) => void;
   showOptions?: boolean;
+  bgColor?: string;
+  bgStyle?: React.CSSProperties;
+  indicatorStyle?: React.CSSProperties;
 } & Pick<SliderBaseProps, 'indent' | 'onDrag' | 'onRelease' | 'sensitivity'>;
 
 function easeInOutCirc(x: number, hardness: number = 2): number {
@@ -41,6 +45,22 @@ function findOptionIndex(options: SliderSelectProps['options'], value: string) {
   return options.findIndex((o) => getOptionValue(o) === value);
 }
 
+export function ControlSliderSelect(props: SliderSelectProps) {
+  return (
+    <SliderSelect
+      {...props}
+      bgColor='white'
+      bgStyle={{
+        boxShadow: CONTROL_SHADOW,
+      }}
+      indicatorStyle={{
+        background: 'white',
+        mixBlendMode: 'difference',
+      }}
+    />
+  );
+}
+
 export default function SliderSelect({
   label,
   options,
@@ -49,25 +69,22 @@ export default function SliderSelect({
   indent,
   showOptions,
   sensitivity = 1.2,
+  bgColor,
+  bgStyle,
+  indicatorStyle,
 }: SliderSelectProps) {
   const [sliderValue, setSliderValue] = useState(
     findOptionIndex(options, value),
   );
-  const {
-    width: clientWidth,
-    ref,
-  } = useResizeDetector<HTMLDivElement>();
+  const { width: clientWidth, ref } = useResizeDetector<HTMLDivElement>();
 
-  const { scrollWidth, scrollX } = useMemo(
-    () => {
-      const scrollWidth = ref.current?.scrollWidth ?? 0;
-      return {
-        scrollWidth,
-        scrollX: Math.max(0, scrollWidth - (clientWidth ?? 0)),
-      };
-    },
-    [clientWidth, ref],
-  );
+  const { scrollWidth, scrollX } = useMemo(() => {
+    const scrollWidth = ref.current?.scrollWidth ?? 0;
+    return {
+      scrollWidth,
+      scrollX: Math.max(0, scrollWidth - (clientWidth ?? 0)),
+    };
+  }, [clientWidth, ref]);
 
   const eased = useMemo(() => {
     const widths = Array.from(
@@ -83,12 +100,12 @@ export default function SliderSelect({
     });
 
     return ease(sliderValue, normalWidths);
-  // clientWidth is requqired to trigger recalcuate
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // clientWidth is requqired to trigger recalcuate
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ref, sliderValue, clientWidth]);
-  
+
   const handleRelease = useCallback(() => {
-    setSliderValue( Math.round(sliderValue));
+    setSliderValue(Math.round(sliderValue));
   }, [sliderValue]);
 
   useEffect(() => {
@@ -118,16 +135,30 @@ export default function SliderSelect({
           Math.min(1, normalValue * 1.8 - 0.4),
         );
         return (
-          <div className='relative flex size-full justify-between overflow-hidden'>
-            <div className='flex h-full items-center justify-between bg-white pl-2 pr-4'>
+          <div
+            style={{
+              ...bgStyle,
+              background: bgColor,
+            }}
+            className='relative flex size-full justify-between overflow-hidden'
+          >
+            <div
+              style={{
+                background: bgColor,
+              }}
+              className='flex h-full items-center justify-between pl-2 pr-4'
+            >
               {label}
             </div>
             <div className='h-full overflow-hidden' ref={ref}>
               <div
-                className='relative flex h-full w-fit bg-white '
+                className='relative flex h-full w-fit'
                 style={{
                   transform: `translateX(-${scrollX * normalScrollOffset}px)`,
-                  transition: !dragging ? 'transform 0.15s ease-out' : undefined,
+                  transition: !dragging
+                    ? 'transform 0.15s ease-out'
+                    : undefined,
+                  background: bgColor,
                 }}
               >
                 {options.map((option) => (
@@ -135,8 +166,8 @@ export default function SliderSelect({
                     key={getOptionValue(option)}
                     className='slider-option flex h-full items-center text-clip px-4'
                     style={{
-                      color: showOptions || dragging ? 'black' : 'transparent',
-                      transition: 'color 0.1s',
+                      opacity: showOptions || dragging ? 1 : 0,
+                      transition: 'opacity 0.1s',
                     }}
                   >
                     {typeof option === 'string' ? option : option.label}
@@ -148,9 +179,12 @@ export default function SliderSelect({
                     left: `${(scrollWidth ?? 0) * eased.value}px`,
                     transform: `scaleX(${(scrollWidth ?? 0) * eased.width}%)`,
                     transformOrigin: '0 0',
-                    transition: !dragging ? 'transform 0.15s ease-out, left 0.15s ease-out' : undefined,
+                    transition: !dragging
+                      ? 'transform 0.15s ease-out, left 0.15s ease-out'
+                      : undefined,
+                    ...indicatorStyle,
                   }}
-                  className='absolute left-0 top-0 h-full w-16 bg-white mix-blend-difference'
+                  className='absolute left-0 top-0 h-full w-16'
                 ></div>
               </div>
             </div>

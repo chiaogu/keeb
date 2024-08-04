@@ -1,3 +1,4 @@
+import { CONTROL_SHADOW } from '@src/utils/constants';
 import SliderBase, { SliderBaseProps } from './SliderBase';
 
 type SliderProps = {
@@ -15,7 +16,12 @@ export default function Slider({
       {...sliderProps}
       sensitivity={1.2}
       render={({ normalValue }) => (
-        <>
+        <div
+          style={{
+            boxShadow: CONTROL_SHADOW,
+          }}
+          className='size-full bg-white'
+        >
           <div
             style={{
               transform: `scaleX(${normalValue * 100}%)`,
@@ -34,7 +40,7 @@ export default function Slider({
           >
             {renderValue(normalValue)}
           </div>
-        </>
+        </div>
       )}
     />
   );

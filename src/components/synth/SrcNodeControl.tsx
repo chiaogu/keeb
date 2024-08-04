@@ -3,7 +3,7 @@ import { SrcNodeType, nodeConfig, srcNodeConfig } from '@src/synth/config';
 import { zBaseSynthSrc } from '@src/synth/config/shared';
 import { omit } from '@src/utils/schema';
 import SectionHeader from '../shared/SectionHeader';
-import SliderSelect from '../shared/SliderSelect';
+import { ControlSliderSelect } from '../shared/SliderSelect';
 import Controls from './Controls';
 
 type SrcNodeControlProps = {
@@ -16,7 +16,7 @@ const srcTypeOptions = Object.keys(srcNodeConfig) as SrcNodeType[];
 export default function SrcNodeControl({ src, onChange }: SrcNodeControlProps) {
   return (
     <div className='flex w-full flex-col items-center'>
-      <SliderSelect
+      <ControlSliderSelect
         label='type'
         options={srcTypeOptions}
         value={src.type}

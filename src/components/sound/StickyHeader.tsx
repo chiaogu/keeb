@@ -6,7 +6,6 @@ import Adsr from './Adsr';
 import FFT from './FFT';
 import VolumeMeter from './VolumeMeter';
 import Waveform from './Waveform';
-import IconButton from '../shared/IconButton';
 
 type StickyHeaderProps = {
   channel: Tone.ToneAudioNode;
@@ -56,11 +55,27 @@ function Navigation() {
     <div className='h-14 w-full px-4 py-3'>
       <SliderSelect
         label='sound'
-        options={[{ value: 'back', label: <span className='material-symbols-outlined -mx-2'>chevron_backward</span> }, 'synth', 'tweaks']}
+        options={[
+          {
+            value: 'back',
+            label: (
+              <span className='material-symbols-outlined -mx-2'>
+                chevron_backward
+              </span>
+            ),
+          },
+          'synth',
+          'tweaks',
+        ]}
         value={tab}
         onChange={setTab}
         sensitivity={1.5}
         showOptions
+        bgColor='transparent'
+        bgStyle={{
+          color: 'white',
+        }}
+        indicatorStyle={{ background: 'white', mixBlendMode: 'difference' }}
       />
     </div>
   );
