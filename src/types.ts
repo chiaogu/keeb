@@ -1,5 +1,5 @@
 import * as Tone from '@src/tone';
-import { SoundStructure } from './components/SoundStructureTree/SoundStructure';
+import { SoundStructure } from './components/sound/SoundStructure';
 import { KeySoundModifier } from './keyboard/keySoundModifier';
 import { SynthConfig } from './synth';
 

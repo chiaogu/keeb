@@ -2,7 +2,7 @@ import IconButton from '@src/components/shared/IconButton';
 import SectionHeader from '@src/components/shared/SectionHeader';
 import SoundStructure, {
   SoundStructureProps,
-} from '@src/components/SoundStructureTree/SoundStructure';
+} from '@src/components/sound/SoundStructure';
 import {
   isModifierOp,
   ModifierOp,

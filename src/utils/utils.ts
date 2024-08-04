@@ -1,5 +1,5 @@
 import { SoundFieldPath } from '@src/components/keyboard/KeyModifierControl/RandomizationControl';
-import { SoundStructure } from '@src/components/SoundStructureTree/SoundStructure';
+import { SoundStructure } from '@src/components/sound/SoundStructure';
 import { SynthConfig } from '@src/synth';
 import { Envelope, zEnvelope } from '@src/synth/config/envelope';
 import * as Tone from '@src/tone';

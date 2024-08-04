@@ -3,7 +3,7 @@ import SectionHeader from '@src/components/shared/SectionHeader';
 import SoundStructure, {
   RenderFieldProps,
   SoundStructureField,
-} from '@src/components/SoundStructureTree/SoundStructure';
+} from '@src/components/sound/SoundStructure';
 import { SynthNodeState } from '@src/synth';
 import { useMemo } from 'react';
 import { useModiferContext } from './ModifierContext';

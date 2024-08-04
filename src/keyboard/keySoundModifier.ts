@@ -2,7 +2,7 @@ import { SoundFieldPath } from '@src/components/keyboard/KeyModifierControl/Rand
 import {
   SoundStructure,
   SoundStructureField,
-} from '@src/components/SoundStructureTree/SoundStructure';
+} from '@src/components/sound/SoundStructure';
 import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
 import { FieldRandomConfig, ModifierLayer } from '@src/types';

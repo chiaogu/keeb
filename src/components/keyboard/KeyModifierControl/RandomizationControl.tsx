@@ -2,7 +2,7 @@ import IconButton from '@src/components/shared/IconButton';
 import SectionHeader from '@src/components/shared/SectionHeader';
 import SoundStructure, {
   RenderFieldProps,
-} from '@src/components/SoundStructureTree/SoundStructure';
+} from '@src/components/sound/SoundStructure';
 import { isFieldRandomConfig } from '@src/keyboard/keySoundModifier';
 import { FieldRandomConfig, RandomizationConfig } from '@src/types';
 import { isSoundFieldPathEqual } from '@src/utils/utils';
