@@ -1,13 +1,15 @@
 import { scale } from '@src/utils/utils';
-import { useEffect, useMemo, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { useResizeDetector } from 'react-resize-detector';
 import SliderBase, { SliderBaseProps } from './SliderBase';
 
 type SliderSelectProps = {
   label: string;
-  options: string[];
+  options: (string | { value: string; label: ReactNode })[];
   value: string;
   onChange: (value: string) => void;
-} & Pick<SliderBaseProps, 'indent' | 'onDrag' | 'onRelease'>;
+  showOptions?: boolean;
+} & Pick<SliderBaseProps, 'indent' | 'onDrag' | 'onRelease' | 'sensitivity'>;
 
 function easeInOutCirc(x: number, hardness: number = 2): number {
   return x < 0.5
@@ -31,28 +33,45 @@ function ease(value: number, optionElementWidths: number[]) {
   return { value: easedValue, width: easedWidth };
 }
 
+function getOptionValue(option: SliderSelectProps['options'][number]) {
+  return typeof option === 'string' ? option : option.value;
+}
+
+function findOptionIndex(options: SliderSelectProps['options'], value: string) {
+  return options.findIndex((o) => getOptionValue(o) === value);
+}
+
 export default function SliderSelect({
   label,
   options,
   value,
   onChange,
   indent,
+  showOptions,
+  sensitivity = 1.2,
 }: SliderSelectProps) {
-  const [sliderValue, setSliderValue] = useState(options.indexOf(value));
-  const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  const [sliderValue, setSliderValue] = useState(
+    findOptionIndex(options, value),
+  );
+  const {
+    width: clientWidth,
+    ref,
+  } = useResizeDetector<HTMLDivElement>();
 
-  const { scrollWidth, clientWidth } = useMemo(() => {
-    const { scrollWidth = 0, clientWidth = 0 } = container ?? {};
-    return { scrollWidth, clientWidth };
-  }, [container]);
-
-  const scrollX = useMemo(() => {
-    return !container ? 0 : scrollWidth - clientWidth;
-  }, [clientWidth, container, scrollWidth]);
+  const { scrollWidth, scrollX } = useMemo(
+    () => {
+      const scrollWidth = ref.current?.scrollWidth ?? 0;
+      return {
+        scrollWidth,
+        scrollX: Math.max(0, scrollWidth - (clientWidth ?? 0)),
+      };
+    },
+    [clientWidth, ref],
+  );
 
   const eased = useMemo(() => {
     const widths = Array.from(
-      container?.querySelectorAll('.slider-option') ?? [],
+      ref.current?.querySelectorAll('.slider-option') ?? [],
     ).map(({ clientWidth }) => clientWidth);
     const widthSum = widths.reduce((sum, w) => sum + w, 0);
 
@@ -64,27 +83,35 @@ export default function SliderSelect({
     });
 
     return ease(sliderValue, normalWidths);
-  }, [container, sliderValue]);
+  // clientWidth is requqired to trigger recalcuate
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ref, sliderValue, clientWidth]);
+  
+  const handleRelease = useCallback(() => {
+    setSliderValue( Math.round(sliderValue));
+  }, [sliderValue]);
 
   useEffect(() => {
-    if (options.indexOf(value) !== Math.round(sliderValue)) {
-      setSliderValue(options.indexOf(value));
+    const index = findOptionIndex(options, value);
+    if (index !== Math.round(sliderValue)) {
+      setSliderValue(index);
     }
   }, [options, sliderValue, value]);
 
   return (
     <SliderBase
-      sensitivity={1.2}
+      sensitivity={sensitivity}
       indent={indent}
       value={sliderValue}
       max={options.length - 1}
       min={0}
       onChange={(v) => {
         setSliderValue(v);
-        if (options.indexOf(value) !== Math.round(v)) {
-          onChange(options[Math.round(v)]);
+        if (findOptionIndex(options, value) !== Math.round(v)) {
+          onChange(getOptionValue(options[Math.round(v)]));
         }
       }}
+      onRelease={handleRelease}
       render={({ normalValue, dragging }) => {
         const normalScrollOffset = Math.max(
           0,
@@ -95,23 +122,24 @@ export default function SliderSelect({
             <div className='flex h-full items-center justify-between bg-white pl-2 pr-4'>
               {label}
             </div>
-            <div className='h-full overflow-hidden' ref={setContainer}>
+            <div className='h-full overflow-hidden' ref={ref}>
               <div
                 className='relative flex h-full w-fit bg-white '
                 style={{
                   transform: `translateX(-${scrollX * normalScrollOffset}px)`,
+                  transition: !dragging ? 'transform 0.15s ease-out' : undefined,
                 }}
               >
                 {options.map((option) => (
                   <div
-                    key={option}
+                    key={getOptionValue(option)}
                     className='slider-option flex h-full items-center text-clip px-4'
                     style={{
-                      color: dragging ? 'black' : 'transparent',
+                      color: showOptions || dragging ? 'black' : 'transparent',
                       transition: 'color 0.1s',
                     }}
                   >
-                    {option}
+                    {typeof option === 'string' ? option : option.label}
                   </div>
                 ))}
                 <div
@@ -120,13 +148,17 @@ export default function SliderSelect({
                     left: `${(scrollWidth ?? 0) * eased.value}px`,
                     transform: `scaleX(${(scrollWidth ?? 0) * eased.width}%)`,
                     transformOrigin: '0 0',
+                    transition: !dragging ? 'transform 0.15s ease-out, left 0.15s ease-out' : undefined,
                   }}
                   className='absolute left-0 top-0 h-full w-16 bg-white mix-blend-difference'
                 ></div>
               </div>
             </div>
             <div
-              style={{ opacity: dragging ? 0 : 1, transition: 'opacity 0.1s' }}
+              style={{
+                opacity: showOptions || dragging ? 0 : 1,
+                transition: 'opacity 0.1s',
+              }}
               className='absolute right-2 top-0 flex h-full items-center text-white mix-blend-difference'
             >
               {value}

@@ -45,11 +45,7 @@ export default function SoundControl({
 
   return (
     <div className='flex w-full max-w-[500px] flex-col items-center space-y-5 overflow-x-visible'>
-      <StickyHeader
-        sound={sound}
-        channel={channel}
-        selectedSynth={selectedSynth}
-      />
+      <StickyHeader channel={channel} />
       <SoundLayerControl
         sound={sound}
         selectedSynth={selectedSynth}
