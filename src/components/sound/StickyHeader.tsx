@@ -28,7 +28,7 @@ export default function StickyHeader({
         marginTop: 0,
         width: 'calc(100% - 2rem)',
         background: 'rgba(0,0,0,0.6)',
-        boxShadow: '0 5px 10px 0px rgba(0,0,0,0.3)',
+        boxShadow: '0 5px 10px 0px rgba(0,0,0,0.2)',
       }}
       className='sticky top-2 z-20 mx-4 rounded-md backdrop-blur-md'
     >
