@@ -18,7 +18,7 @@ function Meters({ channel }: { channel: Tone.ToneAudioNode }) {
   }
 
   return (
-    <div className='flex h-14 w-full items-center space-x-2 px-5 pb-6 pt-2 invert'>
+    <div className='pointer-events-none absolute top-0 flex h-14 w-full items-center space-x-2 px-5 pb-6 pt-2 invert'>
       <div className='h-[28px] flex-1'>
         <FFT channel={channel} />
       </div>
@@ -40,7 +40,7 @@ function Envelope() {
   }
 
   return (
-    <div className='h-14 w-full px-4 py-3 invert'>
+    <div className='absolute top-0 h-14 w-full px-4 py-3 invert'>
       <div className='relative size-full'>
         <Adsr envelope={screen.envelope} />
       </div>

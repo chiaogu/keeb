@@ -32,28 +32,32 @@ const TABS = [
 export type Tab = (typeof TABS)[number]['value'];
 
 export default function Navigation() {
-  const { tab, setTab, screen } = useMainContext();
+  const { tab, setTab, screen, setScreen } = useMainContext();
   const [localTab, setLocalTab] = useState(tab);
   const value = useMemo(
     () => TABS.find(({ value }) => value === localTab)?.value ?? '',
     [localTab],
   );
 
+  const handleDrag = useCallback(() => {
+    setScreen({ type: 'nav' });
+  }, [setScreen]);
+
   const handleRelease = useCallback(() => {
     setTab(localTab);
   }, [localTab, setTab]);
-  
-  if (screen.type !== 'nav') {
-    return null;
-  }
 
   return (
-    <div className='h-14 w-full px-4'>
+    <div
+      style={{ opacity: screen.type === 'nav' ? 1 : 0 }}
+      className='h-14 w-full px-4'
+    >
       <SliderSelect
         label={value}
         options={TABS}
         value={localTab}
         onChange={setLocalTab}
+        onDrag={handleDrag}
         onRelease={handleRelease}
         sensitivity={2}
         showOptions
