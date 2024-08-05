@@ -4,11 +4,9 @@ import { SoundConfig } from '@src/types';
 import { useEffect, useMemo, useState } from 'react';
 import SynthControl from '../synth/SynthControl';
 import { SoundLayerControl } from './SoundLayerControl';
-import StickyHeader from '../pages/StickyHeader/StickyHeader';
 
 type SoundControlProps = {
   sound: SoundConfig;
-  channel: Tone.ToneAudioNode;
   onRemoveLayer: Sound['removeLayer'];
   onAddLayer: Sound['addLayer'];
   onSrcChange: Sound['setSrcState'];
@@ -22,7 +20,6 @@ type SoundControlProps = {
 
 export default function SoundControl({
   sound,
-  channel,
   onRemoveLayer,
   onAddLayer,
   onSrcChange,
@@ -45,7 +42,6 @@ export default function SoundControl({
 
   return (
     <div className='flex w-full max-w-[500px] flex-col items-center space-y-5 overflow-x-visible'>
-      <StickyHeader channel={channel} />
       <SoundLayerControl
         sound={sound}
         selectedSynth={selectedSynth}

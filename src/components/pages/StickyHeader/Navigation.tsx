@@ -1,3 +1,4 @@
+import { useMainContext } from '@src/components/shared/MainContext';
 import SliderSelect from '@src/components/shared/SliderSelect';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -26,32 +27,37 @@ const TABS = [
     value: 'about',
     label: <span className='material-symbols-outlined -mx-2'>emoticon</span>,
   },
-];
+] as const;
+
+export type Tab = (typeof TABS)[number]['value'];
 
 export default function Navigation() {
-  const [path, setPath] = useState('sound');
+  const { tab, setTab } = useMainContext();
+  const [localTab, setLocalTab] = useState(tab);
   const value = useMemo(
-    () => TABS.find((tab) => tab.value === path)?.value ?? '',
-    [path],
+    () => TABS.find(({ value }) => value === localTab)?.value ?? '',
+    [localTab],
   );
 
-  const handleRelease = useCallback(() => {}, []);
+  const handleRelease = useCallback(() => {
+    setTab(localTab);
+  }, [localTab, setTab]);
 
   return (
     <div className='h-14 w-full px-4'>
       <SliderSelect
         label={value}
         options={TABS}
-        value={path}
-        onChange={setPath}
+        value={localTab}
+        onChange={setLocalTab}
         onRelease={handleRelease}
-        sensitivity={1.5}
+        sensitivity={2}
         showOptions
         bgColor='transparent'
         bgStyle={{
           color: 'white',
           textShadow: '2px 4px 2px rgba(0,0,0,0.3)',
-          height: '56px'
+          height: '56px',
         }}
         indicatorStyle={{
           background: 'white',

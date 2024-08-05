@@ -1,26 +1,26 @@
 import useKeyboard, { KeyEvent } from '@src/hooks/useKeyboard';
-import { Tab } from '@src/types';
 import { channels, COLOR } from '@src/utils/constants';
 import { useMemo, useState } from 'react';
 import KeyEvents from '../keyboard/KeyEvents';
 import KeySoundModifier from '../keyboard/KeySoundModifier';
 import TestButton from '../keyboard/TestButton';
 import IconButton from '../shared/IconButton';
-import { MainContextProvider } from '../shared/MainContext';
+import { MainContextProvider, useMainContext } from '../shared/MainContext';
 import RadioGroup from '../shared/RadioGroup';
 import SectionHeader from '../shared/SectionHeader';
 import SoundControl from '../sound/SoundControl';
+import StickyHeader from './StickyHeader/StickyHeader';
 
 function Main() {
+  const { tab } = useMainContext();
   const [keyEvent, setKeyEvent] = useState<KeyEvent>('down');
-  const [tab, setTab] = useState<Tab>('config');
 
   const keyboard = useKeyboard();
   const { sound } = useMemo(() => keyboard[keyEvent], [keyEvent, keyboard]);
-  const channel = useMemo(() => channels[keyEvent], [keyEvent]);
 
   return (
-    <div className='flex flex-col items-center pb-[70vh]'>
+    <div className='flex flex-col items-center pb-[70vh] pt-2'>
+      <StickyHeader channel={channels[keyEvent]} />
       <div className='my-4 flex w-full max-w-[500px] flex-col items-center'>
         <div
           style={{ background: COLOR.BG }}
@@ -41,20 +41,11 @@ function Main() {
             onChange={([value]) => setKeyEvent(value as KeyEvent)}
             options={['down', 'up']}
           />
-          <RadioGroup
-            label='tab'
-            values={[tab]}
-            onChange={([value]) => setTab(value as Tab)}
-            options={['config', 'modifier']}
-            className='mb-4'
-          />
-          <KeyEvents />
         </div>
       </div>
-      {tab === 'config' && (
+      {tab === 'sound' && (
         <SoundControl
           sound={sound}
-          channel={channel}
           onRemoveLayer={sound.removeLayer}
           onAddLayer={sound.addLayer}
           onSrcChange={sound.setSrcState}
@@ -68,7 +59,7 @@ function Main() {
           }
         />
       )}
-      {tab === 'modifier' && (
+      {tab === 'tweaks' && (
         <KeySoundModifier keyboard={keyboard} keyEvent={keyEvent} />
       )}
       <TestButton />

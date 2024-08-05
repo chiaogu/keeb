@@ -5,9 +5,12 @@ type ScreenState = { type: 'meter' } | { type: 'adsr', envelope: Envelope };
 
 function useMainContextValue() {
   const [screen, setScreen] = useState<ScreenState>({ type: 'meter' });
+  const [tab, setTab] = useState('sound');
   return {
     screen,
     setScreen,
+    tab,
+    setTab,
   };
 }
 

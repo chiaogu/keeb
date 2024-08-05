@@ -6,7 +6,7 @@ import SliderBase, { SliderBaseProps } from './SliderBase';
 
 type SliderSelectProps = {
   label: string;
-  options: (string | { value: string; label: ReactNode })[];
+  options: readonly (string | { value: string; label: ReactNode })[];
   value: string;
   onChange: (value: string) => void;
   showOptions?: boolean;

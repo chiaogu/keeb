@@ -2,6 +2,7 @@ import * as Tone from '@src/tone';
 import { SoundStructure } from './components/sound/SoundStructure';
 import { KeySoundModifier } from './keyboard/keySoundModifier';
 import { SynthConfig } from './synth';
+import { TABS } from './components/pages/StickyHeader/Navigation';
 
 export type SoundConfig = {
   id: string;
@@ -52,5 +53,3 @@ export type ToneClass<T extends Tone.ToneAudioNode> = {
   new (): T;
   getDefaults: (...args: unknown[]) => unknown;
 };
-
-export type Tab = 'config' | 'modifier';
