@@ -32,7 +32,7 @@ const TABS = [
 export type Tab = (typeof TABS)[number]['value'];
 
 export default function Navigation() {
-  const { tab, setTab } = useMainContext();
+  const { tab, setTab, screen } = useMainContext();
   const [localTab, setLocalTab] = useState(tab);
   const value = useMemo(
     () => TABS.find(({ value }) => value === localTab)?.value ?? '',
@@ -42,6 +42,10 @@ export default function Navigation() {
   const handleRelease = useCallback(() => {
     setTab(localTab);
   }, [localTab, setTab]);
+  
+  if (screen.type !== 'nav') {
+    return null;
+  }
 
   return (
     <div className='h-14 w-full px-4'>

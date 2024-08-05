@@ -53,13 +53,14 @@ export default function StickyHeader({ channel }: StickyHeaderProps) {
     <div
       style={{
         width: 'calc(100% - 2rem)',
+        maxWidth: '500px',
         background: 'rgba(0,0,0,0.6)',
         boxShadow: '0 5px 10px 0px rgba(0,0,0,0.2)',
       }}
       className='sticky top-2 z-20 mx-4 mb-6 rounded-md backdrop-blur-md'
     >
-      {/* <Meters channel={channel} />
-      <Envelope /> */}
+      <Meters channel={channel} />
+      <Envelope />
       <Navigation />
     </div>
   );

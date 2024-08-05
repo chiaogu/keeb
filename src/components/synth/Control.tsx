@@ -1,4 +1,3 @@
-import RadioGroup from '@src/components/shared/RadioGroup';
 import Slider from '@src/components/shared/Slider';
 import { NodeControlConfig } from '@src/synth/config';
 import { Envelope, zEnvelope } from '@src/synth/config/envelope';
@@ -13,9 +12,9 @@ import { useMemo } from 'react';
 import { z } from 'zod';
 import ReadOnly from '../shared/ReadOnly';
 import SectionHeader from '../shared/SectionHeader';
+import { ControlSliderSelect } from '../shared/SliderSelect';
 import Controls from './Controls';
 import EnvelopeControl from './EnvelopeControl';
-import SliderSelect, { ControlSliderSelect } from '../shared/SliderSelect';
 
 type ControlProps = {
   config?: NodeControlConfig;
@@ -61,7 +60,7 @@ export default function Control({
   } else if (innerSchema instanceof z.ZodEnum) {
     const options = getEnumDef(innerSchema);
     return (
-      <ControlSliderSelect 
+      <ControlSliderSelect
         indent={indent}
         label={label}
         value={value as string}

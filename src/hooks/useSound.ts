@@ -7,7 +7,7 @@ export default function useSound(
   config: SoundConfig,
   channel: Tone.ToneAudioNode,
 ) {
-  const { states, synths, reset, ...methods } = useSynths(
+  const synth = useSynths(
     config.synths,
     channel,
   );
@@ -19,16 +19,14 @@ export default function useSound(
       id,
       name,
       setName,
-      synths,
-      states,
       loadConfig(config: SoundConfig) {
         setId(config.id);
         setName(config.name);
-        reset(config.synths);
+        synth.reset(config.synths);
       },
-      ...methods,
+      ...synth,
     }),
-    [id, name, synths, states, methods, reset],
+    [id, name, synth],
   );
 }
 

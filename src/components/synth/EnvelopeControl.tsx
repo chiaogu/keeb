@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { useMainContext } from '../shared/MainContext';
 import SectionHeader from '../shared/SectionHeader';
 import Controls from './Controls';
+import { useDebounceCallback } from '@react-hook/debounce';
 
 type EnvelopeProps = {
   label: string;
@@ -17,7 +18,7 @@ export default function EnvelopeControl({
   onChange,
   indent = 0,
 }: EnvelopeProps) {
-  const { setScreen } = useMainContext();
+  const { setScreen, resetScreen } = useMainContext();
   const { attack, decay, sustain, release } = envelope;
 
   const handleDrag = useCallback(() => {
@@ -27,9 +28,9 @@ export default function EnvelopeControl({
     });
   }, [attack, decay, sustain, release, setScreen]);
 
-  const handleRelease = useCallback(() => {
-    setScreen({ type: 'meter' });
-  }, [setScreen]);
+  const handleRelease = useDebounceCallback(() => {
+    resetScreen();
+  }, 500);
 
   const handleChange = useCallback(
     (newEnvelope: Record<string, unknown>, key: string) => {

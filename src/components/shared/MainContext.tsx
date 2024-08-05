@@ -1,17 +1,50 @@
+import { useDebounceCallback } from '@react-hook/debounce';
+import { useKeyEvents } from '@src/hooks/useKeyEvents';
 import { Envelope } from '@src/synth/config/envelope';
-import { createContext, useContext, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 
-type ScreenState = { type: 'meter' } | { type: 'adsr', envelope: Envelope };
+type ScreenState =
+  | { type: 'nav' }
+  | { type: 'meter' }
+  | { type: 'adsr'; envelope: Envelope };
 
 function useMainContextValue() {
-  const [screen, setScreen] = useState<ScreenState>({ type: 'meter' });
+  const [screen, setScreen] = useState<ScreenState>({ type: 'nav' });
   const [tab, setTab] = useState('sound');
-  return {
-    screen,
-    setScreen,
-    tab,
-    setTab,
-  };
+  const resetScreen = useCallback(() => setScreen({ type: 'nav' }), []);
+
+  const resetAfterKeyEvents = useDebounceCallback(resetScreen, 2000);
+
+  const handleKeyEvents = useCallback(() => {
+    if (screen.type === 'nav') {
+      setScreen({ type: 'meter' });
+    }
+    resetAfterKeyEvents();
+  }, [resetAfterKeyEvents, screen.type]);
+
+  const handlers = useMemo(
+    () => ({ onKeydown: handleKeyEvents, onKeyUp: handleKeyEvents }),
+    [handleKeyEvents],
+  );
+
+  useKeyEvents(handlers);
+
+  return useMemo(
+    () => ({
+      screen,
+      setScreen,
+      resetScreen,
+      tab,
+      setTab,
+    }),
+    [screen, setScreen, resetScreen, tab, setTab],
+  );
 }
 
 const MainContext = createContext<ReturnType<

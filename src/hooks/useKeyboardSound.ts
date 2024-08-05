@@ -1,3 +1,4 @@
+import { useDebounceCallback } from '@react-hook/debounce';
 import { SoundFieldPath } from '@src/components/keyboard/KeyModifierControl/RandomizationControl';
 import {
   findSoundModifiers,
@@ -10,11 +11,10 @@ import {
 import { KeySoundConfig, ModifierLayer, RandomizationConfig } from '@src/types';
 import { channels } from '@src/utils/constants';
 import {
-  getRandomKeyCode,
   getSoundStructureFieldPath,
   replaceSoundStructureField,
 } from '@src/utils/utils';
-import { isEmpty, set, throttle } from 'lodash-es';
+import { isEmpty, set } from 'lodash-es';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import { v4 as uuid } from 'uuid';
@@ -22,15 +22,6 @@ import { KeyEvent } from './useKeyboard';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
 import useThrottleCallback from './useThrottleCallback';
-import { useDebounceCallback } from '@react-hook/debounce';
-
-const throttleCall = throttle(
-  (callback) => {
-    callback();
-  },
-  100,
-  { leading: true, trailing: true },
-);
 
 export default function useKeyboardSound(
   keySound: KeySoundConfig,
@@ -38,22 +29,22 @@ export default function useKeyboardSound(
 ) {
   const channel = useMemo(() => channels[keyEvent], [keyEvent]);
   const soundCache = useSoundCache(channel);
-  const { synths, states, ...rest } = useSound(keySound.config, channel);
+  const sound = useSound(keySound.config, channel);
   const [modifiers, setModifiers] = useImmer(keySound.modifiers);
 
   const trigger = useCallback(
     (key: string) => {
-      soundCache.trigger(key, synths, findSoundModifiers(modifiers, key));
+      soundCache.trigger(key, sound.synths, findSoundModifiers(modifiers, key));
     },
-    [modifiers, soundCache, synths],
+    [modifiers, soundCache, sound.synths],
   );
-  
+
   const triggerRelease = useDebounceCallback(() => {
     dispatchEvent(
       new KeyboardEvent('keyup', {
         code: 'KeyQ',
         key: 'q',
-        repeat: true // avoid trigger sound
+        repeat: true, // avoid trigger sound
       }),
     );
   }, 300);
@@ -80,13 +71,13 @@ export default function useKeyboardSound(
     triggerKeyEvent();
   }, [soundCache, triggerKeyEvent, trigger]);
 
-  const sound = useMemo(
+  const keyboardSound = useMemo(
     () => ({
-      ...rest,
-      synths: states,
+      ...sound,
+      synths: sound.states,
       trigger,
     }),
-    [rest, states, trigger],
+    [sound, trigger],
   );
 
   const loadModifierLayers = useCallback(
@@ -274,19 +265,34 @@ export default function useKeyboardSound(
     [setModifiers],
   );
 
-  return {
-    sound,
-    modifiers,
-    addModifierLayer,
-    removeModifierLayer,
-    updateModiferLayer,
-    updateModifier,
-    removeModifier,
-    batchSetModifier,
-    updateRandomConfig,
-    loadModifierLayers,
-    fixInvalidFields,
-  };
+  return useMemo(
+    () => ({
+      sound: keyboardSound,
+      modifiers,
+      addModifierLayer,
+      removeModifierLayer,
+      updateModiferLayer,
+      updateModifier,
+      removeModifier,
+      batchSetModifier,
+      updateRandomConfig,
+      loadModifierLayers,
+      fixInvalidFields,
+    }),
+    [
+      keyboardSound,
+      modifiers,
+      addModifierLayer,
+      removeModifierLayer,
+      updateModiferLayer,
+      updateModifier,
+      removeModifier,
+      batchSetModifier,
+      updateRandomConfig,
+      loadModifierLayers,
+      fixInvalidFields,
+    ],
+  );
 }
 
 export type KeyboardSound = ReturnType<typeof useKeyboardSound>;

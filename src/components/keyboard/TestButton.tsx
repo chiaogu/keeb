@@ -1,7 +1,7 @@
 import { useKeyEvents } from '@src/hooks/useKeyEvents';
 import getKeyCodeLabel from '@src/keyboard/getKeyLabel';
 import { getRandomKeyCode } from '@src/utils/utils';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import KeyButton from './KeyButton';
 
 export default function TestButton() {
@@ -32,11 +32,13 @@ export default function TestButton() {
     },
     [pressed],
   );
-
-  useKeyEvents({
+  
+  const eventHandlers = useMemo(() => ({
     onKeydown: createKetEventHandler(true),
     onKeyUp: createKetEventHandler(false),
-  });
+  }), [createKetEventHandler]);
+
+  useKeyEvents(eventHandlers);
 
   return (
     <KeyButton

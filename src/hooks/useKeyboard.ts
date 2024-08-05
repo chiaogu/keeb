@@ -1,11 +1,11 @@
 import { getDefaultKeyboard, getDefaultSound } from '@src/keyboard/defaults';
+import { KeyboardConfig } from '@src/types';
 import { downloadKeyboard } from '@src/utils/file';
 import * as storage from '@src/utils/localstorage';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useKeyEvents } from './useKeyEvents';
 import useKeyboardSound from './useKeyboardSound';
 import useUplodaFile from './useUplodaFile';
-import { KeyboardConfig } from '@src/types';
 
 function getKeyboardConfig() {
   return storage.getKeyboardConfig() ?? getDefaultKeyboard();
@@ -55,12 +55,17 @@ export default function useKeyboard() {
     [up],
   );
 
-  useKeyEvents({ onKeydown, onKeyUp });
+  const keyEventHandlers = useMemo(
+    () => ({ onKeydown, onKeyUp }),
+    [onKeyUp, onKeydown],
+  );
+
+  useKeyEvents(keyEventHandlers);
 
   const download = useCallback(() => {
     downloadKeyboard(currentConfig);
   }, [currentConfig]);
-  
+
   // TODO: Validation
   const { load: upload } = useUplodaFile((data: KeyboardConfig) => {
     setName(data.name);
@@ -77,7 +82,7 @@ export default function useKeyboard() {
     down.sound.loadConfig(getDefaultSound());
     down.loadModifierLayers([]);
   }, [down, up]);
-  
+
   return useMemo(
     () => ({ down, up, name, setName, download, upload, reset }),
     [down, up, name, download, upload, reset],
