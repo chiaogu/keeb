@@ -13,6 +13,7 @@ export default function Slider({
 }: SliderProps) {
   return (
     <SliderBase
+      className='mb-2 h-8'
       {...sliderProps}
       sensitivity={1.2}
       render={({ normalValue }) => (

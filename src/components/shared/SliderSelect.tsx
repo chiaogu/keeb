@@ -47,17 +47,19 @@ function findOptionIndex(options: SliderSelectProps['options'], value: string) {
 
 export function ControlSliderSelect(props: SliderSelectProps) {
   return (
-    <SliderSelect
-      {...props}
-      bgColor='white'
-      bgStyle={{
-        boxShadow: CONTROL_SHADOW,
-      }}
-      indicatorStyle={{
-        background: 'white',
-        mixBlendMode: 'difference',
-      }}
-    />
+    <div className='mb-2 h-8 w-full'>
+      <SliderSelect
+        {...props}
+        bgColor='white'
+        bgStyle={{
+          boxShadow: CONTROL_SHADOW,
+        }}
+        indicatorStyle={{
+          background: 'white',
+          mixBlendMode: 'difference',
+        }}
+      />
+    </div>
   );
 }
 
@@ -120,6 +122,7 @@ export default function SliderSelect({
 
   return (
     <SliderBase
+      className='h-full'
       sensitivity={sensitivity}
       indent={indent}
       value={sliderValue}
@@ -146,14 +149,14 @@ export default function SliderSelect({
             }}
             className='relative flex size-full justify-between overflow-hidden'
           >
-            {label && <div
+            <div
               style={{
                 background: bgColor,
               }}
-              className='flex h-full items-center justify-between pl-2 pr-4'
+              className={`flex h-full items-center justify-between ${label ? 'pl-2 pr-4' : ''}`}
             >
               {label}
-            </div>}
+            </div>
             <div className='h-full overflow-hidden' ref={ref}>
               <div
                 className='relative flex h-full w-fit'

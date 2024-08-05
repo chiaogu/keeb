@@ -1,90 +1,65 @@
 import SliderSelect from '@src/components/shared/SliderSelect';
-import { get } from 'lodash-es';
 import { useCallback, useMemo, useState } from 'react';
 
-const NAV = {
-  '/': {
-    keyboard: {
-      sound: {
-        synth: null,
-        tweaks: null,
-      },
-      visual: {
-        keycaps: null,
-        light: null,
-      },
-    },
-    presets: null,
-    settings: null,
+const TABS = [
+  {
+    value: 'sound',
+    label: <span className='material-symbols-outlined -mx-2'>vital_signs</span>,
   },
-};
-
-const BACK = {
-  value: 'back',
-  label: (
-    <span className='material-symbols-outlined -mx-2'>chevron_backward</span>
-  ),
-};
+  {
+    value: 'tweaks',
+    label: (
+      <span className='material-symbols-outlined -mx-2'>discover_tune</span>
+    ),
+  },
+  {
+    value: 'visual',
+    label: (
+      <span className='material-symbols-outlined -mx-2'>deployed_code</span>
+    ),
+  },
+  {
+    value: 'presets',
+    label: <span className='material-symbols-outlined -mx-2'>folder_open</span>,
+  },
+  {
+    value: 'about',
+    label: <span className='material-symbols-outlined -mx-2'>emoticon</span>,
+  },
+];
 
 export default function Navigation() {
-  const [path, setPath] = useState(['/', 'keyboard', 'sound', 'synth']);
-  const [prevPath, setPrevPath] = useState<string[]>([]);
-
-  const direction = useMemo(
-    () => (prevPath.length > path.length ? 'up' : prevPath.length < path.length ? 'down' : null),
-    [path.length, prevPath.length],
-  );
-  
-  console.log(direction);
-
-  const label = useMemo(() => {
-    const result = path[path.length - 2] ?? '';
-    return result === '/' ? '' : result;
-  }, [path]);
-
-  const options = useMemo(
-    () => [
-      ...(path.length > 2 ? [BACK] : []),
-      ...Object.keys(get(NAV, path.slice(0, path.length - 1)) ?? {}),
-    ],
+  const [path, setPath] = useState('sound');
+  const value = useMemo(
+    () => TABS.find((tab) => tab.value === path)?.value ?? '',
     [path],
   );
 
-  const handleChange = useCallback((value: string) => {
-    setPath((currentPath) => [
-      ...currentPath.slice(0, currentPath.length - 1),
-      value,
-    ]);
-  }, []);
-
-  const handleRelease = useCallback(() => {
-    setPrevPath(path);
-
-    if (path[path.length - 1] === BACK.value) {
-      setPath(path.slice(0, path.length - 1));
-    }
-
-    const children = get(NAV, path);
-    if (children != null) {
-      setPath([...path, BACK.value]);
-    }
-  }, [path]);
+  const handleRelease = useCallback(() => {}, []);
 
   return (
-    <div className='h-14 w-full px-4 py-3'>
+    <div className='h-14 w-full px-4'>
       <SliderSelect
-        label={label}
-        options={options}
-        value={path[path.length - 1]}
-        onChange={handleChange}
+        label={value}
+        options={TABS}
+        value={path}
+        onChange={setPath}
         onRelease={handleRelease}
-        sensitivity={2}
+        sensitivity={1.5}
         showOptions
         bgColor='transparent'
         bgStyle={{
           color: 'white',
+          textShadow: '2px 4px 2px rgba(0,0,0,0.3)',
+          height: '56px'
         }}
-        indicatorStyle={{ background: 'white', mixBlendMode: 'difference' }}
+        indicatorStyle={{
+          background: 'white',
+          mixBlendMode: 'difference',
+          boxShadow: '2px 4px 2px rgba(0,0,0,0.3)',
+          height: '32px',
+          top: '12px',
+        }}
       />
     </div>
   );

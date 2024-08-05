@@ -20,6 +20,7 @@ export type SliderBaseProps = {
   sensitivity?: number;
   onDrag?: () => void;
   onRelease?: () => void;
+  className?: string;
 };
 
 const DRAG_THRESHOLD = 20;
@@ -99,6 +100,7 @@ export default function SliderBase({
   sensitivity = 1,
   onDrag,
   onRelease,
+  className,
 }: SliderBaseProps) {
   const container = useRef<HTMLDivElement | null>(null);
   const startValue = useRef(value);
@@ -187,7 +189,7 @@ export default function SliderBase({
 
   return (
     <div
-      className='relative mb-2 flex h-8 touch-none items-center last:mb-0'
+      className={`relative flex touch-none items-center last:mb-0 ${className}`}
       style={{
         width: `calc(100% - ${marginLeft}px)`,
         marginLeft,
