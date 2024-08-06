@@ -1,4 +1,5 @@
 import { useDebounceCallback } from '@react-hook/debounce';
+import useKeyboard from '@src/hooks/useKeyboard';
 import { useKeyEvents } from '@src/hooks/useKeyEvents';
 import { Envelope } from '@src/synth/config/envelope';
 import {
@@ -18,6 +19,7 @@ function useMainContextValue() {
   const [screen, setScreen] = useState<ScreenState>({ type: 'nav' });
   const [tab, setTab] = useState('sound');
   const resetScreen = useCallback(() => setScreen({ type: 'nav' }), []);
+  const keyboard = useKeyboard();
 
   return useMemo(
     () => ({
@@ -26,8 +28,9 @@ function useMainContextValue() {
       resetScreen,
       tab,
       setTab,
+      keyboard,
     }),
-    [screen, setScreen, resetScreen, tab, setTab],
+    [screen, resetScreen, tab, keyboard],
   );
 }
 

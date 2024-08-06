@@ -12,10 +12,9 @@ import SoundControl from '../sound/SoundControl';
 import StickyHeader from './StickyHeader/StickyHeader';
 
 function Main() {
-  const { tab } = useMainContext();
+  const { tab, keyboard } = useMainContext();
   const [keyEvent, setKeyEvent] = useState<KeyEvent>('down');
 
-  const keyboard = useKeyboard();
   const { sound } = useMemo(() => keyboard[keyEvent], [keyEvent, keyboard]);
 
   return (
@@ -45,15 +44,10 @@ function Main() {
       </div>
       {tab === 'sound' && (
         <SoundControl
-          sound={sound}
-          onRemoveLayer={sound.removeLayer}
-          onAddLayer={sound.addLayer}
           onSrcChange={sound.setSrcState}
           onFxChange={sound.setFxState}
           onRemoveFx={sound.removeFx}
           onAddFx={sound.addFx}
-          onNameChange={sound.setName}
-          onLoadSound={sound.loadConfig}
           onSynthNameChange={(index, name) =>
             sound.updateLayer(index, { name })
           }

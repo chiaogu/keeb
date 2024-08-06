@@ -1,8 +1,7 @@
 import { Sound } from '@src/hooks/useSound';
 import useUplodaFile from '@src/hooks/useUplodaFile';
-import { SynthConfig } from '@src/synth';
+import { getDefaultSynth } from '@src/keyboard/defaults';
 import { zBaseSynthSrc } from '@src/synth/config/shared';
-import * as Tone from '@src/tone';
 import { SoundConfig } from '@src/types';
 import { COLOR } from '@src/utils/constants';
 import { downloadSound } from '@src/utils/file';
@@ -13,17 +12,17 @@ import TimelineBlock from './TimelineBlock';
 
 type SoundLayerControlProps = {
   sound: SoundConfig;
-  selectedSynth: SynthConfig;
+  selectedSynthId?: string;
   onAddLayer: Sound['addLayer'];
   onNameChange: Sound['setName'];
   onLoadSound: (sound: SoundConfig) => void;
-  onSelectLayer: (index: number) => void;
+  onSelectLayer: (index: string) => void;
   onRemoveLayer: (index: number) => void;
 };
 
 export function SoundLayerControl({
   sound,
-  selectedSynth,
+  selectedSynthId,
   onAddLayer,
   onNameChange,
   onLoadSound,
@@ -62,8 +61,9 @@ export function SoundLayerControl({
         <IconButton
           icon='add'
           onClick={() => {
-            onAddLayer();
-            onSelectLayer(sound.synths.length);
+            const synth = getDefaultSynth();
+            onAddLayer(synth);
+            onSelectLayer(synth.id);
           }}
         />
       </SectionHeader>
@@ -75,10 +75,8 @@ export function SoundLayerControl({
             key={synth.id}
             synth={synth}
             maxDelayAndDuration={maxDelayAndDuration}
-            selected={synth.id === selectedSynth.id}
-            onClickWatch={() =>
-              onSelectLayer(sound.synths.findIndex((s) => s.id === synth.id))
-            }
+            selected={synth.id === selectedSynthId}
+            onClickWatch={() => onSelectLayer(synth.id)}
             onClickListen={() => {}}
             onRemove={() =>
               onRemoveLayer(sound.synths.findIndex((s) => s.id === synth.id))

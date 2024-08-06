@@ -1,4 +1,3 @@
-import { getDefaultSynth } from '@src/keyboard/defaults';
 import createSynth, { Synth, SynthConfig } from '@src/synth';
 import { parseFxNodeState, parseSrcNodeState } from '@src/synth/parseNodeData';
 import * as Tone from '@src/tone';
@@ -77,21 +76,24 @@ export default function useSynths(
     [setSynthStates, synthStates],
   );
 
-  const addLayer = useCallback(() => {
-    setSynthStates((states) => {
-      states.push(
-        castDraft(
-          createSynthState(
-            {
-              ...getDefaultSynth(),
-              name: `layer ${states.length}`,
-            },
-            channel,
+  const addLayer = useCallback(
+    (synth: SynthConfig) => {
+      setSynthStates((states) => {
+        states.push(
+          castDraft(
+            createSynthState(
+              {
+                ...synth,
+                name: `layer ${states.length}`,
+              },
+              channel,
+            ),
           ),
-        ),
-      );
-    });
-  }, [channel, setSynthStates]);
+        );
+      });
+    },
+    [channel, setSynthStates],
+  );
 
   const updateLayer = useCallback(
     (index: number, updates: Pick<SynthConfig, 'name'>) => {
