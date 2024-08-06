@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 
 type AdsrProps = {
   envelope: Envelope;
+  className?: string;
 };
 
 // TODO: Curve
-export default function Adsr({ envelope }: AdsrProps) {
+export default function Adsr({ envelope, className }: AdsrProps) {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -50,5 +51,5 @@ export default function Adsr({ envelope }: AdsrProps) {
     ctx.fill();
   }, [envelope, canvas]);
 
-  return <canvas className='size-full' ref={setCanvas} />;
+  return <canvas className={`size-full ${className}`} ref={setCanvas} />;
 }

@@ -1,5 +1,5 @@
 import { Envelope, zEnvelope } from '@src/synth/config/envelope';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useMainContext } from '../shared/MainContext';
 import SectionHeader from '../shared/SectionHeader';
 import Controls from './Controls';
@@ -18,19 +18,26 @@ export default function EnvelopeControl({
   onChange,
   indent = 0,
 }: EnvelopeProps) {
+  const [dragging, setDragging] = useState(false);
   const { setScreen, resetScreen } = useMainContext();
   const { attack, decay, sustain, release } = envelope;
 
   const handleDrag = useCallback(() => {
+    setDragging(true);
     setScreen({
       type: 'adsr',
       envelope: { attack, decay, sustain, release },
     });
   }, [attack, decay, sustain, release, setScreen]);
+  
+  const reset = useDebounceCallback(() => {
+    if (!dragging) resetScreen();
+  }, 1000);
 
-  const handleRelease = useDebounceCallback(() => {
-    resetScreen();
-  }, 500);
+  const handleRelease = useCallback(() => {
+    setDragging(false);
+    reset();
+  }, [reset]);
 
   const handleChange = useCallback(
     (newEnvelope: Record<string, unknown>, key: string) => {

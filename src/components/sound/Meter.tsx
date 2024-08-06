@@ -42,6 +42,7 @@ export default function Meter<T extends Tone.ToneAudioNode>({
       channel.connect(toneNode);
     } catch (e) {
       console.error(e);
+      console.log(channel, toneNode);
     }
 
     function loop() {
@@ -70,5 +71,5 @@ export default function Meter<T extends Tone.ToneAudioNode>({
     };
   }, [channel, createToneMeter, draw, enabled]);
 
-  return <canvas className='h-8 w-full' ref={canvas} />;
+  return <canvas style={{ filter: 'drop-shadow(2px 4px 2px rgba(0,0,0,0.3))' }} className='h-8 w-full' ref={canvas} />;
 }

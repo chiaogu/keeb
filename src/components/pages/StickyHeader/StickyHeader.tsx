@@ -18,14 +18,14 @@ function Meters({ channel }: { channel: Tone.ToneAudioNode }) {
   }
 
   return (
-    <div className='pointer-events-none absolute top-0 flex h-14 w-full items-center space-x-2 px-5 pb-6 pt-2 invert'>
-      <div className='h-[28px] flex-1'>
+    <div className='pointer-events-none absolute top-0 flex size-full items-center space-x-2 px-5 py-3'>
+      <div className='h-full flex-1'>
         <FFT channel={channel} />
       </div>
-      <div className='mt-3 h-[14px] flex-1'>
+      <div className='h-full flex-1'>
         <Waveform channel={channel} />
       </div>
-      <div className='flex-1'>
+      <div className='h-full flex-1'>
         <VolumeMeter channel={channel} />
       </div>
     </div>
@@ -40,9 +40,9 @@ function Envelope() {
   }
 
   return (
-    <div className='absolute top-0 h-14 w-full px-4 py-3 invert'>
-      <div className='relative size-full'>
-        <Adsr envelope={screen.envelope} />
+    <div className='absolute top-0 h-14 w-full px-4 py-3'>
+      <div style={{ filter: 'drop-shadow(2px 4px 2px rgba(0,0,0,0.3))' }} className='relative size-full'>
+        <Adsr className='invert' envelope={screen.envelope} />
       </div>
     </div>
   );

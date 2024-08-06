@@ -2,13 +2,16 @@ import * as Tone from '@src/tone';
 import { scale } from '@src/utils/utils';
 import { useCallback, useRef } from 'react';
 import Meter from './Meter';
-import { COLOR } from '@src/utils/constants';
 
 const LENGTH = 100;
 const defaultValues = Array(LENGTH).fill(0);
 
 function createToneMeter() {
-  return new Tone.Meter({ normalRange: true, smoothing: 0 });
+  return new Tone.Meter({
+    normalRange: true,
+    smoothing: 0,
+    context: Tone.defaultContext,
+  });
 }
 
 type VolumeMeterProps = {
@@ -32,7 +35,7 @@ export default function VolumeMeter({ channel }: VolumeMeterProps) {
       // ctx.fillStyle = COLOR.BG;
       // ctx.fillRect(0, 0, w, h);
 
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
       for (let i = 0; i < values.length; i++) {
         const v = values[i];
@@ -44,7 +47,7 @@ export default function VolumeMeter({ channel }: VolumeMeterProps) {
           ctx.lineTo(x, y);
         }
       }
-      ctx.strokeStyle = 'black';
+      ctx.strokeStyle = 'white';
       ctx.stroke();
     },
     [],

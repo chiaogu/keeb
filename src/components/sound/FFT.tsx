@@ -1,7 +1,7 @@
 import * as Tone from '@src/tone';
-import Meter from './Meter';
-import { COLOR, MAX_SAMPLE_SIZE } from '@src/utils/constants';
+import { MAX_SAMPLE_SIZE } from '@src/utils/constants';
 import { downSample, scale } from '@src/utils/utils';
+import Meter from './Meter';
 
 const defaultValues = new Float32Array(Array(MAX_SAMPLE_SIZE).fill(1));
 
@@ -17,8 +17,8 @@ function draw(
 
   // ctx.fillStyle = COLOR.BG;
   // ctx.fillRect(0, 0, w, h);
-  
-  ctx.lineWidth = 1;
+
+  ctx.lineWidth = 1.5;
   ctx.beginPath();
   for (let i = 0; i < resampled.length; i++) {
     const v = resampled[i];
@@ -30,12 +30,14 @@ function draw(
       ctx.lineTo(x, y);
     }
   }
-  ctx.strokeStyle = 'black';
+  ctx.strokeStyle = 'white';
   ctx.stroke();
 }
 
 function createToneMeter() {
-  return new Tone.FFT();
+  return new Tone.FFT({
+    context: Tone.defaultContext,
+  });
 }
 
 type FFTProps = {

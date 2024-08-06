@@ -11,6 +11,8 @@ export function getDestination(): DestinationClass {
   return getContext().destination;
 }
 
+export const defaultContext = getContext();
+
 // import { OmniOscillatorSynthOptions } from 'tone/build/esm/source/oscillator/OscillatorInterface';
 
 // const x: OmniOscillatorSynthOptions = {

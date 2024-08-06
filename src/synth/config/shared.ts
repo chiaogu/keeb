@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const zBaseSynthSrc = z.object({
-  volume: z.number().min(-80).max(10).catch(-15),
+  volume: z.number().min(-80).max(10).catch(0),
   duration: z.number().min(0.001).max(0.2).catch(0.1),
   delay: z.number().min(0).max(0.2).catch(0),
 });
