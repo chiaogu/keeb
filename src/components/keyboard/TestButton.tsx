@@ -1,6 +1,6 @@
 import { useKeyEvents } from '@src/hooks/useKeyEvents';
 import getKeyCodeLabel from '@src/keyboard/getKeyLabel';
-import { getRandomKeyCode } from '@src/utils/utils';
+import { dispatchKeyEvent, getRandomKeyCode } from '@src/utils/utils';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import KeyButton from './KeyButton';
 
@@ -11,13 +11,19 @@ export default function TestButton() {
   const handlePress = useCallback(() => {
     const code = getRandomKeyCode();
     pressedKey.current = { code, key: getKeyCodeLabel(code).toLowerCase() };
-    dispatchEvent(new KeyboardEvent('keydown', pressedKey.current));
+    dispatchKeyEvent({
+      event: 'keydown',
+      ...pressedKey.current,
+    });
   }, []);
 
   const handleRelease = useCallback(() => {
     if (!pressed) return;
     if (pressedKey.current) {
-      dispatchEvent(new KeyboardEvent('keyup', pressedKey.current));
+      dispatchKeyEvent({
+        event: 'keyup',
+        ...pressedKey.current,
+      });
     }
   }, [pressed]);
 

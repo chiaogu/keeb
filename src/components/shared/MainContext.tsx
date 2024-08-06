@@ -19,22 +19,6 @@ function useMainContextValue() {
   const [tab, setTab] = useState('sound');
   const resetScreen = useCallback(() => setScreen({ type: 'nav' }), []);
 
-  const resetAfterKeyEvents = useDebounceCallback(resetScreen, 2000);
-
-  const handleKeyEvents = useCallback(() => {
-    if (screen.type === 'nav') {
-      setScreen({ type: 'meter' });
-    }
-    resetAfterKeyEvents();
-  }, [resetAfterKeyEvents, screen.type]);
-
-  const handlers = useMemo(
-    () => ({ onKeydown: handleKeyEvents, onKeyUp: handleKeyEvents }),
-    [handleKeyEvents],
-  );
-
-  useKeyEvents(handlers);
-
   return useMemo(
     () => ({
       screen,

@@ -11,6 +11,7 @@ import {
 import { KeySoundConfig, ModifierLayer, RandomizationConfig } from '@src/types';
 import { channels } from '@src/utils/constants';
 import {
+  dispatchKeyEvent,
   getSoundStructureFieldPath,
   replaceSoundStructureField,
 } from '@src/utils/utils';
@@ -40,24 +41,22 @@ export default function useKeyboardSound(
   );
 
   const triggerRelease = useDebounceCallback(() => {
-    dispatchEvent(
-      new KeyboardEvent('keyup', {
-        code: 'KeyQ',
-        key: 'q',
-        repeat: true, // avoid trigger sound
-      }),
-    );
+    dispatchKeyEvent({
+      event: 'keyup',
+      code: 'KeyQ',
+      key: 'q',
+      audio: false,
+    });
   }, 300);
 
   const triggerKeyEvent = useThrottleCallback(
     useCallback(() => {
       requestAnimationFrame(() => {
-        dispatchEvent(
-          new KeyboardEvent(keyEvent === 'up' ? 'keyup' : 'keydown', {
-            code: 'KeyQ',
-            key: 'q',
-          }),
-        );
+        dispatchKeyEvent({
+          event: keyEvent === 'up' ? 'keyup' : 'keydown',
+          code: 'KeyQ',
+          key: 'q',
+        });
       });
       if (keyEvent === 'down') {
         triggerRelease();

@@ -1,5 +1,6 @@
 import { SoundFieldPath } from '@src/components/keyboard/KeyModifierControl/RandomizationControl';
 import { SoundStructure } from '@src/components/sound/SoundStructure';
+import { keys } from '@src/keyboard/keys';
 import { SynthConfig } from '@src/synth';
 import { Envelope, zEnvelope } from '@src/synth/config/envelope';
 import * as Tone from '@src/tone';
@@ -7,7 +8,7 @@ import { WritableDraft } from 'immer';
 import { get, isEmpty, isEqual, set, unset } from 'lodash-es';
 import React from 'react';
 import { MAX_SAMPLE_SIZE } from './constants';
-import { keys } from '@src/keyboard/keys';
+import getKeyCodeLabel from '@src/keyboard/getKeyLabel';
 
 export function frequencyToHertz(value: Tone.Unit.Frequency): number {
   const frequency = value.valueOf();
@@ -152,4 +153,26 @@ export function calculateEnvelope(
 const allKeys = keys.flat();
 export function getRandomKeyCode() {
   return allKeys[Math.round((allKeys.length - 1) * Math.random())];
+}
+
+type DispatchKeyEventArgs = {
+  event: 'keydown' | 'keyup';
+  audio?: boolean;
+  code: string;
+  key?: string;
+}
+
+export function dispatchKeyEvent({
+  event,
+  code,
+  key,
+  audio = true,
+}: DispatchKeyEventArgs) {
+  dispatchEvent(
+    new KeyboardEvent(event, {
+      code,
+      key: key ?? getKeyCodeLabel(code).toLowerCase(),
+      repeat: !audio,
+    }),
+  );
 }
