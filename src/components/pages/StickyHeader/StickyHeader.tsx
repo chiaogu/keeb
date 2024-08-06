@@ -1,4 +1,4 @@
-import * as Tone from '@src/tone';
+import { channels } from '@src/utils/constants';
 import { useMainContext } from '../../shared/MainContext';
 import Adsr from '../../sound/Adsr';
 import FFT from '../../sound/FFT';
@@ -6,16 +6,14 @@ import VolumeMeter from '../../sound/VolumeMeter';
 import Waveform from '../../sound/Waveform';
 import Navigation from './Navigation';
 
-type StickyHeaderProps = {
-  channel: Tone.ToneAudioNode;
-};
-
-function Meters({ channel }: { channel: Tone.ToneAudioNode }) {
-  const { screen } = useMainContext();
+function Meters() {
+  const { screen, screenMeterChannel } = useMainContext();
 
   if (screen.type !== 'meter') {
     return null;
   }
+
+  const channel = channels[screenMeterChannel];
 
   return (
     <div className='pointer-events-none absolute top-0 flex size-full items-center space-x-2 px-5 py-3'>
@@ -41,14 +39,17 @@ function Envelope() {
 
   return (
     <div className='absolute top-0 h-14 w-full px-4 py-3'>
-      <div style={{ filter: 'drop-shadow(2px 4px 2px rgba(0,0,0,0.3))' }} className='relative size-full'>
+      <div
+        style={{ filter: 'drop-shadow(2px 4px 2px rgba(0,0,0,0.3))' }}
+        className='relative size-full'
+      >
         <Adsr className='invert' envelope={screen.envelope} />
       </div>
     </div>
   );
 }
 
-export default function StickyHeader({ channel }: StickyHeaderProps) {
+export default function StickyHeader() {
   return (
     <div
       style={{
@@ -59,7 +60,7 @@ export default function StickyHeader({ channel }: StickyHeaderProps) {
       }}
       className='sticky top-2 z-20 mx-4 mb-6 rounded-md backdrop-blur-md'
     >
-      <Meters channel={channel} />
+      <Meters />
       <Envelope />
       <Navigation />
     </div>

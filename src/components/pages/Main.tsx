@@ -1,7 +1,6 @@
-import useKeyboard, { KeyEvent } from '@src/hooks/useKeyboard';
+import { KeyEvent } from '@src/hooks/useKeyboard';
 import { channels, COLOR } from '@src/utils/constants';
 import { useMemo, useState } from 'react';
-import KeyEvents from '../keyboard/KeyEvents';
 import KeySoundModifier from '../keyboard/KeySoundModifier';
 import TestButton from '../keyboard/TestButton';
 import IconButton from '../shared/IconButton';
@@ -15,11 +14,9 @@ function Main() {
   const { tab, keyboard } = useMainContext();
   const [keyEvent, setKeyEvent] = useState<KeyEvent>('down');
 
-  const { sound } = useMemo(() => keyboard[keyEvent], [keyEvent, keyboard]);
-
   return (
     <div className='flex flex-col items-center pb-[70vh] pt-2'>
-      <StickyHeader channel={channels[keyEvent]} />
+      <StickyHeader />
       <div className='my-4 flex w-full max-w-[500px] flex-col items-center'>
         <div
           style={{ background: COLOR.BG }}
@@ -42,17 +39,7 @@ function Main() {
           />
         </div>
       </div>
-      {tab === 'sound' && (
-        <SoundControl
-          onSrcChange={sound.setSrcState}
-          onFxChange={sound.setFxState}
-          onRemoveFx={sound.removeFx}
-          onAddFx={sound.addFx}
-          onSynthNameChange={(index, name) =>
-            sound.updateLayer(index, { name })
-          }
-        />
-      )}
+      {tab === 'sound' && <SoundControl />}
       {tab === 'tweaks' && (
         <KeySoundModifier keyboard={keyboard} keyEvent={keyEvent} />
       )}

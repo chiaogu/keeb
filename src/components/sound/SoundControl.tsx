@@ -1,5 +1,5 @@
 import { KeyEvent } from '@src/hooks/useKeyboard';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useMainContext } from '../shared/MainContext';
 import SynthControl from '../synth/SynthControl';
 import { SoundLayerControl } from './SoundLayerControl';
@@ -7,7 +7,7 @@ import { SoundLayerControl } from './SoundLayerControl';
 const keyEvents: KeyEvent[] = ['down', 'up'];
 
 export default function SoundControl() {
-  const { keyboard } = useMainContext();
+  const { keyboard, setScreenMeterChannel } = useMainContext();
   const [selectedSynthId, setSelectedSynthId] = useState<string>();
 
   const { selectedSound, selectedSynth, keyEvent, selectedSynthIndex } =
@@ -29,6 +29,10 @@ export default function SoundControl() {
 
       return {};
     }, [keyboard, selectedSynthId]);
+    
+  useEffect(() => {
+    if (keyEvent) setScreenMeterChannel(keyEvent);
+  }, [keyEvent, setScreenMeterChannel]);
 
   return (
     <div className='flex w-full max-w-[500px] flex-col items-center space-y-5 overflow-x-visible'>
