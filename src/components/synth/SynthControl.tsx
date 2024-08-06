@@ -5,6 +5,7 @@ import FxsControl from './FxsControl';
 import SrcNodeControl from './SrcNodeControl';
 
 type SynthControlProps = {
+  soundName: string;
   synth: SynthConfig;
   onSrcChange: Synth['setSrcState'];
   onFxChange: Synth['setFxState'];
@@ -14,6 +15,7 @@ type SynthControlProps = {
 };
 
 export default function SynthControl({
+  soundName,
   synth,
   onSrcChange,
   onFxChange,
@@ -26,6 +28,11 @@ export default function SynthControl({
       style={{ background: COLOR.BG }}
       className='flex w-full flex-col items-center p-8'
     >
+      <SectionHeader
+        className='mb-2 font-bold'
+        labelClassName='w-full truncate'
+        label={soundName}
+      ></SectionHeader>
       <SectionHeader
         className='mb-2 font-bold'
         label={synth.name ?? 'untitled'}

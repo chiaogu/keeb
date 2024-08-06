@@ -33,7 +33,7 @@ export default function SectionHeader({
           style={{ boxShadow: CONTROL_SHADOW }}
         >
           <span
-            className='pointer-events-none absolute flex h-full min-w-8 items-center whitespace-nowrap p-2'
+            className='pointer-events-none absolute flex h-full min-w-8 items-center whitespace-nowrap p-2 font-medium truncate'
             ref={setSpan}
           >
             {label}

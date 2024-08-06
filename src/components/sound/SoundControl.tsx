@@ -29,18 +29,19 @@ export default function SoundControl() {
 
       return {};
     }, [keyboard, selectedSynthId]);
-    
+
   useEffect(() => {
     if (keyEvent) setScreenMeterChannel(keyEvent);
   }, [keyEvent, setScreenMeterChannel]);
 
   return (
     <div className='flex w-full max-w-[500px] flex-col items-center space-y-5 overflow-x-visible'>
-      {keyEvents.map((e) => {
-        const { sound } = keyboard[e];
+      {keyEvents.map((event) => {
+        const { sound } = keyboard[event];
         return (
           <SoundLayerControl
-            key={e}
+            key={event}
+            keyEvent={event}
             sound={sound}
             selectedSynthId={selectedSynth?.id}
             onAddLayer={sound.addLayer}
@@ -60,6 +61,7 @@ export default function SoundControl() {
       })}
       {selectedSynth && (
         <SynthControl
+          soundName={selectedSound.name}
           key={selectedSynth.id}
           synth={selectedSynth}
           onSrcChange={(src) => {

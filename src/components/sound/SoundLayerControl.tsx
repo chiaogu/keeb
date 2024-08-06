@@ -1,3 +1,4 @@
+import { KeyEvent } from '@src/hooks/useKeyboard';
 import { Sound } from '@src/hooks/useSound';
 import useUplodaFile from '@src/hooks/useUplodaFile';
 import { getDefaultSynth } from '@src/keyboard/defaults';
@@ -11,6 +12,7 @@ import SectionHeader from '../shared/SectionHeader';
 import TimelineBlock from './TimelineBlock';
 
 type SoundLayerControlProps = {
+  keyEvent: KeyEvent;
   sound: SoundConfig;
   selectedSynthId?: string;
   onAddLayer: Sound['addLayer'];
@@ -21,6 +23,7 @@ type SoundLayerControlProps = {
 };
 
 export function SoundLayerControl({
+  keyEvent,
   sound,
   selectedSynthId,
   onAddLayer,
@@ -47,15 +50,21 @@ export function SoundLayerControl({
   return (
     <div
       style={{ background: COLOR.BG }}
-      className='flex w-full flex-col items-center p-8 pb-0'
+      className='flex w-full flex-col items-center space-y-2 p-8 pb-0'
     >
       <SectionHeader
         className='font-bold'
+        label={keyEvent === 'down' ? 'downstroke' : 'upstroke'}
+      >
+        <div className='font-normal'>
+          {Math.round(maxDelayAndDuration * 1000)}ms
+        </div>
+      </SectionHeader>
+      <SectionHeader
+        labelClassName='w-full'
         label={sound.name}
         onLabelChange={onNameChange}
       >
-        {/* <div className='font-normal'>{Math.round(maxDelayAndDuration * 1000)}ms</div> */}
-
         <IconButton icon='upload' onClick={load} />
         <IconButton icon='download' onClick={() => downloadSound(sound)} />
         <IconButton
@@ -67,7 +76,7 @@ export function SoundLayerControl({
           }}
         />
       </SectionHeader>
-      <div className='mt-2 flex w-full flex-col'>
+      <div className='flex w-full flex-col'>
         {/* // <div className='fixed bottom-4 left-6 flex items-center rounded-md bg-[rgba(255,255,255,0.5)] px-2 pb-2 backdrop-blur-sm'>
     // </div> */}
         {sound.synths.map((synth) => (
