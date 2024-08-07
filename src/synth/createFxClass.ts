@@ -38,15 +38,6 @@ export default function createFxClass<
       this.connectEffect(this.component);
     }
 
-    connect(
-      destination: Tone.InputNode,
-      outputNum?: number | undefined,
-      inputNum?: number | undefined,
-    ): this {
-      super.connect(destination, outputNum, inputNum);
-      return this;
-    }
-
     set({ wet, ...options }: Tone.RecursivePartial<FxOptions>) {
       if (wet) this.wet.setValueAtTime(wet as number, 0);
       this.component.set(options as never);

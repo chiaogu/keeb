@@ -12,10 +12,13 @@ export const amplitudeEnvelopeConfig = createConfig(
   }),
   {
     trigger(node, src) {
-      node.triggerAttackRelease(src.duration, src.delay);
+      node.triggerAttackRelease(src.duration, `+${src.delay}`);
     },
     setState(node, state, { duration }) {
-      node.set(calculateEnvelope(state.envelope, duration));
+      node.set({
+        ...state,
+        ...calculateEnvelope(state.envelope, duration),
+      });
     },
   },
 );

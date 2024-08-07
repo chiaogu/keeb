@@ -1,18 +1,19 @@
 import * as Tone from '@src/tone';
-import { calculateEnvelope } from '@src/utils/utils';
-import { z } from 'zod';
 import createConfig from '../createConfig';
+import createFxClass from '../createFxClass';
 import { zEnvelope } from './envelope';
+import { zInnerFilter } from './filter';
 import { zBaseSynthFx } from './shared';
+import { z } from 'zod';
+import { calculateEnvelope } from '@src/utils/utils';
 
-interface EnvelopeFrequencyShifterOptions extends Tone.EffectOptions {
-  frequency: number;
+interface FilterEnvelopeOptions extends Tone.FilterOptions {
+  envelope: Tone.EnvelopeOptions;
   octaves: number;
   exponent: number;
-  envelope: Tone.EnvelopeOptions;
 }
 
-export class EnvelopeFrequencyShifter extends Tone.FrequencyShifter {
+export class FilterEnvelope extends Tone.Filter {
   private _envelope: Tone.FrequencyEnvelope;
 
   constructor() {
@@ -23,17 +24,17 @@ export class EnvelopeFrequencyShifter extends Tone.FrequencyShifter {
   }
 
   set({
-    frequency,
     envelope,
     octaves,
     exponent,
-    wet,
-  }: Tone.RecursivePartial<EnvelopeFrequencyShifterOptions>) {
-    if (wet) this.wet.setValueAtTime(wet, 0);
-    if (frequency) this._envelope.baseFrequency = frequency;
+    frequency,
+    ...filter
+  }: Tone.RecursivePartial<FilterEnvelopeOptions>) {
     if (envelope) this._envelope.set(envelope);
+    if (frequency) this._envelope.baseFrequency = frequency;
     if (octaves) this._envelope.octaves = octaves;
     if (exponent) this._envelope.exponent = exponent;
+    if (filter) super.set(filter);
     return this;
   }
 
@@ -47,20 +48,22 @@ export class EnvelopeFrequencyShifter extends Tone.FrequencyShifter {
     this._envelope.triggerAttackRelease(duration, time);
   }
 
-  static getDefaults(): EnvelopeFrequencyShifterOptions {
-    return Object.assign(Tone.Effect.getDefaults(), {
-      frequency: 0,
-      octaves: 1,
-      exponent: 0,
-      envelope: Tone.FrequencyEnvelope.getDefaults(),
-    });
+  static getDefaults(): FilterEnvelopeOptions {
+    const envelope = Tone.FrequencyEnvelope.getDefaults();
+    const { octaves, exponent } = envelope;
+    return {
+      ...Tone.Filter.getDefaults(),
+      octaves,
+      exponent,
+      envelope,
+    };
   }
 }
 
-export const envelopeFrequencyShifterConfig = createConfig(
-  EnvelopeFrequencyShifter,
+export const filterEnvelopeConfig = createConfig(
+  createFxClass(FilterEnvelope),
   zBaseSynthFx.extend({
-    frequency: z.number().min(0).max(5000),
+    ...zInnerFilter.shape,
     octaves: z.number().min(-10).max(10).catch(1),
     exponent: z.number().min(0).max(10).catch(0),
     envelope: zEnvelope,
@@ -69,6 +72,7 @@ export const envelopeFrequencyShifterConfig = createConfig(
     setState(node, state, { duration }) {
       node.set({
         ...state,
+        rolloff: parseInt(state.rolloff) as Tone.FilterRollOff,
         envelope: {
           ...state.envelope,
           ...calculateEnvelope(state.envelope, duration),

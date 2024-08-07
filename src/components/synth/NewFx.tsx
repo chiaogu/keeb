@@ -15,7 +15,7 @@ export default function NewFx({ onSelect, open, setOpen }: NewFxProps) {
 
   return (
     <div className='flex w-full flex-col'>
-      <SectionHeader className='mt-4 font-bold' label='fx'>
+      <SectionHeader className='mb-2 mt-4 font-bold' label='fx'>
         <IconButton icon={open ? 'close' : 'add'} onClick={toggleSelecting} />
       </SectionHeader>
       {open && (

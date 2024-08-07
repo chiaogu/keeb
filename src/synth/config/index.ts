@@ -33,6 +33,7 @@ import { pluchSynthConfig } from './pluckSynth';
 import { reverbConfig } from './reverb';
 import { tremoloConfig } from './tremolo';
 import { vibratoConfig } from './vibrato';
+import { filterEnvelopeConfig } from './filterEnvelope';
 
 export type NodeControlConfig = {
   label?: string | null;
@@ -80,7 +81,7 @@ export const fxNodeConfig = {
   feedbackDelay: feedbackDelayConfig,
   freeverb: freeverbConfig,
   frequencyShifter: frequencyShifterConfig,
-  envelopeFrequencyShifter: envelopeFrequencyShifterConfig,
+  frequencyEnvelope: envelopeFrequencyShifterConfig,
   jcReverb: jcreverbConfig,
   phaser: phaserConfig,
   pingPongDelay: pingPongDelayConfig,
@@ -93,6 +94,7 @@ export const fxNodeConfig = {
   multibandCompressor: multibandCompressorConfig,
   gate: gateConfig,
   limiter: limiterConfig,
+  filterEnvelope: filterEnvelopeConfig,
 };
 
 export const nodeConfig = {

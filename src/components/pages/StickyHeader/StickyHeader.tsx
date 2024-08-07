@@ -1,5 +1,5 @@
 import { channels } from '@src/utils/constants';
-import * as Tone from 'tone';
+import * as Tone from '@src/tone';
 import { useMainContext } from '../../shared/MainContext';
 import Adsr from '../../sound/Adsr';
 import FFT from '../../sound/FFT';
@@ -16,7 +16,7 @@ function Meters() {
 
   const channel = screenMeterChannel
     ? channels[screenMeterChannel]
-    : Tone.getDestination();
+    : Tone.defaultContext.destination;
 
   return (
     <div className='pointer-events-none absolute top-0 flex size-full items-center space-x-2 px-5 py-3'>
