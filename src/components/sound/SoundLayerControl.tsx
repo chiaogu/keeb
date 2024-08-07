@@ -1,4 +1,6 @@
+import { useDebounceCallback } from '@react-hook/debounce';
 import { KeyEvent } from '@src/hooks/useKeyboard';
+import { useKeyEvents } from '@src/hooks/useKeyEvents';
 import { Sound } from '@src/hooks/useSound';
 import useUplodaFile from '@src/hooks/useUplodaFile';
 import { getDefaultSynth } from '@src/keyboard/defaults';
@@ -6,7 +8,7 @@ import { zBaseSynthSrc } from '@src/synth/config/shared';
 import { SoundConfig } from '@src/types';
 import { COLOR } from '@src/utils/constants';
 import { downloadSound } from '@src/utils/file';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import IconButton from '../shared/IconButton';
 import SectionHeader from '../shared/SectionHeader';
 import TimelineBlock from './TimelineBlock';
@@ -47,14 +49,35 @@ export function SoundLayerControl({
     [sound.synths],
   );
 
+  const [highlighted, setHighlighted] = useState(false);
+  const resetHighlighed = useDebounceCallback(() => setHighlighted(false), 100);
+
+  const handleKeyEvents = useCallback(() => {
+    if (highlighted) {
+      setHighlighted(false);
+    }
+    requestAnimationFrame(() => {
+      setHighlighted(true);
+      resetHighlighed();
+    });
+  }, [highlighted, resetHighlighed]);
+
+  useKeyEvents(
+    keyEvent === 'down'
+      ? { onKeydown: handleKeyEvents }
+      : { onKeyUp: handleKeyEvents },
+  );
+
   return (
     <div
       style={{ background: COLOR.BG }}
-      className='flex w-full flex-col items-center space-y-2 p-8 pb-0'
+      className='mb-4 flex w-full flex-col items-center space-y-2'
     >
       <SectionHeader
         className='font-bold'
         label={keyEvent === 'down' ? 'downstroke' : 'upstroke'}
+        labelClassName={highlighted ? 'invert bg-white' : undefined}
+        // labelStyle={{ transition: !highlighted ? 'filter 0.2s' : undefined }}
       >
         <div className='font-normal'>
           {Math.round(maxDelayAndDuration * 1000)}ms

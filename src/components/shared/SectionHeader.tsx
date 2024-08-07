@@ -1,5 +1,5 @@
 import { CONTROL_SHADOW } from '@src/utils/constants';
-import { ReactNode, useEffect, useState } from 'react';
+import { CSSProperties, ReactNode, useEffect, useState } from 'react';
 
 type SectionHeaderProps = {
   label: string;
@@ -7,6 +7,7 @@ type SectionHeaderProps = {
   children?: ReactNode;
   onLabelChange?: (value: string) => void;
   labelClassName?: string;
+  labelStyle?: CSSProperties;
 };
 
 export default function SectionHeader({
@@ -15,6 +16,7 @@ export default function SectionHeader({
   children,
   onLabelChange,
   labelClassName,
+  labelStyle,
 }: SectionHeaderProps) {
   const [span, setSpan] = useState<HTMLSpanElement | null>(null);
   const [width, setWidth] = useState(0);
@@ -33,7 +35,7 @@ export default function SectionHeader({
           style={{ boxShadow: CONTROL_SHADOW }}
         >
           <span
-            className='pointer-events-none absolute flex h-full min-w-8 items-center whitespace-nowrap p-2 font-medium truncate'
+            className='pointer-events-none absolute flex h-full min-w-8 items-center truncate whitespace-nowrap p-2 font-medium'
             ref={setSpan}
           >
             {label}
@@ -46,7 +48,7 @@ export default function SectionHeader({
           />
         </div>
       ) : (
-        <label className={`shrink-0 ${labelClassName}`}>{label}</label>
+        <label className={`shrink-0 ${labelClassName}`} style={labelStyle}>{label}</label>
       )}
       {children && <div className='ml-2 flex items-center space-x-2'>{children}</div>}
     </div>

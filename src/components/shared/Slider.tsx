@@ -1,5 +1,6 @@
 import { CONTROL_SHADOW } from '@src/utils/constants';
 import SliderBase, { SliderBaseProps } from './SliderBase';
+import { useEffect, useState } from 'react';
 
 type SliderProps = {
   label: string;
@@ -11,12 +12,18 @@ export default function Slider({
   renderValue = (v) => `${(v * 100).toFixed()}%`,
   ...sliderProps
 }: SliderProps) {
+  const [firstRender, setFirstRender] = useState(true);
+  
+  useEffect(() => {
+    setFirstRender(false);
+  }, []);
+  
   return (
     <SliderBase
       className='mb-2 h-8'
       {...sliderProps}
       sensitivity={1.2}
-      render={({ normalValue }) => (
+      render={({ normalValue, dragging }) => (
         <div
           style={{
             boxShadow: CONTROL_SHADOW,
@@ -25,7 +32,8 @@ export default function Slider({
         >
           <div
             style={{
-              transform: `scaleX(${normalValue * 100}%)`,
+              transform: `scaleX(${firstRender ? 0 : normalValue * 100}%)`,
+              transition: dragging ? undefined : 'transform 0.15s',
             }}
             className='size-full origin-left bg-black'
           ></div>

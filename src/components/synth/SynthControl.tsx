@@ -26,7 +26,7 @@ export default function SynthControl({
   return (
     <div
       style={{ background: COLOR.BG }}
-      className='flex w-full flex-col items-center p-8'
+      className='flex w-full flex-col items-center'
     >
       <SectionHeader
         className='mb-2 font-bold'

@@ -1,4 +1,5 @@
 import { channels } from '@src/utils/constants';
+import * as Tone from 'tone';
 import { useMainContext } from '../../shared/MainContext';
 import Adsr from '../../sound/Adsr';
 import FFT from '../../sound/FFT';
@@ -13,7 +14,9 @@ function Meters() {
     return null;
   }
 
-  const channel = channels[screenMeterChannel];
+  const channel = screenMeterChannel
+    ? channels[screenMeterChannel]
+    : Tone.getDestination();
 
   return (
     <div className='pointer-events-none absolute top-0 flex size-full items-center space-x-2 px-5 py-3'>
@@ -58,7 +61,7 @@ export default function StickyHeader() {
         background: 'rgba(0,0,0,0.6)',
         boxShadow: '0 5px 10px 0px rgba(0,0,0,0.2)',
       }}
-      className='sticky top-2 z-20 mx-4 mb-6 rounded-md backdrop-blur-md'
+      className='sticky top-2 z-20 mx-4 rounded-md backdrop-blur-md'
     >
       <Meters />
       <Envelope />

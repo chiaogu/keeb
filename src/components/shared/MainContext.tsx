@@ -19,7 +19,7 @@ function useMainContextValue() {
   const resetScreen = useCallback(() => setScreen({ type: 'nav' }), []);
   const keyboard = useKeyboard();
   const [screenMeterChannel, setScreenMeterChannel] =
-    useState<KeyEvent>('down');
+    useState<KeyEvent | null>(null);
 
   return useMemo(
     () => ({
