@@ -2,6 +2,7 @@ import KeySoundModifier from '../keyboard/KeySoundModifier';
 import TestButton from '../keyboard/TestButton';
 import { MainContextProvider, useMainContext } from '../shared/MainContext';
 import SoundControl from '../sound/SoundControl';
+import Presets from './Presets';
 import StickyHeader from './StickyHeader/StickyHeader';
 
 function Main() {
@@ -11,6 +12,7 @@ function Main() {
       <StickyHeader />
       {tab === 'sound' && <SoundControl />}
       {tab === 'tweaks' && <KeySoundModifier />}
+      {tab === 'presets' && <Presets />}
       <TestButton />
     </div>
   );

@@ -63,9 +63,13 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
   const removeModifierLayer = useCallback(
     (index: number) => {
       soundRemoveModifierLayer(index);
-      setSelectedLayerIndex(Math.max(Math.min(index, modifiers.length - 2), 0));
+      if (index < selectedLayerIndex) {
+        setSelectedLayerIndex(selectedLayerIndex - 1);
+      } else if (index >= modifiers.length - 1) {
+        setSelectedLayerIndex(modifiers.length - 2);
+      }
     },
-    [modifiers.length, soundRemoveModifierLayer],
+    [modifiers.length, selectedLayerIndex, soundRemoveModifierLayer],
   );
 
   const updateRandomConfig = useCallback(

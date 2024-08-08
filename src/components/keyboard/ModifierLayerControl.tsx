@@ -1,11 +1,10 @@
 import { ModifierLayerType } from '@src/types';
-import { useMemo, useState } from 'react';
+import { CONTROL_SHADOW } from '@src/utils/constants';
+import { downloadModifierLayers } from '@src/utils/file';
+import { useState } from 'react';
 import IconButton from '../shared/IconButton';
-import RadioGroup from '../shared/RadioGroup';
-import ReadOnly from '../shared/ReadOnly';
 import SectionHeader from '../shared/SectionHeader';
 import { useModiferContext } from './KeyModifierControl/ModifierContext';
-import { downloadModifierLayers } from '@src/utils/file';
 
 const layerTypes: ModifierLayerType[] = ['custom', 'random'];
 
@@ -40,43 +39,61 @@ export default function ModifierLayerControl() {
     addModifierLayer,
     soundName,
     loadModifierLayers,
+    removeModifierLayer
   } = useModiferContext();
-  const layers = useMemo(
-    () => modifiers.map(({ id, name }) => ({ label: name, key: id })),
-    [modifiers],
-  );
   const [addingLayer, setAddingLayer] = useState(false);
 
   return (
-    <>
-      <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
-        <SectionHeader label={`${soundName} modifier`} className='font-bold'>
-          <IconButton icon='upload' onClick={loadModifierLayers} />
-          <IconButton icon='download' onClick={() => downloadModifierLayers(`${soundName}-modifier`, modifiers)} />
-        </SectionHeader>
-        <RadioGroup
-          label='layers'
-          values={[selectedLayer?.id]}
-          onChange={([id]) =>
-            setSelectedLayerIndex(modifiers.findIndex((m) => m.id === id))
+    <div className='flex w-full flex-col items-center p-8'>
+      <SectionHeader label={`${soundName} modifier`} className='mb-2 font-bold'>
+        <IconButton icon='upload' onClick={loadModifierLayers} />
+        <IconButton
+          icon='download'
+          onClick={() =>
+            downloadModifierLayers(`${soundName}-modifier`, modifiers)
           }
-          options={layers}
         />
-        <SectionHeader label='new'>
+        <IconButton icon='add' 
+            onClick={() =>
+              addModifierLayer({ name: `layer ${modifiers.length}`, type: 'custom' })
+            }/>
+      </SectionHeader>
+      {modifiers.map((layer, index) => (
+        <div className='mb-2 flex w-full'>
+          <button
+            style={{ boxShadow: CONTROL_SHADOW }}
+            className='mr-2 h-8 flex-1 bg-white px-2 text-end'
+            key={layer.id}
+            onClick={() => setSelectedLayerIndex(index)}
+          >
+            {layer.name}
+          </button>
           <IconButton
-            icon={addingLayer ? 'close' : 'add'}
-            onClick={() => setAddingLayer(!addingLayer)}
+            className={`shrink-0 ${layer.id === selectedLayer?.id ? 'bg-white invert' : ''}`}
+            icon='visibility'
+            onClick={() => setSelectedLayerIndex(index)}
           />
-        </SectionHeader>
-        {addingLayer && (
-          <AddLayer
-            onSelect={(type) => {
-              setAddingLayer(false);
-              addModifierLayer({ name: `layer ${modifiers.length}`, type });
-            }}
+          <IconButton
+            icon='remove'
+            className='ml-2'
+            onClick={() => removeModifierLayer(index)}
           />
-        )}
-      </div>
-    </>
+        </div>
+      ))}
+      <SectionHeader label='new'>
+        <IconButton
+          icon={addingLayer ? 'close' : 'add'}
+          onClick={() => setAddingLayer(!addingLayer)}
+        />
+      </SectionHeader>
+      {addingLayer && (
+        <AddLayer
+          onSelect={(type) => {
+            setAddingLayer(false);
+            addModifierLayer({ name: `layer ${modifiers.length}`, type });
+          }}
+        />
+      )}
+    </div>
   );
 }
