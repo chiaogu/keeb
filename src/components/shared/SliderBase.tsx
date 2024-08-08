@@ -201,7 +201,7 @@ export default function SliderBase({
         setElement(element);
       }}
     >
-      <div className='pointer-events-none absolute top-0 size-full'>
+      <div className='absolute top-0 size-full'>
         {render({ normalValue: scale(value, min, max), dragging })}
       </div>
     </div>

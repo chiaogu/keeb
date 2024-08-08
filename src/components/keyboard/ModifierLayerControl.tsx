@@ -75,6 +75,7 @@ export default function ModifierLayerControl() {
           <div>
             {layerTypes.map((type) => (
               <button
+                style={{ boxShadow: CONTROL_SHADOW }}
                 className='mb-2 mr-2 h-8 bg-white px-2 active:invert'
                 key={type}
                 onClick={() => {

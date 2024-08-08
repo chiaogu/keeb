@@ -9,11 +9,12 @@ type SliderSelectProps = {
   options: readonly (string | { value: string; label: ReactNode })[];
   value: string;
   onChange: (value: string) => void;
+  onRelease: (value: string) => void;
   showOptions?: boolean;
   bgColor?: string;
   bgStyle?: React.CSSProperties;
   indicatorStyle?: React.CSSProperties;
-} & Pick<SliderBaseProps, 'indent' | 'onDrag' | 'onRelease' | 'sensitivity'>;
+} & Pick<SliderBaseProps, 'indent' | 'onDrag' | 'sensitivity'>;
 
 function easeInOutCirc(x: number, hardness: number = 2): number {
   return x < 0.5
@@ -109,9 +110,10 @@ export default function SliderSelect({
   }, [ref, sliderValue, clientWidth]);
 
   const handleRelease = useCallback(() => {
-    setSliderValue(Math.round(sliderValue));
-    onRelease?.();
-  }, [onRelease, sliderValue]);
+    const newValue = Math.round(sliderValue);
+    setSliderValue(newValue);
+    onRelease?.(getOptionValue(options[newValue]));
+  }, [onRelease, options, sliderValue]);
 
   useEffect(() => {
     const index = findOptionIndex(options, value);
@@ -176,6 +178,14 @@ export default function SliderSelect({
                       opacity: showOptions || dragging ? 1 : 0,
                       transition: 'opacity 0.1s',
                     }}
+                    onClick={() => {
+                      if (!showOptions) {
+                        return;
+                      }
+                      const optionValue = getOptionValue(option);
+                      onChange(optionValue);
+                      onRelease?.(optionValue);
+                    }}
                   >
                     {typeof option === 'string' ? option : option.label}
                   </div>
@@ -191,7 +201,7 @@ export default function SliderSelect({
                       : undefined,
                     ...indicatorStyle,
                   }}
-                  className='absolute left-0 top-0 h-full w-16'
+                  className='pointer-events-none absolute left-0 top-0 h-full w-16'
                 ></div>
               </div>
             </div>
@@ -200,7 +210,7 @@ export default function SliderSelect({
                 opacity: showOptions || dragging ? 0 : 1,
                 transition: 'opacity 0.1s',
               }}
-              className='absolute right-2 top-0 flex h-full items-center text-white mix-blend-difference'
+              className='pointer-events-none absolute right-2 top-0 flex h-full items-center text-white mix-blend-difference'
             >
               {value}
             </div>

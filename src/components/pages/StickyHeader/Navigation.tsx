@@ -65,10 +65,11 @@ export default function Navigation() {
     setScreen({ type: 'nav' });
   }, [setScreen]);
 
-  const handleRelease = useCallback(() => {
+  const handleRelease = useCallback((newTab: string) => {
     setDragging(false);
-    setTab(localTab);
-  }, [localTab, setTab]);
+    setTab(newTab);
+    setLocalTab(newTab);
+  }, [setTab]);
 
   const handleChange = useCallback((value: string) => {
     setLocalTab(value);
