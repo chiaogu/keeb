@@ -23,6 +23,7 @@ import { KeyEvent } from './useKeyboard';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
 import useThrottleCallback from './useThrottleCallback';
+import { getDefaultModifierLayer } from '@src/keyboard/defaults';
 
 export default function useKeyboardSound(
   keySound: KeySoundConfig,
@@ -122,12 +123,31 @@ export default function useKeyboardSound(
   );
 
   const updateModiferLayer = useCallback(
-    (index: number, updates: Pick<ModifierLayer, 'name'>) => {
+    (index: number, updates: Partial<Pick<ModifierLayer, 'name' | 'type'>>) => {
       setModifiers((draft) => {
-        draft[index] = {
-          ...draft[index],
-          ...updates,
-        };
+        if (updates.name != null) {
+          draft[index].name = updates.name;
+        }
+        
+        if (updates.type === 'custom') {
+          draft[index] = {
+            id: uuid(),
+            keys: {},
+            name: draft[index].name,
+            type: updates.type,
+          };
+        }
+
+        if (updates.type === 'random') {
+          draft[index] = {
+            id: uuid(),
+            keys: {},
+            config: {},
+            randomSeed: {},
+            name: draft[index].name,
+            type: updates.type,
+          };
+        }
       });
     },
     [setModifiers],

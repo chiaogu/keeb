@@ -1,50 +1,35 @@
 import { ModifierLayerType } from '@src/types';
 import { CONTROL_SHADOW } from '@src/utils/constants';
 import { downloadModifierLayers } from '@src/utils/file';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import IconButton from '../shared/IconButton';
 import SectionHeader from '../shared/SectionHeader';
 import { useModiferContext } from './KeyModifierControl/ModifierContext';
 
 const layerTypes: ModifierLayerType[] = ['custom', 'random'];
 
-function AddLayer({
-  onSelect,
-}: {
-  onSelect: (type: ModifierLayerType) => void;
-}) {
-  return (
-    <div className='flex w-full'>
-      <label className='w-32 shrink-0'>type</label>
-      <div className='inline-block w-full'>
-        {layerTypes.map((type) => (
-          <button
-            className='mr-5 underline'
-            key={type}
-            onClick={() => onSelect(type)}
-          >
-            {type}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export default function ModifierLayerControl() {
   const {
     modifiers,
     setSelectedLayerIndex,
     selectedLayer,
+    selectedLayerIndex,
     addModifierLayer,
     soundName,
     loadModifierLayers,
-    removeModifierLayer
+    removeModifierLayer,
   } = useModiferContext();
   const [addingLayer, setAddingLayer] = useState(false);
 
+  const toggleLayer = useCallback(
+    (index: number) => {
+      setSelectedLayerIndex(index === selectedLayerIndex ? -1 : index);
+    },
+    [selectedLayerIndex, setSelectedLayerIndex],
+  );
+
   return (
-    <div className='flex w-full flex-col items-center p-8'>
+    <div className='flex w-full flex-col items-center'>
       <SectionHeader label={`${soundName} modifier`} className='mb-2 font-bold'>
         <IconButton icon='upload' onClick={loadModifierLayers} />
         <IconButton
@@ -53,25 +38,30 @@ export default function ModifierLayerControl() {
             downloadModifierLayers(`${soundName}-modifier`, modifiers)
           }
         />
-        <IconButton icon='add' 
-            onClick={() =>
-              addModifierLayer({ name: `layer ${modifiers.length}`, type: 'custom' })
-            }/>
+        <IconButton
+          icon='add'
+          style={{
+            opacity: addingLayer ? 0.3 : 1,
+            pointerEvents: addingLayer ? 'none' : undefined,
+          }}
+          onClick={() => setAddingLayer(true)}
+        />
       </SectionHeader>
       {modifiers.map((layer, index) => (
-        <div className='mb-2 flex w-full'>
+        <div className='mb-2 flex w-full' key={layer.id}>
           <button
             style={{ boxShadow: CONTROL_SHADOW }}
-            className='mr-2 h-8 flex-1 bg-white px-2 text-end'
+            className='mr-2 flex h-8 flex-1 items-center justify-between bg-white px-2 text-end'
             key={layer.id}
-            onClick={() => setSelectedLayerIndex(index)}
+            onClick={() => toggleLayer(index)}
           >
-            {layer.name}
+            <div>{Object.keys(layer.keys).length} keys</div>
+            <div>{layer.name}</div>
           </button>
           <IconButton
             className={`shrink-0 ${layer.id === selectedLayer?.id ? 'bg-white invert' : ''}`}
             icon='visibility'
-            onClick={() => setSelectedLayerIndex(index)}
+            onClick={() => toggleLayer(index)}
           />
           <IconButton
             icon='remove'
@@ -80,19 +70,24 @@ export default function ModifierLayerControl() {
           />
         </div>
       ))}
-      <SectionHeader label='new'>
-        <IconButton
-          icon={addingLayer ? 'close' : 'add'}
-          onClick={() => setAddingLayer(!addingLayer)}
-        />
-      </SectionHeader>
       {addingLayer && (
-        <AddLayer
-          onSelect={(type) => {
-            setAddingLayer(false);
-            addModifierLayer({ name: `layer ${modifiers.length}`, type });
-          }}
-        />
+        <div className='flex w-full justify-between'>
+          <div>
+            {layerTypes.map((type) => (
+              <button
+                className='mb-2 mr-2 h-8 bg-white px-2 active:invert'
+                key={type}
+                onClick={() => {
+                  setAddingLayer(false);
+                  addModifierLayer({ name: `layer ${modifiers.length}`, type });
+                }}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+          <IconButton icon='close' onClick={() => setAddingLayer(false)} />
+        </div>
       )}
     </div>
   );

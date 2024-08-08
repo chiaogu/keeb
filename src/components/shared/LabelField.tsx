@@ -18,7 +18,7 @@ export default function LabelField({
   containerClassName,
 }: LabelFieldProps) {
   return (
-    <div className={`flex w-full items-start ${containerClassName}`}>
+    <div className={`flex h-8 w-full items-center bg-white px-2 ${containerClassName}`}>
       <div
         style={{
           paddingLeft: indent > 0 ? 8 : 0,
@@ -27,7 +27,7 @@ export default function LabelField({
         className='mr-4 w-36 shrink-0'
       >
         <label
-          className={`inline-block bg-white ${className}`}
+          className={`inline-block ${className}`}
           onClick={onClick}
         >
           {label}

@@ -85,7 +85,7 @@ export default function RandomModifierControl() {
   return (
     <>
       <ModifierKeyboard highlightedKeys={modifiedKeys} onPress={toggleKey} />
-      <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
+      <div className='flex w-full max-w-[500px] flex-col items-center'>
         <ModifierLayerInfo />
         <KeysSelect
           onSelect={(selectedKeys) => {

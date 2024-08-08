@@ -5,6 +5,7 @@ export default function ModifierKeyboard(props: KeyboardProps) {
   const { triggerUp, triggerDown } = useModiferContext();
   return (
     <Keyboard
+      className='mb-8'
       {...props}
       onRelease={(key) => {
         triggerUp(key);

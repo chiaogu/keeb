@@ -50,7 +50,7 @@ export default function CustomModifierControl() {
         highlightedKeys={highlightedKeys}
         onPress={toggleKey}
       />
-      <div className='flex w-full max-w-[500px] flex-col items-center border-2 border-black p-8'>
+      <div className='flex w-full flex-col items-center'>
         <ModifierLayerInfo className='mb-4'/>
         {selectedKeys.length === 0 && 'select a key'}
         {selectedKeys.map((key) => (
