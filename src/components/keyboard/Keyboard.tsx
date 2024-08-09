@@ -3,7 +3,7 @@ import getKeyCodeLabel from '@src/keyboard/getKeyLabel';
 import getKeyWidth from '@src/keyboard/getKeyWidth';
 import { keys } from '@src/keyboard/keys';
 
-const keySize = 48;
+const keySize = 44;
 
 export type KeyboardProps = {
   className?: string;

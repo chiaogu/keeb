@@ -183,7 +183,7 @@ export default function SliderBase({
     [value],
   );
 
-  const setElement = usePreventDefaultTouchStart();
+  // const setElement = usePreventDefaultTouchStart();
 
   const marginLeft = Math.max(0, indent ?? 0) * 8;
 
@@ -198,7 +198,7 @@ export default function SliderBase({
       onPointerDown={handlePointerDown}
       ref={(element) => {
         container.current = element;
-        setElement(element);
+        // setElement(element);
       }}
     >
       <div className='absolute top-0 size-full'>

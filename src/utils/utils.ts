@@ -160,19 +160,29 @@ type DispatchKeyEventArgs = {
   audio?: boolean;
   code: string;
   key?: string;
+  visual?: boolean;
 }
+
+const VISUAL_ENABLED_CODE = 1;
+const VISUAL_DISABLE_CODE = 0;
 
 export function dispatchKeyEvent({
   event,
   code,
   key,
   audio = true,
+  visual = true,
 }: DispatchKeyEventArgs) {
   dispatchEvent(
     new KeyboardEvent(event, {
       code,
       key: key ?? getKeyCodeLabel(code).toLowerCase(),
       repeat: !audio,
+      detail: visual ? VISUAL_ENABLED_CODE : VISUAL_DISABLE_CODE,
     }),
   );
+}
+
+export function shouldShowKeyEventVisual(e: KeyboardEvent) {
+  return e.detail === VISUAL_ENABLED_CODE;
 }

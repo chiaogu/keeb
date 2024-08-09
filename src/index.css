@@ -11,4 +11,6 @@
   
   user-select: none;
   -webkit-user-select: none;
+  
+  overscroll-behavior: none;
 }

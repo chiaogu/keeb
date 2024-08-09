@@ -64,6 +64,10 @@ export default function ModifierLayerControl() {
             onClick={() => toggleLayer(index)}
           />
           <IconButton
+            className='ml-2 shrink-0'
+            icon='hearing'
+          />
+          <IconButton
             icon='remove'
             className='ml-2'
             onClick={() => removeModifierLayer(index)}
@@ -72,21 +76,27 @@ export default function ModifierLayerControl() {
       ))}
       {addingLayer && (
         <div className='flex w-full justify-between'>
-          <div>
-            {layerTypes.map((type) => (
-              <button
-                style={{ boxShadow: CONTROL_SHADOW }}
-                className='mb-2 mr-2 h-8 bg-white px-2 active:invert'
-                key={type}
-                onClick={() => {
-                  setAddingLayer(false);
-                  addModifierLayer({ name: `layer ${modifiers.length}`, type });
-                }}
-              >
-                {type}
-              </button>
-            ))}
+          <div className='flex w-full items-center justify-between'>
+            <div>
+              {layerTypes.map((type) => (
+                <button
+                  style={{ boxShadow: CONTROL_SHADOW }}
+                  className='mr-2 h-8 bg-white px-2 active:invert'
+                  key={type}
+                  onClick={() => {
+                    setAddingLayer(false);
+                    addModifierLayer({
+                      name: `layer ${modifiers.length}`,
+                      type,
+                    });
+                  }}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
           </div>
+          <div className='w-32'></div>
           <IconButton icon='close' onClick={() => setAddingLayer(false)} />
         </div>
       )}

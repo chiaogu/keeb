@@ -8,7 +8,7 @@ import StickyHeader from './StickyHeader/StickyHeader';
 function Main() {
   const { tab } = useMainContext();
   return (
-    <div className='flex flex-col items-center pb-[70vh] pt-2'>
+    <div className='flex flex-col items-center overflow-hidden pb-[70vh] pt-2'>
       <StickyHeader />
       {tab === 'sound' && <SoundControl />}
       {tab === 'tweaks' && <KeySoundModifier />}

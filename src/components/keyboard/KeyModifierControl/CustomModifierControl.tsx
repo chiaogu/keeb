@@ -45,13 +45,13 @@ export default function CustomModifierControl() {
 
   return (
     <>
+      <ModifierLayerInfo className='mb-4'/>
       <ModifierKeyboard
         selectedKeys={selectedKeys}
         highlightedKeys={highlightedKeys}
         onPress={toggleKey}
       />
       <div className='flex w-full flex-col items-center'>
-        <ModifierLayerInfo className='mb-4'/>
         {selectedKeys.length === 0 && 'select a key'}
         {selectedKeys.map((key) => (
           <div key={key} className='mb-4 flex w-full flex-col last:mb-0'>
