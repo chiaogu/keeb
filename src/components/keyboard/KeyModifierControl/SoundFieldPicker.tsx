@@ -23,7 +23,7 @@ type SoundFieldPickerProps = {
   soundName: string;
   onSelect: (args: SoundFieldPath, node?: SynthNodeState) => void;
   onClose: () => void;
-  excluded: SoundStructureType<ModifierOp>;
+  excluded?: SoundStructureType<ModifierOp>;
 };
 
 export default function SoundFieldPicker({
@@ -55,8 +55,10 @@ export default function SoundFieldPicker({
     const render = (props: RenderFieldProps<unknown>) => {
       const { fieldPath, synthId, nodeId, node } = props;
 
-      const value = getSoundStructureValue(excluded, props);
-      if (value) return null;
+      if (excluded) {
+        const value = getSoundStructureValue(excluded, props);
+        if (value) return null;
+      }
 
       return (
         <button
