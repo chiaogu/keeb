@@ -3,8 +3,12 @@ import SectionHeader from '@src/components/shared/SectionHeader';
 import SoundStructure, {
   RenderFieldProps,
   SoundStructureField,
+  SoundStructure as SoundStructureType,
 } from '@src/components/sound/SoundStructure';
+import { ModifierOp } from '@src/keyboard/keySoundModifier';
 import { SynthNodeState } from '@src/synth';
+import { CONTROL_SHADOW } from '@src/utils/constants';
+import { getSoundStructureValue } from '@src/utils/utils';
 import { useMemo } from 'react';
 import { useModiferContext } from './ModifierContext';
 import { SoundFieldPath } from './RandomizationControl';
@@ -19,12 +23,14 @@ type SoundFieldPickerProps = {
   soundName: string;
   onSelect: (args: SoundFieldPath, node?: SynthNodeState) => void;
   onClose: () => void;
+  excluded: SoundStructureType<ModifierOp>;
 };
 
 export default function SoundFieldPicker({
   soundName,
   onSelect,
   onClose,
+  excluded,
 }: SoundFieldPickerProps) {
   const { synths } = useModiferContext();
 
@@ -48,9 +54,14 @@ export default function SoundFieldPicker({
   const renderField = useMemo(() => {
     const render = (props: RenderFieldProps<unknown>) => {
       const { fieldPath, synthId, nodeId, node } = props;
+
+      const value = getSoundStructureValue(excluded, props);
+      if (value) return null;
+
       return (
         <button
-          className='mr-5 underline'
+          style={{ boxShadow: CONTROL_SHADOW }}
+          className='mb-2 mr-2 h-8 bg-white px-2 active:invert'
           onClick={() => onSelect({ synthId, nodeId, fieldPath }, node)}
         >
           {fieldPath[fieldPath.length - 1]}
@@ -58,7 +69,7 @@ export default function SoundFieldPicker({
       );
     };
     return render;
-  }, [onSelect]);
+  }, [excluded, onSelect]);
 
   return (
     <>

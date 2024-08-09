@@ -1,6 +1,6 @@
 import { SynthConfig, SynthNodeState } from '@src/synth';
 import { typedMemo } from '@src/utils/utils';
-import { useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 import SectionHeader from '../shared/SectionHeader';
 
 export type SoundStructureField<T> = T | { [nestedField: string]: T };
@@ -41,7 +41,6 @@ export type SoundStructureProps<T> = {
 const SynthHeader = ({ synth }: { synth?: SynthConfig }) => (
   <SectionHeader
     label={synth?.name ?? 'unknown'}
-    // labelClassName={synth ? undefined : 'invert px-2'}
     labelClassName={synth ? undefined : 'line-through'}
   />
 );
@@ -50,7 +49,6 @@ function NodeHeader({ node }: { node?: SynthNodeState }): React.ReactNode {
   return (
     <SectionHeader
       className='ml-[8px]'
-      // labelClassName={node ? '' : 'invert px-2'}
       labelClassName={node ? '' : 'line-through'}
       label={node?.type ?? 'unknown'}
     />
@@ -95,41 +93,52 @@ const SoundStructure = typedMemo(
       const render = (
         props: RenderNestedFieldProps<T> & {
           level?: number;
+          last: boolean;
         },
-      ) => {
-        const { fieldPath, value, level = 0, node } = props;
-        
-        return (
-          <div
-            key={fieldPath.join()}
-            style={{ paddingLeft: level * 8 }}
-            className={
-              level ? 'border-l-2 border-dotted border-l-black' : undefined
-            }
-          >
-            {shouldRenderField(value) && (
-              <>{renderField({ ...props, value })}</>
-            )}
-            {!shouldRenderField(value) && (
-              <>
-                <SectionHeader
-                  labelClassName={node ? '' : 'line-through'}
-                  // labelClassName={node ? '' : 'invert px-2'}
-                  label={fieldPath[fieldPath.length - 1]}
-                />
-                {
-                  Object.entries(value).map(([field, v]) =>
-                    render({
-                      ...props,
-                      value: v,
-                      level: level + 1,
-                      fieldPath: [...fieldPath, field],
-                    }),
-                  )
+      ): React.ReactNode => {
+        const { fieldPath, value, level = 0, node, last } = props;
+        const shouldRender = shouldRenderField(value);
+
+        if (shouldRender) {
+          const fieldNode = shouldRender
+            ? renderField({ ...props, value })
+            : null;
+          return !fieldNode ? null : (
+            <div className='flex' key={fieldPath.join()}>
+              <div
+                style={{ paddingLeft: level * 8 }}
+                className={
+                  level
+                    ? `${last ? 'h-8' : ''} border-l-2 border-dotted border-l-black`
+                    : undefined
                 }
-              </>
-            )}
-          </div>
+              ></div>
+              {fieldNode}
+            </div>
+          );
+        }
+
+        const nestedNodes = Object.entries(value)
+          .map(([field, v], index) =>
+            render({
+              ...props,
+              value: v,
+              level: level + 1,
+              fieldPath: [...fieldPath, field],
+              last: index === Object.keys(value).length - 1,
+            }),
+          )
+          .filter(Boolean);
+
+        return nestedNodes.length === 0 ? null : (
+          <Fragment key={fieldPath.join()}>
+            <SectionHeader
+              labelClassName={node ? '' : 'line-through'}
+              // labelClassName={node ? '' : 'invert px-2'}
+              label={fieldPath[fieldPath.length - 1]}
+            />
+            {nestedNodes}
+          </Fragment>
         );
       };
       return render;
@@ -139,35 +148,45 @@ const SoundStructure = typedMemo(
       <>
         {Object.entries(structure).map(([synthId, nodes]) => {
           const synth = synthMap[synthId];
-          return (
+          const synthChildrenNodes = Object.entries(nodes)
+            .map(([nodeId, fields]) => {
+              const node = nodeMap[synthId]?.[nodeId];
+              const nodeChildrenNodes = Object.entries(fields)
+                .map(([field, value], index) => {
+                  const nestedFiledNodes = renderNestedField({
+                    synth,
+                    node,
+                    fieldPath: [field],
+                    value,
+                    synthId,
+                    nodeId,
+                    last: index === Object.keys(fields).length - 1,
+                  });
+                  return !nestedFiledNodes ? null : (
+                    <div
+                      key={`${synthId}-${nodeId}-${field}`}
+                      className='ml-[8px] border-l-2 border-dotted border-l-black pl-[8px]'
+                    >
+                      {nestedFiledNodes}
+                    </div>
+                  );
+                })
+                .filter((node) => node != null);
+              return nodeChildrenNodes.length === 0 ? null : (
+                <div
+                  key={nodeId}
+                  className='border-l-2 border-dotted border-l-black'
+                >
+                  {renderNodeHeader({ synth, node })}
+                  {nodeChildrenNodes}
+                </div>
+              );
+            })
+            .filter(Boolean);
+          return synthChildrenNodes.length === 0 ? null : (
             <div key={synthId} className='w-full'>
               {renderSynthHeader({ synth })}
-              {Object.entries(nodes).map(([nodeId, fields]) => {
-                const node = nodeMap[synthId]?.[nodeId];
-                return (
-                  <div
-                    key={nodeId}
-                    className='border-l-2 border-dotted border-l-black'
-                  >
-                    {renderNodeHeader({ synth, node })}
-                    {Object.entries(fields).map(([field, value]) => (
-                      <div
-                        key={`${synthId}-${nodeId}-${field}`}
-                        className='ml-[8px] border-l-2 border-dotted border-l-black pl-[8px]'
-                      >
-                        {renderNestedField({
-                          synth,
-                          node,
-                          fieldPath: [field],
-                          value,
-                          synthId,
-                          nodeId,
-                        })}
-                      </div>
-                    ))}
-                  </div>
-                );
-              })}
+              {synthChildrenNodes}
             </div>
           );
         })}

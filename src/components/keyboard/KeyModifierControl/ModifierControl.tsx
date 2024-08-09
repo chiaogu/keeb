@@ -87,6 +87,7 @@ const InnerModifierControl = memo(function ModifierControl({
       )}
       {selectingField && (
         <SoundFieldPicker
+          excluded={modifier}
           soundName={soundName}
           onSelect={(newField, node) => {
             if (selectingField === 'fix' && fixingField) {
