@@ -9,7 +9,7 @@ type SliderSelectProps = {
   options: readonly (string | { value: string; label: ReactNode })[];
   value: string;
   onChange: (value: string) => void;
-  onRelease: (value: string) => void;
+  onRelease?: (value: string) => void;
   showOptions?: boolean;
   bgColor?: string;
   bgStyle?: React.CSSProperties;

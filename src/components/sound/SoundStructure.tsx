@@ -49,7 +49,7 @@ const SynthHeader = ({ synth }: { synth?: SynthConfig }) => (
 function NodeHeader({ node }: { node?: SynthNodeState }): React.ReactNode {
   return (
     <SectionHeader
-      className='ml-[16px]'
+      className='ml-[8px]'
       // labelClassName={node ? '' : 'invert px-2'}
       labelClassName={node ? '' : 'line-through'}
       label={node?.type ?? 'unknown'}
@@ -102,7 +102,7 @@ const SoundStructure = typedMemo(
         return (
           <div
             key={fieldPath.join()}
-            style={{ paddingLeft: level * 16 }}
+            style={{ paddingLeft: level * 8 }}
             className={
               level ? 'border-l-2 border-dotted border-l-black' : undefined
             }
@@ -153,7 +153,7 @@ const SoundStructure = typedMemo(
                     {Object.entries(fields).map(([field, value]) => (
                       <div
                         key={`${synthId}-${nodeId}-${field}`}
-                        className='ml-[16px] border-l-2 border-dotted border-l-black pl-[14px]'
+                        className='ml-[8px] border-l-2 border-dotted border-l-black pl-[8px]'
                       >
                         {renderNestedField({
                           synth,

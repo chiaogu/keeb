@@ -51,8 +51,8 @@ export default function CustomModifierControl() {
         highlightedKeys={highlightedKeys}
         onPress={toggleKey}
       />
-      <div className='flex w-full flex-col items-center'>
-        {selectedKeys.length === 0 && 'select a key'}
+      <div className='mt-8 flex w-full flex-col items-center'>
+        {/* {selectedKeys.length === 0 && 'select a key'} */}
         {selectedKeys.map((key) => (
           <div key={key} className='mb-4 flex w-full flex-col last:mb-0'>
             <SectionHeader className='font-bold' label={key}>

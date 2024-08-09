@@ -1,9 +1,10 @@
 import SliderBase from '@src/components/shared/SliderBase';
 import { CONTROL_SHADOW } from '@src/utils/constants';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 import Keyboard, { KeyboardProps } from '../Keyboard';
 import { useModiferContext } from './ModifierContext';
+import { useViewport } from '@src/hooks/useViewport';
 
 type ScrollBarProps = {
   clientWidth: number;
@@ -24,7 +25,7 @@ function ScrollBar({
 
   return (
     <SliderBase
-      className='mb-8 mt-4 h-8'
+      className='mt-4 h-8'
       sensitivity={2}
       value={value}
       max={1}
@@ -52,19 +53,25 @@ export default function ModifierKeyboard(props: KeyboardProps) {
   const { triggerUp, triggerDown } = useModiferContext();
   const [offsetX, setOffsetX] = useState(0);
   const { width: clientWidth = 0, ref } = useResizeDetector<HTMLDivElement>();
+  const viewport = useViewport();
 
   const contentRef = useRef<HTMLDivElement>(null);
   const scrollWidth = contentRef.current?.clientWidth ?? 0;
+  const overflow = scrollWidth > viewport.width - 64;
 
   const handleWheel = useCallback(
     (e: React.WheelEvent<HTMLDivElement>) => {
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) return;
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX) || !overflow) return;
 
       const maxOffset = scrollWidth - clientWidth;
       setOffsetX((x) => Math.min(maxOffset, Math.max(0, x - e.deltaX)));
     },
-    [scrollWidth, clientWidth],
+    [overflow, scrollWidth, clientWidth],
   );
+  
+  useEffect(() => {
+    setOffsetX(overflow ? 0 : (scrollWidth - clientWidth) / 2);
+  }, [clientWidth, overflow, scrollWidth]);
 
   return (
     <>
@@ -91,12 +98,14 @@ export default function ModifierKeyboard(props: KeyboardProps) {
           />
         </div>
       </div>
-      <ScrollBar
-        clientWidth={clientWidth}
-        scrollWidth={scrollWidth}
-        scrollX={offsetX}
-        onChange={setOffsetX}
-      />
+      {overflow && (
+        <ScrollBar
+          clientWidth={clientWidth}
+          scrollWidth={scrollWidth}
+          scrollX={offsetX}
+          onChange={setOffsetX}
+        />
+      )}
     </>
   );
 }

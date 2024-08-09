@@ -1,7 +1,6 @@
 import IconButton from '@src/components/shared/IconButton';
-import RadioGroup from '@src/components/shared/RadioGroup';
-import ReadOnly from '@src/components/shared/ReadOnly';
 import Slider from '@src/components/shared/Slider';
+import { ControlSliderSelect } from '@src/components/shared/SliderSelect';
 import { ModifierOp } from '@src/keyboard/keySoundModifier';
 import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
@@ -62,14 +61,15 @@ export default function FieldModifier({
           />
         )}
         {schema instanceof z.ZodEnum && (
-          <RadioGroup
+          <ControlSliderSelect
+            indent={0}
             label={field}
-            values={[value as string]}
-            onChange={([o]) => onChange(['set', o])}
+            value={value as string}
+            onChange={(v) => onChange(['set', v])}
             options={schema.options}
           />
         )}
-        <IconButton className='ml-4' icon='remove' onClick={onRemove}/>
+        <IconButton className='ml-2' icon='remove' onClick={onRemove} />
       </div>
     </>
   );
