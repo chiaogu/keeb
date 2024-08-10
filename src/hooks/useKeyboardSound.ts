@@ -23,7 +23,6 @@ import { KeyEvent } from './useKeyboard';
 import useSound from './useSound';
 import useSoundCache from './useSoundCache';
 import useThrottleCallback from './useThrottleCallback';
-import { getDefaultModifierLayer } from '@src/keyboard/defaults';
 
 export default function useKeyboardSound(
   keySound: KeySoundConfig,
@@ -36,7 +35,7 @@ export default function useKeyboardSound(
 
   const trigger = useCallback(
     (key: string) => {
-      soundCache.trigger(key, sound.synths, findSoundModifiers(modifiers, key));
+      soundCache.trigger(sound.synths, findSoundModifiers(modifiers, key));
     },
     [modifiers, soundCache, sound.synths],
   );
@@ -128,7 +127,7 @@ export default function useKeyboardSound(
         if (updates.name != null) {
           draft[index].name = updates.name;
         }
-        
+
         if (updates.type === 'custom') {
           draft[index] = {
             id: uuid(),

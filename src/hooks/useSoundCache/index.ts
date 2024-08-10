@@ -5,7 +5,8 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { v4 as uuid } from 'uuid';
 import logCacheSize from './logCacheSize';
 import { createPlayerPool } from './playerPool';
-import renderSound from './renderSound';
+import renderSound, { clearRenderQueue } from './renderSound';
+import { hash } from 'object-code';
 
 export type SoundCache = Record<string, Record<string, Tone.ToneAudioBuffer>>;
 const cache: SoundCache = {};
@@ -17,11 +18,11 @@ export default function useSoundCache(destination: Tone.ToneAudioNode) {
   );
   const instanceId = useMemo(uuid, []);
 
-  // TODO: Clear render queue
   const clear = useCallback(() => {
     Object.values(cache[instanceId]).forEach((cache) => cache?.dispose());
     cache[instanceId] = {};
     logCacheSize(cache);
+    clearRenderQueue();
   }, [instanceId]);
 
   useEffect(() => {
@@ -45,6 +46,7 @@ export default function useSoundCache(destination: Tone.ToneAudioNode) {
     }
 
     function playRealtime(synths: Synth[], modifiers: SoundModifier[]) {
+      console.log('playRealtime');
       synths.forEach((synth) => synth.trigger(modifiers));
     }
 
@@ -67,7 +69,10 @@ export default function useSoundCache(destination: Tone.ToneAudioNode) {
       logCacheSize(cache);
     }
 
-    return (key: string, synths: Synth[], modifiers: SoundModifier[] = []) => {
+    return (synths: Synth[], modifiers: SoundModifier[] = []) => {
+      const synthStates = synths.map((s) => s.state);
+      const key = hash({ synthStates, modifiers }).toString();
+      
       if (cache[instanceId][key]) {
         cache[instanceId][key].loaded
           ? playCached(key, synths, modifiers)
