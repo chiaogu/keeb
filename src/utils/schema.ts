@@ -74,7 +74,7 @@ export function getNestedFieldSchema(
         fieldPath.slice(1, fieldPath.length),
       );
     } else {
-      throw new Error(`Field path ${fieldPath.join(',')} is invalid`);
+      return null;
     }
   }
 

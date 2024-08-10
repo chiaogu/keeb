@@ -104,7 +104,7 @@ const SoundStructure = typedMemo(
             ? renderField({ ...props, value })
             : null;
           return !fieldNode ? null : (
-            <div className='flex' key={fieldPath.join()}>
+            <div className='mb-[2px] flex' key={fieldPath.join()}>
               <div
                 style={{ paddingLeft: level * 8 }}
                 className={
@@ -113,7 +113,7 @@ const SoundStructure = typedMemo(
                     : undefined
                 }
               ></div>
-              {fieldNode}
+              <div className='mb-[-2px] size-full'>{fieldNode}</div>
             </div>
           );
         }

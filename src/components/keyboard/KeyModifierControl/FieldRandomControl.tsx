@@ -40,6 +40,7 @@ export default function FieldRandomControl({
       <InvalidFieldModifier
         field={field}
         onClick={onClickInvalidField}
+        onRemove={() => {}}
         showFixButton={showFixButton}
         highlighted={highlighted}
       />

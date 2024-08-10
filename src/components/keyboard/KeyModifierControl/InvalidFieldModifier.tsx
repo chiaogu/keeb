@@ -1,9 +1,9 @@
 import IconButton from '@src/components/shared/IconButton';
-import ReadOnly from '@src/components/shared/ReadOnly';
 
 type InvalidFieldModifierProps = {
   field: string;
   onClick?: () => void;
+  onRemove: () => void;
   showFixButton: boolean;
   highlighted: boolean;
 };
@@ -13,13 +13,19 @@ export default function InvalidFieldModifier({
   onClick,
   showFixButton,
   highlighted,
+  onRemove,
 }: InvalidFieldModifierProps) {
   return (
-    <ReadOnly
-      key={field}
-      label={`${field}`}
-      className={`line-through ${highlighted ? 'px-2 invert' : ''}`}
-      value={showFixButton ? <IconButton className="ml-4" icon='bug_report' onClick={onClick}/> : undefined}
-    />
+    <div className='mb-2 flex size-full items-center justify-between'>
+      <div className={`flex h-8 items-center line-through ${highlighted ? 'bg-white px-2 invert' : ''}`}>
+        {field}
+      </div>
+      <div className='flex'>
+        {showFixButton && (
+          <IconButton className='ml-4' icon='bug_report' onClick={onClick} />
+        )}
+        <IconButton className='ml-2' icon='remove' onClick={onRemove} />
+      </div>
+    </div>
   );
 }

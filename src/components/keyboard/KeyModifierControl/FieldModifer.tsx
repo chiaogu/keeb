@@ -33,19 +33,20 @@ export default function FieldModifier({
 }: FieldModifierProps) {
   const field = fieldPath[fieldPath.length - 1];
   const valid = node && get(node?.data, fieldPath) != undefined;
+  const schema =
+    valid && getNestedFieldSchema(nodeConfig[node.type].schema, fieldPath);
 
-  if (!valid) {
+  if (!valid || !schema) {
     return (
       <InvalidFieldModifier
         field={field}
         onClick={onClickInvalidField}
+        onRemove={onRemove}
         showFixButton={showFixButton}
         highlighted={highlighted}
       />
     );
   }
-
-  const schema = getNestedFieldSchema(nodeConfig[node.type].schema, fieldPath);
 
   return (
     <>
