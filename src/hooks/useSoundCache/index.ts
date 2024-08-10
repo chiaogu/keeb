@@ -46,7 +46,6 @@ export default function useSoundCache(destination: Tone.ToneAudioNode) {
     }
 
     function playRealtime(synths: Synth[], modifiers: SoundModifier[]) {
-      console.log('playRealtime');
       synths.forEach((synth) => synth.trigger(modifiers));
     }
 

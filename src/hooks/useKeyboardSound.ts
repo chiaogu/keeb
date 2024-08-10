@@ -182,7 +182,7 @@ export default function useKeyboardSound(
 
   const batchSetModifier = useCallback(
     (layerIndex: number, keys: string[], resetSeed: boolean = false) => {
-      const getSeed = Math.random;
+      const getSeed = () => Math.round(Math.random() * 100) / 100;
 
       setModifiers((draft) => {
         keys.forEach((key) => {
