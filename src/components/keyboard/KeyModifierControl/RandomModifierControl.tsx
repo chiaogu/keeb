@@ -24,6 +24,7 @@ const KeysDebug = memo(
           <Fragment key={selectedKey}>
             <SectionHeader className='font-bold' label={selectedKey} />
             <ModifierControl
+              keyCode={selectedKey}
               soundName='Debug'
               modifier={modifierKeys[selectedKey] ?? {}}
             />

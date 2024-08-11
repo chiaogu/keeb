@@ -29,7 +29,6 @@ export default function KeySoundModifier() {
   return (
     <ModifierContextProvider keyboard={keyboard} keyEvent={keyEvent}>
       <RadioGroup
-        label='event'
         values={[keyEvent]}
         onChange={([value]) => setKeyEvent(value as KeyEvent)}
         options={['down', 'up']}
