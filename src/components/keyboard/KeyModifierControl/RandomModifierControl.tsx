@@ -90,16 +90,6 @@ export default function RandomModifierControl() {
     <>
       <ModifierLayerInfo>
         <IconButton
-          icon={selectedKeys ? 'remove_selection' : 'select'}
-          onClick={() => {
-            removeModifier(selectedLayerIndex, keys.flat());
-            batchSetModifier(
-              selectedLayerIndex,
-              selectedKeys ? [] : keys.flat(),
-            );
-          }}
-        />
-        <IconButton
           icon='ifl'
           onClick={() => {
             removeModifier(selectedLayerIndex, keys.flat());
@@ -107,6 +97,16 @@ export default function RandomModifierControl() {
               selectedLayerIndex,
               Object.keys(selectedLayer.keys),
               true,
+            );
+          }}
+        />
+        <IconButton
+          icon={selectedKeys ? 'remove_selection' : 'select'}
+          onClick={() => {
+            removeModifier(selectedLayerIndex, keys.flat());
+            batchSetModifier(
+              selectedLayerIndex,
+              selectedKeys ? [] : keys.flat(),
             );
           }}
         />

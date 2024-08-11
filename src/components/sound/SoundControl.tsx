@@ -8,6 +8,7 @@ const keyEvents: KeyEvent[] = ['down', 'up'];
 
 export default function SoundControl() {
   const { keyboard, setScreenMeterChannel } = useMainContext();
+  // TODO: Persist in main context
   const [selectedSynthId, setSelectedSynthId] = useState<string>();
 
   const { selectedSound, selectedSynth, keyEvent, selectedSynthIndex } =

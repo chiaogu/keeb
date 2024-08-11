@@ -5,19 +5,21 @@ import { useResizeDetector } from 'react-resize-detector';
 
 type SliderProps = {
   label: string;
+  offsetMode?: boolean;
   renderValue?: (normalizedValue: number) => React.ReactNode;
 } & Omit<SliderBaseProps, 'render'>;
 
 export default function Slider({
   label,
   renderValue = (v) => `${(v * 100).toFixed()}%`,
+  offsetMode,
   ...sliderProps
 }: SliderProps) {
   const { width = 0, ref } = useResizeDetector<HTMLDivElement>();
   const [firstRender, setFirstRender] = useState(true);
   const { value, min, max } = sliderProps;
 
-  const [normalValue, normalLeft] = useMemo(
+  const [offserValue, normalOffsetZero] = useMemo(
     () => [
       value / (max - min),
       Math.abs(min) / (max - min)
@@ -34,7 +36,7 @@ export default function Slider({
       className='mb-2 h-8'
       {...sliderProps}
       sensitivity={1.2}
-      render={({ dragging }) => (
+      render={({ dragging, normalValue }) => (
         <div
           style={{
             boxShadow: CONTROL_SHADOW,
@@ -44,9 +46,9 @@ export default function Slider({
         >
           <div
             style={{
-              transform: `scaleX(${firstRender ? 0 : normalValue * 100}%)`,
+              transform: `scaleX(${firstRender ? 0 : (offsetMode ? offserValue : normalValue) * 100}%)`,
               transition: dragging ? undefined : 'transform 0.15s',
-              marginLeft: `${width * normalLeft}px`,
+              marginLeft: offsetMode ? `${width * normalOffsetZero}px` : undefined,
             }}
             className='size-full origin-left bg-black'
           ></div>
@@ -60,7 +62,7 @@ export default function Slider({
             style={{ transform: 'translateY(-50%)' }}
             className='absolute right-2 top-1/2 text-white mix-blend-difference'
           >
-            {renderValue(normalValue)}
+            {renderValue(offsetMode ? offserValue : normalValue)}
           </div>
         </div>
       )}

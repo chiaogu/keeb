@@ -58,6 +58,7 @@ export default function FieldModifier({
             onChange={(v) => onChange(['add', v])}
             min={-0.5}
             max={0.5}
+            offsetMode
           />
         )}
         {schema instanceof z.ZodEnum && (

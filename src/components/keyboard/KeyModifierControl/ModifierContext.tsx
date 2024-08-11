@@ -41,6 +41,8 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     () => (keyEvent === 'down' ? keyboard.down : keyboard.up),
     [keyEvent, keyboard],
   );
+  
+  // TODO: Persist in main context
   const [selectedLayerIndex, setSelectedLayerIndex] = useState(-1);
   const selectedLayer = useMemo(
     () => modifiers[selectedLayerIndex],
