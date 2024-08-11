@@ -75,13 +75,14 @@ export default function FieldRandomControl({
         </>
       )}
       {schema instanceof z.ZodEnum && (
-        <RadioGroup
-          label='options'
-          values={options}
-          onChange={(selected) => onChange({ options: selected })}
-          options={schema.options}
-          multi
-        />
+        <div className='flex w-full border-l-2 border-dotted border-l-black pl-2'>
+          <RadioGroup
+            values={options}
+            onChange={(selected) => onChange({ options: selected })}
+            options={schema.options}
+            multi
+          />
+        </div>
       )}
     </>
   );

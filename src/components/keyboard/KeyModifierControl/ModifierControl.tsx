@@ -9,7 +9,7 @@ import {
   SoundModifier,
 } from '@src/keyboard/keySoundModifier';
 import { SynthConfig, SynthNodeState } from '@src/synth';
-import { isSoundFieldPathEqual } from '@src/utils/utils';
+import { isSoundFieldPathEqual, splitCamelCase } from '@src/utils/utils';
 import { memo, useCallback, useState } from 'react';
 import FieldModifier from './FieldModifer';
 import { useModiferContext } from './ModifierContext';
@@ -23,6 +23,8 @@ type ModifierControlProps = {
   onAdd?: (field: SoundFieldPath, node: SynthNodeState) => void;
   onFix?: (fixingField: SoundFieldPath, newField: SoundFieldPath) => void;
   onRemove?: (field: SoundFieldPath) => void;
+  onRemoveKey?: () => void;
+  keyCode: string;
 };
 
 const InnerModifierControl = memo(function ModifierControl({
@@ -33,6 +35,8 @@ const InnerModifierControl = memo(function ModifierControl({
   onAdd,
   onFix,
   onRemove,
+  keyCode,
+  onRemoveKey,
 }: ModifierControlProps & { synths: SynthConfig[] }) {
   const [fixingField, setFixingField] = useState<SoundFieldPath>();
   const [selectingField, setSelectingField] = useState<'add' | 'fix' | false>(
@@ -68,28 +72,37 @@ const InnerModifierControl = memo(function ModifierControl({
     );
 
   return (
-    <>
-      <SoundStructure
-        synths={synths}
-        structure={modifier}
-        renderField={renderField}
-        shouldRenderField={isModifierOp}
-      />
-      {!selectingField && (
-        <SectionHeader label='new'>
+    <div className='mb-4 flex w-full flex-col last:mb-0'>
+      <SectionHeader className='font-bold' label={splitCamelCase(keyCode)}>
+        {!selectingField && (
+          <>
+            <IconButton
+              icon='remove'
+              onClick={onRemoveKey}
+            />
+            <IconButton
+              icon='add'
+              onClick={() => {
+                setSelectingField('add');
+              }}
+            />
+          </>
+        )}
+        {selectingField && (
           <IconButton
-            icon='add'
+            icon='close'
             onClick={() => {
-              setSelectingField('add');
+              setSelectingField(false);
             }}
           />
-        </SectionHeader>
-      )}
+        )}
+      </SectionHeader>
       {selectingField && (
         <SoundFieldPicker
           excluded={modifier}
           soundName={soundName}
           onSelect={(newField, node) => {
+            // TODO: Fix fixing functionaility
             if (selectingField === 'fix' && fixingField) {
               onFix?.(fixingField, newField);
             }
@@ -105,7 +118,15 @@ const InnerModifierControl = memo(function ModifierControl({
           }}
         />
       )}
-    </>
+      {!selectingField && (
+        <SoundStructure
+          synths={synths}
+          structure={modifier}
+          renderField={renderField}
+          shouldRenderField={isModifierOp}
+        />
+      )}
+    </div>
   );
 });
 

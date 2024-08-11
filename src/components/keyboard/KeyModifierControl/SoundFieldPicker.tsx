@@ -63,7 +63,7 @@ export default function SoundFieldPicker({
       return (
         <button
           style={{ boxShadow: CONTROL_SHADOW }}
-          className='mb-2 mr-2 h-8 bg-white px-2 active:invert'
+          className='mr-2 h-8 bg-white px-2 active:invert'
           onClick={() => onSelect({ synthId, nodeId, fieldPath }, node)}
         >
           {fieldPath[fieldPath.length - 1]}
@@ -75,9 +75,7 @@ export default function SoundFieldPicker({
 
   return (
     <>
-      <SectionHeader label={soundName} className='mt-4 font-bold'>
-        <IconButton icon='close' onClick={onClose} />
-      </SectionHeader>
+      <SectionHeader label={soundName} />
       <SoundStructure
         synths={synths}
         structure={nodeMap}

@@ -1,23 +1,20 @@
 import { CONTROL_SHADOW } from '@src/utils/constants';
 import { useCallback } from 'react';
-import { LabelFieldProps } from './LabelField';
 
 type Option = { label: string; key: string };
 
 type RadioGroupProps<T> = {
   multi?: boolean;
-  label: string;
   options: readonly T[];
   values?: string[];
   onChange: (value: string[]) => void;
-} & Omit<LabelFieldProps, 'children'>;
+};
 
 export default function RadioGroup<T extends string | Option>({
   values = [],
   onChange,
   options,
   multi,
-  ...labelFields
 }: RadioGroupProps<T>) {
   const handleClick = useCallback(
     (key: string) => {
@@ -39,18 +36,16 @@ export default function RadioGroup<T extends string | Option>({
       {options.map((option) => {
         const key = typeof option === 'string' ? option : option.key;
         const label = typeof option === 'string' ? option : option.label;
+        const selected = values.includes(key);
         return (
-          <div className='mr-4 flex space-x-1' key={key}>
-            {/* <input
-                type='radio'
-                value={label}
-                checked={values.includes(key)}
-                onChange={() => handleClick(key)}
-              />
-              <label onClick={() => handleClick(key)}>{label}</label> */}
+          <div className='flex space-x-1' key={key}>
             <button
-              style={{ boxShadow: CONTROL_SHADOW }}
-              className='mb-2 mr-2 h-8 bg-white px-2 active:invert'
+              style={{
+                boxShadow: CONTROL_SHADOW,
+                background: selected ? 'black' : 'white',
+                color: selected ? 'white' : 'black',
+              }}
+              className='mb-2 mr-2 h-8 px-2 active:invert'
               key={key}
               onClick={() => handleClick(key)}
             >
