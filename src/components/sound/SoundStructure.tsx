@@ -109,11 +109,11 @@ const SoundStructure = typedMemo(
                 style={{ paddingLeft: level * 8 }}
                 className={
                   level
-                    ? `${last ? 'h-8' : ''} border-l-2 border-dotted border-l-black`
+                    ? `border-l-2 border-dotted border-l-black ${last ? 'mb-[6px]' : ''}`
                     : undefined
                 }
               ></div>
-              <div className='mb-[-2px] size-full'>{fieldNode}</div>
+              <div className='mb-2 size-full'>{fieldNode}</div>
             </div>
           );
         }
@@ -146,13 +146,15 @@ const SoundStructure = typedMemo(
 
     return (
       <>
-        {Object.entries(structure).map(([synthId, nodes]) => {
+        {Object.entries(structure).map(([synthId, nodes], synthIndex) => {
           const synth = synthMap[synthId];
-          const synthChildrenNodes = Object.entries(nodes)
-            .map(([nodeId, fields]) => {
+          const nodeEntries = Object.entries(nodes);
+          const synthChildrenNodes = nodeEntries
+            .map(([nodeId, fields], nodeIndex) => {
               const node = nodeMap[synthId]?.[nodeId];
               const nodeChildrenNodes = Object.entries(fields)
                 .map(([field, value], index) => {
+                  const last = index === Object.keys(fields).length - 1;
                   const nestedFiledNodes = renderNestedField({
                     synth,
                     node,
@@ -160,31 +162,33 @@ const SoundStructure = typedMemo(
                     value,
                     synthId,
                     nodeId,
-                    last: index === Object.keys(fields).length - 1,
+                    last,
                   });
                   return !nestedFiledNodes ? null : (
-                    <div
-                      key={`${synthId}-${nodeId}-${field}`}
-                      className='ml-[8px] border-l-2 border-dotted border-l-black pl-[8px]'
-                    >
-                      {nestedFiledNodes}
+                    <div className='flex' key={`${synthId}-${nodeId}-${field}`}>
+                      <div
+                        className={`ml-[8px] mt-[2px] border-l-2 border-dotted border-l-black pl-[8px] ${last ? 'mb-2' : ''}`}
+                      ></div>
+                      <div className='size-full'>{nestedFiledNodes}</div>
                     </div>
                   );
                 })
                 .filter((node) => node != null);
               return nodeChildrenNodes.length === 0 ? null : (
-                <div
-                  key={nodeId}
-                  className='border-l-2 border-dotted border-l-black'
-                >
-                  {renderNodeHeader({ synth, node })}
-                  {nodeChildrenNodes}
+                <div className='mb-[2px] flex' key={nodeId}>
+                  <div
+                    className={`border-l-2 border-dotted border-l-black ${nodeIndex === nodeEntries.length - 1 ? 'mb-2' : ''}`}
+                  ></div>
+                  <div className='size-full'>
+                    {renderNodeHeader({ synth, node })}
+                    {nodeChildrenNodes}
+                  </div>
                 </div>
               );
             })
             .filter(Boolean);
           return synthChildrenNodes.length === 0 ? null : (
-            <div key={synthId} className='w-full'>
+            <div key={synthId} className={`w-full ${synthIndex > 0 ? '-mt-2' : ''}`}>
               {renderSynthHeader({ synth })}
               {synthChildrenNodes}
             </div>

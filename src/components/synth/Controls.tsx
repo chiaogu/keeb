@@ -26,8 +26,15 @@ export default function Controls<T extends z.ZodTypeAny>({
   onRelease,
 }: ControlsProps<T>) {
   const innerSchema = useMemo(() => removeDefault(schema), [schema]);
+  const fields = useMemo(
+    () =>
+      innerSchema instanceof z.ZodObject
+        ? Object.entries(innerSchema.shape)
+        : null,
+    [innerSchema],
+  );
 
-  if (!(innerSchema instanceof z.ZodObject)) {
+  if (!fields) {
     return null;
   }
 
@@ -35,23 +42,28 @@ export default function Controls<T extends z.ZodTypeAny>({
     <div
       className={`flex w-full flex-col items-center ${className} ${indent > 0 ? 'mb-2 border-l-2 border-dotted border-l-black' : ''}`}
     >
-      {Object.entries(innerSchema.shape).map(([key, fieldSchema]) => (
-        <Control
-          key={key}
-          name={key}
-          value={value[key]}
-          onChange={(v) =>
-            onChange({
-              ...value,
-              [key]: v,
-            }, key)
-          }
-          schema={fieldSchema as z.ZodTypeAny}
-          config={controls?.[key]}
-          indent={indent}
-          onDrag={onDrag}
-          onRelease={onRelease}
-        />
+      {fields.map(([key, fieldSchema], index) => (
+        <div className={`w-full ${index === fields.length - 1 ? '' : 'mb-2'}`}>
+          <Control
+            key={key}
+            name={key}
+            value={value[key]}
+            onChange={(v) =>
+              onChange(
+                {
+                  ...value,
+                  [key]: v,
+                },
+                key,
+              )
+            }
+            schema={fieldSchema as z.ZodTypeAny}
+            config={controls?.[key]}
+            indent={indent}
+            onDrag={onDrag}
+            onRelease={onRelease}
+          />
+        </div>
       ))}
     </div>
   );

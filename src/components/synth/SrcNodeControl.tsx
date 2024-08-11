@@ -28,6 +28,7 @@ export default function SrcNodeControl({ src, onChange }: SrcNodeControlProps) {
           })
         }
       />
+      <div className='mb-2'></div>
       <Controls
         schema={zBaseSynthSrc}
         value={src.data}

@@ -48,7 +48,7 @@ function findOptionIndex(options: SliderSelectProps['options'], value: string) {
 
 export function ControlSliderSelect(props: SliderSelectProps) {
   return (
-    <div className='mb-2 h-8 w-full'>
+    <div className='h-8 w-full'>
       <SliderSelect
         {...props}
         bgColor='white'
