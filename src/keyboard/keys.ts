@@ -96,3 +96,20 @@ export const keys = [
     'ArrowRight',
   ],
 ];
+
+
+export const modifiers = [
+  'Escape',
+  'Tab',
+  'CapsLock',
+  'ShiftLeft',
+  'ControlLeft',
+  'AltLeft',
+  'MetaLeft',
+  'MetaRight',
+  'AltRight',
+  'ShiftRight',
+  'Enter',
+  'Backslash',
+  'Backspace',
+];

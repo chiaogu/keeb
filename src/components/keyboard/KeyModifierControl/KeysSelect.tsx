@@ -1,5 +1,5 @@
-import LabelField from '@src/components/shared/LabelField';
-import { keys } from '@src/keyboard/keys';
+import { keys, modifiers } from '@src/keyboard/keys';
+import { CONTROL_SHADOW } from '@src/utils/constants';
 import { useCallback } from 'react';
 
 type KeysSelectProps = {
@@ -10,7 +10,11 @@ type KeysSelectProps = {
 export function KeysSelect({ onSelect, className }: KeysSelectProps) {
   const KeyGroupButton = useCallback(
     ({ label, keys }: { label: string; keys: string[] }) => (
-      <button className='mr-5 underline' onClick={() => onSelect(keys)}>
+      <button
+        style={{ boxShadow: CONTROL_SHADOW }}
+        className='mb-2 mr-2 h-8 bg-white px-2 active:invert'
+        onClick={() => onSelect(keys)}
+      >
         {label}
       </button>
     ),
@@ -18,14 +22,13 @@ export function KeysSelect({ onSelect, className }: KeysSelectProps) {
   );
 
   return (
-    <LabelField label='keys'>
-      <div className={`inline-block w-full ${className}`}>
-        <KeyGroupButton label='none' keys={[]} />
-        <KeyGroupButton label='all' keys={keys.flat()} />
-        {keys.map((row, index) => (
-          <KeyGroupButton key={row[0]} label={`r${index + 1}`} keys={row} />
-        ))}
-      </div>
-    </LabelField>
+    <div className={`inline-block w-full ${className}`}>
+      <KeyGroupButton label='none' keys={[]} />
+      <KeyGroupButton label='all' keys={keys.flat()} />
+      {keys.map((row, index) => (
+        <KeyGroupButton key={row[0]} label={`r${index + 1}`} keys={row} />
+      ))}
+      <KeyGroupButton label='modifiers' keys={modifiers} />
+    </div>
   );
 }

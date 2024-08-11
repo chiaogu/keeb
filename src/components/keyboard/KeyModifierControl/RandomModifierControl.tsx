@@ -3,7 +3,6 @@ import SectionHeader from '@src/components/shared/SectionHeader';
 import { keys } from '@src/keyboard/keys';
 import { ModifierLayer } from '@src/types';
 import { Fragment, memo, useCallback, useMemo, useState } from 'react';
-import { KeysSelect } from './KeysSelect';
 import { useModiferContext } from './ModifierContext';
 import ModifierControl from './ModifierControl';
 import ModifierKeyboard from './ModifierKeyboard';
@@ -82,30 +81,45 @@ export default function RandomModifierControl() {
     [modifiedKeys, batchSetModifier, removeModifier, selectedLayerIndex],
   );
 
+  const selectedKeys = useMemo(
+    () => Object.keys(modifiedKeys).length > 0,
+    [modifiedKeys],
+  );
+
   return (
     <>
-      <ModifierKeyboard highlightedKeys={modifiedKeys} onPress={toggleKey} />
-      <div className='flex w-full max-w-[500px] flex-col items-center'>
-        <ModifierLayerInfo />
-        <KeysSelect
-          onSelect={(selectedKeys) => {
+      <ModifierLayerInfo>
+        <IconButton
+          icon={selectedKeys ? 'remove_selection' : 'select'}
+          onClick={() => {
             removeModifier(selectedLayerIndex, keys.flat());
-            batchSetModifier(selectedLayerIndex, selectedKeys);
+            batchSetModifier(
+              selectedLayerIndex,
+              selectedKeys ? [] : keys.flat(),
+            );
           }}
         />
-        <SectionHeader label='randomize'>
-          <IconButton
-            icon='ifl'
-            onClick={() => {
-              removeModifier(selectedLayerIndex, keys.flat());
-              batchSetModifier(
-                selectedLayerIndex,
-                Object.keys(selectedLayer.keys),
-                true,
-              );
-            }}
-          />
-        </SectionHeader>
+        <IconButton
+          icon='ifl'
+          onClick={() => {
+            removeModifier(selectedLayerIndex, keys.flat());
+            batchSetModifier(
+              selectedLayerIndex,
+              Object.keys(selectedLayer.keys),
+              true,
+            );
+          }}
+        />
+      </ModifierLayerInfo>
+      {/* <KeysSelect
+        onSelect={(selectedKeys) => {
+          removeModifier(selectedLayerIndex, keys.flat());
+          batchSetModifier(selectedLayerIndex, selectedKeys);
+        }}
+      /> */}
+      <div className='mb-4'></div>
+      <ModifierKeyboard highlightedKeys={modifiedKeys} onPress={toggleKey} />
+      <div className='mt-4 flex w-full flex-col items-center'>
         <RandomizationControl
           radomConfig={selectedLayer.config}
           onChange={updateRandomConfig}

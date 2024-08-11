@@ -45,7 +45,18 @@ export default function CustomModifierControl() {
 
   return (
     <>
-      <ModifierLayerInfo className='mb-4'/>
+      <ModifierLayerInfo className='mb-4'>
+        <IconButton
+          icon={selectedKeys.length > 0 ? 'remove_selection' : 'select'}
+          onClick={() => {
+            if (selectedKeys.length > 0) {
+              setSelectedKeys([]);
+            } else {
+              setSelectedKeys(Object.keys(selectedLayer.keys));
+            }
+          }}
+        />
+      </ModifierLayerInfo>
       <ModifierKeyboard
         selectedKeys={selectedKeys}
         highlightedKeys={highlightedKeys}
