@@ -2,6 +2,7 @@ import usePressedKeys from '@src/hooks/usePressedKeys';
 import getKeyCodeLabel from '@src/keyboard/getKeyLabel';
 import getKeyWidth from '@src/keyboard/getKeyWidth';
 import { keys } from '@src/keyboard/keys';
+import { getValueBg, normalValueToBrightness } from '@src/utils/utils';
 
 const keySize = 44;
 
@@ -40,11 +41,8 @@ export default function Keyboard({
             };
             const pressed = pressedKeys.includes(key);
             const selected = selectedKeys.includes(key);
-            const bgValue =
-              highlightedKeys[key] == null ? 1 : 0.7 - highlightedKeys[key];
-            const bg = `rgb(${Array(3)
-              .fill(bgValue * 255)
-              .join(',')})`;
+            const bgValue = normalValueToBrightness(highlightedKeys[key]);
+            const bg = getValueBg(bgValue);
             const color = bgValue > 0.5 ? 'black' : 'white';
             return (
               <div

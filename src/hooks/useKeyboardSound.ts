@@ -210,6 +210,7 @@ export default function useKeyboardSound(
               } else if (options != null) {
                 modifier = [
                   'set',
+                  // TODO: Sort by schema
                   options[Math.round(seed * (options.length - 1))],
                 ];
               }

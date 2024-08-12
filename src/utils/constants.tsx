@@ -44,3 +44,5 @@ export const TABS = [
 ] as const;
 
 export type Tab = (typeof TABS)[number]['value'];
+
+export const MAX_BRIGHTNESS = 0.7;

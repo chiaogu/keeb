@@ -8,6 +8,7 @@ type RadioGroupProps<T> = {
   options: readonly T[];
   values?: string[];
   onChange: (value: string[]) => void;
+  getBackground?: (start: number, end: number) => string;
 };
 
 export default function RadioGroup<T extends string | Option>({
@@ -37,13 +38,15 @@ export default function RadioGroup<T extends string | Option>({
         const key = typeof option === 'string' ? option : option.key;
         const label = typeof option === 'string' ? option : option.label;
         const selected = values.includes(key);
+        // const selectedBackground
         return (
           <div className='flex space-x-1' key={key}>
             <button
               style={{
                 boxShadow: CONTROL_SHADOW,
-                background: selected ? 'black' : 'white',
-                color: selected ? 'white' : 'black',
+                background: 'black',
+                color: 'white',
+                filter: selected ? undefined : 'invert(1)',
               }}
               className='mb-2 mr-2 h-8 px-2 active:invert'
               key={key}

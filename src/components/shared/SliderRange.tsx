@@ -12,6 +12,7 @@ type SliderRangeProps = {
   upper: number;
   onLowerChange: (v: number) => void;
   onUpperChange: (v: number) => void;
+  background?: string;
 };
 
 function OneSideSlider({
@@ -32,7 +33,7 @@ function OneSideSlider({
         value={value}
         sensitivity={1.1}
         onChange={onChange}
-        render={({ dragging, normalValue }) => null}
+        render={() => null}
       />
     </div>
   );
@@ -46,6 +47,7 @@ export default function SliderRange({
   upper,
   onLowerChange,
   onUpperChange,
+  background = 'black',
 }: SliderRangeProps) {
   const { width = 0, ref } = useResizeDetector<HTMLDivElement>();
   const [firstRender, setFirstRender] = useState(true);
@@ -86,14 +88,15 @@ export default function SliderRange({
         style={{
           transform: `scaleX(${firstRender ? 0 : Math.max(0.5, (normalUpper - normalLower) * 100)}%)`,
           left: `${width * (normalLower / 2 - (1 - normalUpper) / 2)}px`,
+          background,
         }}
         className='pointer-events-none absolute size-full bg-black'
       ></div>
-      <div className='pointer-events-none absolute left-0 top-0 flex size-full justify-between px-2'>
-        <div className='flex h-full items-center text-white mix-blend-difference'>
+      <div className='pointer-events-none absolute left-0 top-0 flex size-full justify-between px-2 mix-blend-difference'>
+        <div className='flex h-full items-center text-white'>
           {label}
         </div>
-        <div className='flex h-full items-center text-white mix-blend-difference'>
+        <div className='flex h-full items-center text-white'>
           {lower === upper
             ? `${Math.round(lower * 100)}%`
             : `${Math.round(lower * 100)}% — ${Math.round(upper * 100)}%`}

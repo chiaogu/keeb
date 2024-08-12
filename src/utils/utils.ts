@@ -7,7 +7,7 @@ import * as Tone from '@src/tone';
 import { WritableDraft } from 'immer';
 import { get, isEmpty, isEqual, set, unset } from 'lodash-es';
 import React from 'react';
-import { MAX_SAMPLE_SIZE } from './constants';
+import { MAX_BRIGHTNESS, MAX_SAMPLE_SIZE } from './constants';
 import getKeyCodeLabel from '@src/keyboard/getKeyLabel';
 
 export function frequencyToHertz(value: Tone.Unit.Frequency): number {
@@ -185,4 +185,15 @@ export function dispatchKeyEvent({
 
 export function shouldShowKeyEventVisual(e: KeyboardEvent) {
   return e.detail === VISUAL_ENABLED_CODE || !e.detail;
+}
+
+export function normalValueToBrightness(v?: number | null) {
+  if (v == null) return 1;
+  return MAX_BRIGHTNESS * (1 - v);
+}
+
+export function getValueBg(v: number) {
+  return `rgb(${Array(3)
+    .fill(v * 255)
+    .join(',')})`;
 }
