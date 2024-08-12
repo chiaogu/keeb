@@ -10,6 +10,7 @@ import { formatModifierValue } from '@src/utils/utils';
 import { get } from 'lodash-es';
 import { z } from 'zod';
 import InvalidFieldModifier from './InvalidFieldModifier';
+import SliderRange from '@src/components/shared/SliderRange';
 
 type FieldRandomControlProps = {
   fieldPath: string[];
@@ -55,24 +56,33 @@ export default function FieldRandomControl({
         <IconButton icon='remove' onClick={onClickRemove} />
       </SectionHeader>
       {schema instanceof z.ZodNumber && (
-        <>
-          <Slider
-            label='min'
-            value={min}
-            onChange={(v) => onChange({ max, min: Math.min(v, max) })}
-            min={-0.5}
-            max={0.5}
-            renderValue={formatModifierValue}
-          />
-          <Slider
-            label='max'
-            value={max}
-            onChange={(v) => onChange({ min, max: Math.max(v, min) })}
-            min={-0.5}
-            max={0.5}
-            renderValue={formatModifierValue}
-          />
-        </>
+        <SliderRange 
+          label={field}
+          min={-0.5}
+          max={0.5}
+          lower={min}
+          upper={max}
+          onLowerChange={(v) => onChange({ max, min: Math.min(v, max) })}
+          onUpperChange={(v) => onChange({ min, max: Math.max(v, min) })}
+        />
+        // <>
+        //   <Slider
+        //     label='min'
+        //     value={min}
+        //     onChange={(v) => onChange({ max, min: Math.min(v, max) })}
+        //     min={-0.5}
+        //     max={0.5}
+        //     renderValue={formatModifierValue}
+        //   />
+        //   <Slider
+        //     label='max'
+        //     value={max}
+        //     onChange={(v) => onChange({ min, max: Math.max(v, min) })}
+        //     min={-0.5}
+        //     max={0.5}
+        //     renderValue={formatModifierValue}
+        //   />
+        // </>
       )}
       {schema instanceof z.ZodEnum && (
         <div className='flex w-full border-l-2 border-dotted border-l-black pl-2'>

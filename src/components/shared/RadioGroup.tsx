@@ -32,7 +32,7 @@ export default function RadioGroup<T extends string | Option>({
   );
 
   return (
-    <div className='flex flex-wrap'>
+    <div className='-mb-2 flex flex-wrap'>
       {options.map((option) => {
         const key = typeof option === 'string' ? option : option.key;
         const label = typeof option === 'string' ? option : option.label;
