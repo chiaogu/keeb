@@ -55,6 +55,11 @@ export default function SliderRange({
   const normalUpper = scale(upper, min, max, 0, 1);
   const center = normalLower + (normalUpper - normalLower) / 2;
 
+  const value =
+    lower === upper
+      ? `${Math.round(lower * 100)}%`
+      : `${Math.round(lower * 100)}% — ${Math.round(upper * 100)}%`;
+
   useEffect(() => {
     setFirstRender(false);
   }, []);
@@ -86,21 +91,28 @@ export default function SliderRange({
       />
       <div
         style={{
-          transform: `scaleX(${firstRender ? 0 : Math.max(0.5, (normalUpper - normalLower) * 100)}%)`,
-          left: `${width * (normalLower / 2 - (1 - normalUpper) / 2)}px`,
+          width: `${width * (normalUpper - normalLower)}px`,
+          left: `${width * normalLower}px`,
           background,
         }}
-        className='pointer-events-none absolute size-full bg-black'
-      ></div>
-      <div className='pointer-events-none absolute left-0 top-0 flex size-full justify-between px-2 mix-blend-difference'>
-        <div className='flex h-full items-center text-white'>
+        className='pointer-events-none absolute z-10 size-full min-w-1 justify-between overflow-hidden whitespace-nowrap text-white'
+      >
+        <div
+          className='absolute left-2 flex h-full items-center'
+          style={{ transform: `translateX(-${width * normalLower}px)` }}
+        >
           {label}
         </div>
-        <div className='flex h-full items-center text-white'>
-          {lower === upper
-            ? `${Math.round(lower * 100)}%`
-            : `${Math.round(lower * 100)}% — ${Math.round(upper * 100)}%`}
+        <div
+          className='absolute right-2 flex h-full items-center'
+          style={{ transform: `translateX(${width * (1 - normalUpper)}px)` }}
+        >
+          {value}
         </div>
+      </div>
+      <div className='pointer-events-none absolute left-0 top-0 z-0 flex size-full justify-between px-2'>
+        <div className='flex h-full items-center'>{label}</div>
+        <div className='flex h-full items-center'>{value}</div>
       </div>
     </div>
   );

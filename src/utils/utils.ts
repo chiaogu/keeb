@@ -163,8 +163,8 @@ type DispatchKeyEventArgs = {
   visual?: boolean;
 }
 
-const VISUAL_ENABLED_CODE = 1;
-const VISUAL_DISABLE_CODE = 0;
+const VISUAL_ENABLED_CODE = 0;
+const VISUAL_DISABLE_CODE = Number.MIN_SAFE_INTEGER;
 
 export function dispatchKeyEvent({
   event,
@@ -184,7 +184,8 @@ export function dispatchKeyEvent({
 }
 
 export function shouldShowKeyEventVisual(e: KeyboardEvent) {
-  return e.detail === VISUAL_ENABLED_CODE || !e.detail;
+  console.log(e.detail, VISUAL_ENABLED_CODE);
+  return e.detail === VISUAL_ENABLED_CODE || e.detail === undefined;
 }
 
 export function normalValueToBrightness(v?: number | null) {
