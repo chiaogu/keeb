@@ -5,12 +5,12 @@ import SliderRange from '@src/components/shared/SliderRange';
 import { SynthNodeState } from '@src/synth';
 import { nodeConfig } from '@src/synth/config';
 import { FieldRandomConfig } from '@src/types';
+import { MAX_BRIGHTNESS } from '@src/utils/constants';
 import { getNestedFieldSchema } from '@src/utils/schema';
+import { getValueBg, normalValueToBrightness } from '@src/utils/utils';
 import { get } from 'lodash-es';
 import { z } from 'zod';
 import InvalidFieldModifier from './InvalidFieldModifier';
-import { getValueBg } from '@src/utils/utils';
-import { MAX_BRIGHTNESS } from '@src/utils/constants';
 
 type FieldRandomControlProps = {
   fieldPath: string[];
@@ -64,7 +64,11 @@ export default function FieldRandomControl({
             onLowerChange={(v) => onChange({ max, min: Math.min(v, max) })}
             onUpperChange={(v) => onChange({ min, max: Math.max(v, min) })}
           />
-          <IconButton className='ml-2 shrink-0' icon='remove' onClick={onClickRemove} />
+          <IconButton
+            className='ml-2 shrink-0'
+            icon='remove'
+            onClick={onClickRemove}
+          />
         </div>
       )}
       {schema instanceof z.ZodEnum && (
@@ -78,6 +82,14 @@ export default function FieldRandomControl({
               onChange={(selected) => onChange({ options: selected })}
               options={schema.options}
               multi
+              getBackground={(index) => {
+                const selectedIndex = (options ?? []).indexOf(
+                  schema.options[index],
+                );
+                const start = selectedIndex / (options?.length ?? 1);
+                const end = (selectedIndex + 1) / (options?.length ?? 1);
+                return `linear-gradient(to right, ${getValueBg(normalValueToBrightness(start))}, ${getValueBg(normalValueToBrightness(end))})`;
+              }}
             />
           </div>
         </>
