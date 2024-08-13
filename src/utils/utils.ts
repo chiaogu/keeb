@@ -184,7 +184,6 @@ export function dispatchKeyEvent({
 }
 
 export function shouldShowKeyEventVisual(e: KeyboardEvent) {
-  console.log(e.detail, VISUAL_ENABLED_CODE);
   return e.detail === VISUAL_ENABLED_CODE || e.detail === undefined;
 }
 

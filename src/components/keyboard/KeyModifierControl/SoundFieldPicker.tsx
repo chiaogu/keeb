@@ -22,14 +22,12 @@ function shouldRenderField(
 type SoundFieldPickerProps = {
   soundName: string;
   onSelect: (args: SoundFieldPath, node?: SynthNodeState) => void;
-  onClose: () => void;
   excluded?: SoundStructureType<ModifierOp>;
 };
 
 export default function SoundFieldPicker({
   soundName,
   onSelect,
-  onClose,
   excluded,
 }: SoundFieldPickerProps) {
   const { synths } = useModiferContext();

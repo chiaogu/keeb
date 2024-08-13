@@ -18,7 +18,6 @@ export default function CustomModifierControl() {
     removeModifier,
     soundName,
   } = useModiferContext();
-  const [selectedKeys, setSelectedKeys] = useImmer<string[]>([]);
   const highlightedKeys = useMemo(() => {
     if (!selectedLayer) return {};
     return Object.fromEntries(
@@ -27,6 +26,9 @@ export default function CustomModifierControl() {
         .map(([key]) => [key, 1]),
     );
   }, [selectedLayer]);
+  const [selectedKeys, setSelectedKeys] = useImmer<string[]>(
+    Object.keys(highlightedKeys),
+  );
 
   const toggleKey = useCallback(
     (key: string) => {

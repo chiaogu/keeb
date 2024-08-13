@@ -82,10 +82,7 @@ export default function RandomModifierControl() {
     [modifiedKeys, batchSetModifier, removeModifier, selectedLayerIndex],
   );
 
-  const selectedKeys = useMemo(
-    () => Object.keys(modifiedKeys).length > 0,
-    [modifiedKeys],
-  );
+  const selectedKeys = useMemo(() => Object.keys(modifiedKeys), [modifiedKeys]);
 
   return (
     <>
@@ -102,12 +99,12 @@ export default function RandomModifierControl() {
           }}
         />
         <IconButton
-          icon={selectedKeys ? 'remove_selection' : 'select'}
+          icon={selectedKeys.length > 0 ? 'remove_selection' : 'select'}
           onClick={() => {
             removeModifier(selectedLayerIndex, keys.flat());
             batchSetModifier(
               selectedLayerIndex,
-              selectedKeys ? [] : keys.flat(),
+              selectedKeys.length > 0 ? [] : keys.flat(),
             );
           }}
         />
@@ -120,40 +117,64 @@ export default function RandomModifierControl() {
       /> */}
       <div className='mb-4'></div>
       <ModifierKeyboard highlightedKeys={modifiedKeys} onPress={toggleKey} />
-      <div className='mt-4 flex w-full flex-col items-center'>
-        <RandomizationControl
-          radomConfig={selectedLayer.config}
-          onChange={updateRandomConfig}
-          onClickInvalidField={(args) => {
-            setSelectingField('fix');
-            setFixingField(args);
-          }}
-          onClickAdd={() => {
-            setSelectingField('add');
-          }}
-          selectingField={!!selectingField}
-          selectedField={fixingField}
-        />
-        {selectingField && (
-          <SoundFieldPicker
-            soundName={soundName}
-            onSelect={(newField, node) => {
-              if (selectingField === 'fix' && fixingField) {
-                fixInvalidFields(fixingField, newField);
-              }
-              if (selectingField === 'add' && node) {
-                addRandomConfig(newField, node);
-              }
-              setSelectingField(false);
-              setFixingField(undefined);
-            }}
-            onClose={() => {
-              setSelectingField(false);
-              setFixingField(undefined);
-            }}
-          />
-        )}
-      </div>
+      {selectedKeys.length > 0 && (
+        <div className='mt-8 flex w-full flex-col items-center'>
+          <SectionHeader
+            className='font-bold'
+            label={`${selectedKeys.length} keys`}
+          >
+            {!selectingField && (
+              <>
+                <IconButton
+                  icon='add'
+                  onClick={() => {
+                    setSelectingField('add');
+                  }}
+                />
+              </>
+            )}
+            {selectingField && (
+              <IconButton
+                icon='close'
+                onClick={() => {
+                  setSelectingField(false);
+                }}
+              />
+            )}
+          </SectionHeader>
+          {!selectingField && (
+            <RandomizationControl
+              radomConfig={selectedLayer.config}
+              onChange={updateRandomConfig}
+              onClickInvalidField={(args) => {
+                setSelectingField('fix');
+                setFixingField(args);
+              }}
+              selectingField={!!selectingField}
+              selectedField={fixingField}
+            />
+          )}
+          {selectingField && (
+            <SoundFieldPicker
+              soundName={soundName}
+              onSelect={(newField, node) => {
+                if (selectingField === 'fix' && fixingField) {
+                  fixInvalidFields(fixingField, newField);
+                }
+                if (selectingField === 'add' && node) {
+                  addRandomConfig(newField, node);
+                }
+                setSelectingField(false);
+                setFixingField(undefined);
+              }}
+              // onClose={() => {
+              //   setSelectingField(false);
+              //   setFixingField(undefined);
+              // }}
+            />
+          )}
+        </div>
+      )}
       {/* <KeysDebug
         modifiedKeys={modifiedKeys}
         modifierKeys={selectedLayer.keys}

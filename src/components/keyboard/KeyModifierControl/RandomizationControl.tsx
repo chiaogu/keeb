@@ -20,7 +20,6 @@ type RandomizationControlProps = {
   radomConfig: RandomizationConfig;
   onChange: (field: SoundFieldPath, config: FieldRandomConfig) => void;
   onClickInvalidField: (args: SoundFieldPath) => void;
-  onClickAdd: () => void;
   selectingField: boolean;
   selectedField?: SoundFieldPath;
 };
@@ -29,7 +28,6 @@ export default function RandomizationControl({
   radomConfig,
   onChange,
   onClickInvalidField,
-  onClickAdd,
   selectingField,
   selectedField,
 }: RandomizationControlProps) {
@@ -64,18 +62,13 @@ export default function RandomizationControl({
   );
 
   return (
-    <div className='mt-4 w-full'>
+    <div className='w-full'>
       <SoundStructure
         synths={synths}
         structure={radomConfig}
         renderField={renderField}
         shouldRenderField={isFieldRandomConfig}
       />
-      {!selectingField && (
-        <SectionHeader label='new'>
-          <IconButton icon='add' onClick={onClickAdd} />
-        </SectionHeader>
-      )}
     </div>
   );
 }

@@ -112,10 +112,6 @@ const InnerModifierControl = memo(function ModifierControl({
             setSelectingField(false);
             setFixingField(undefined);
           }}
-          onClose={() => {
-            setSelectingField(false);
-            setFixingField(undefined);
-          }}
         />
       )}
       {!selectingField && (
