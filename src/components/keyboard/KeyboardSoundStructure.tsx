@@ -19,6 +19,7 @@ type KeyboardSounStructureProps<T> = Pick<
 
 
 // TODO: foldable
+// TODO: Add a new section for unknown synths
 export default function KeyboardSoundStructure<T>({
   structure,
   renderField,

@@ -183,6 +183,7 @@ export default function useModifiers(keyboard: KeyboardConfig) {
     [setModifiers],
   );
 
+  // TODO: Not working properly
   const fixInvalidFields = useCallback(
     (oldField: SoundFieldPath, newField: SoundFieldPath) => {
       setModifiers((draft) => {

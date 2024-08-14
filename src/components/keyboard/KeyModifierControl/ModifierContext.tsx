@@ -22,8 +22,9 @@ import {
   useState,
 } from 'react';
 import { SoundFieldPath } from './RandomizationControl';
+import { useMainContext } from '@src/components/shared/MainContext';
 
-function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
+function useModifierContextValue(keyboard: Keyboard) {
   const {
     sound: { name },
 
@@ -37,10 +38,7 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     updateRandomConfig: soundUpdateRandomConfig,
     loadModifierLayers: soundLoadModifierLayers,
     fixInvalidFields: soundFixInvalidFields,
-  } = useMemo(
-    () => (keyEvent === 'down' ? keyboard.down : keyboard.up),
-    [keyEvent, keyboard],
-  );
+  } = keyboard.down;
   
   const modifiers = keyboard.modifier.layers;
 
@@ -249,16 +247,13 @@ export function useModiferContext() {
 
 type ModifierContextProviderProps = {
   children: React.ReactNode;
-  keyboard: Keyboard;
-  keyEvent: KeyEvent;
 };
 
 export function ModifierContextProvider({
-  keyEvent,
-  keyboard,
   children,
 }: ModifierContextProviderProps) {
-  const contextValue = useModifierContextValue(keyboard, keyEvent);
+  const { keyboard } = useMainContext();
+  const contextValue = useModifierContextValue(keyboard);
   return (
     <ModifierContext.Provider value={contextValue}>
       {children}
