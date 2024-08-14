@@ -27,6 +27,7 @@ import useThrottleCallback from './useThrottleCallback';
 export default function useKeyboardSound(
   keySound: KeySoundConfig,
   keyEvent: KeyEvent,
+  keyboardModifiers: ModifierLayer[],
 ) {
   const channel = useMemo(() => channels[keyEvent], [keyEvent]);
   const soundCache = useSoundCache(channel);
@@ -35,9 +36,12 @@ export default function useKeyboardSound(
 
   const trigger = useCallback(
     (key: string) => {
-      soundCache.trigger(sound.synths, findSoundModifiers(modifiers, key));
+      soundCache.trigger(
+        sound.synths,
+        findSoundModifiers(keyboardModifiers, key),
+      );
     },
-    [modifiers, soundCache, sound.synths],
+    [keyboardModifiers, soundCache, sound.synths],
   );
 
   const triggerRelease = useDebounceCallback(() => {

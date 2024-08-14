@@ -16,9 +16,9 @@ export type KeyEvent = 'down' | 'up';
 
 export default function useKeyboard() {
   const initConfig = useMemo(() => getKeyboardConfig(), []);
-  const down = useKeyboardSound(initConfig.sound.down, 'down');
-  const up = useKeyboardSound(initConfig.sound.up, 'up');
   const modifier = useModifiers(initConfig);
+  const down = useKeyboardSound(initConfig.sound.down, 'down', modifier.layers);
+  const up = useKeyboardSound(initConfig.sound.up, 'up', modifier.layers);
   const [name, setName] = useState(initConfig.name);
   const currentConfig = useMemo(
     () => ({
