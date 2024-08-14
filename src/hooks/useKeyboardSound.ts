@@ -15,7 +15,7 @@ import {
   getSoundStructureFieldPath,
   replaceSoundStructureField,
 } from '@src/utils/utils';
-import { isEmpty, set } from 'lodash-es';
+import { isEmpty, omit, set } from 'lodash-es';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import { v4 as uuid } from 'uuid';
@@ -72,7 +72,7 @@ export default function useKeyboardSound(
 
   const keyboardSound = useMemo(
     () => ({
-      ...sound,
+      ...omit(sound, ['states']),
       synths: sound.states,
       trigger,
     }),
