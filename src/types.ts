@@ -45,6 +45,7 @@ export type KeyboardConfig = {
   sound: {
     up: KeySoundConfig;
     down: KeySoundConfig;
+    modifiers: ModifierLayer[];
   };
 };
 

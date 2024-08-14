@@ -2,9 +2,10 @@ import { getDefaultKeyboard, getDefaultSound } from '@src/keyboard/defaults';
 import { KeyboardConfig } from '@src/types';
 import { downloadKeyboard } from '@src/utils/file';
 import * as storage from '@src/utils/localstorage';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useKeyEvents } from './useKeyEvents';
 import useKeyboardSound from './useKeyboardSound';
+import useModifiers from './useModifiers';
 import useUplodaFile from './useUplodaFile';
 
 function getKeyboardConfig() {
@@ -14,10 +15,11 @@ function getKeyboardConfig() {
 export type KeyEvent = 'down' | 'up';
 
 export default function useKeyboard() {
-  const initConfig = useRef(getKeyboardConfig());
-  const down = useKeyboardSound(initConfig.current.sound.down, 'down');
-  const up = useKeyboardSound(initConfig.current.sound.up, 'up');
-  const [name, setName] = useState(initConfig.current.name);
+  const initConfig = useMemo(() => getKeyboardConfig(), []);
+  const down = useKeyboardSound(initConfig.sound.down, 'down');
+  const up = useKeyboardSound(initConfig.sound.up, 'up');
+  const modifier = useModifiers(initConfig);
+  const [name, setName] = useState(initConfig.name);
   const currentConfig = useMemo(
     () => ({
       name,
@@ -30,10 +32,13 @@ export default function useKeyboard() {
           config: up.sound,
           modifiers: up.modifiers,
         },
+        modifiers: modifier.layers,
       },
     }),
-    [down.modifiers, down.sound, name, up.modifiers, up.sound],
+    [down.modifiers, down.sound, modifier.layers, name, up.modifiers, up.sound],
   );
+  
+  console.log(modifier.layers);
 
   useEffect(() => {
     storage.setKeyboardConfig(currentConfig);
@@ -84,8 +89,8 @@ export default function useKeyboard() {
   }, [down, up]);
 
   return useMemo(
-    () => ({ down, up, name, setName, download, upload, reset }),
-    [down, up, name, download, upload, reset],
+    () => ({ down, up, name, setName, download, upload, reset, modifier }),
+    [down, up, name, download, upload, reset, modifier],
   );
 }
 

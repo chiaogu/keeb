@@ -63,6 +63,7 @@ export function getDefaultKeyboard(): KeyboardConfig {
     sound: {
       up: getDefaultKeySound(),
       down: getDefaultKeySound(),
+      modifiers: [],
     },
   };
 }
