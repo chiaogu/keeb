@@ -5,17 +5,18 @@ import { useCallback, useState } from 'react';
 import IconButton from '../shared/IconButton';
 import SectionHeader from '../shared/SectionHeader';
 import { useModiferContext } from './KeyModifierControl/ModifierContext';
+import { useMainContext } from '../shared/MainContext';
 
 const layerTypes: ModifierLayerType[] = ['custom', 'random'];
 
 export default function ModifierLayerControl() {
+  const { keyboard } = useMainContext();
   const {
     modifiers,
     setSelectedLayerIndex,
     selectedLayer,
     selectedLayerIndex,
     addModifierLayer,
-    soundName,
     loadModifierLayers,
     removeModifierLayer,
   } = useModiferContext();
@@ -30,12 +31,12 @@ export default function ModifierLayerControl() {
 
   return (
     <div className='flex w-full flex-col items-center'>
-      <SectionHeader label={`${soundName} modifier`} className='mb-2 font-bold'>
+      <SectionHeader label={`${keyboard.name} tweaks`} className='mb-2 font-bold'>
         <IconButton icon='upload' onClick={loadModifierLayers} />
         <IconButton
           icon='download'
           onClick={() =>
-            downloadModifierLayers(`${soundName}-modifier`, modifiers)
+            downloadModifierLayers(`${keyboard.name}-tweaks`, modifiers)
           }
         />
         <IconButton

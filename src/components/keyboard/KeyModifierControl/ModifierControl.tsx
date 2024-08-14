@@ -1,18 +1,16 @@
 import IconButton from '@src/components/shared/IconButton';
 import SectionHeader from '@src/components/shared/SectionHeader';
-import SoundStructure, {
-  SoundStructureProps,
-} from '@src/components/sound/SoundStructure';
+import { SoundStructureProps } from '@src/components/sound/SoundStructure';
 import {
   isModifierOp,
   ModifierOp,
   SoundModifier,
 } from '@src/keyboard/keySoundModifier';
-import { SynthConfig, SynthNodeState } from '@src/synth';
+import { SynthNodeState } from '@src/synth';
 import { isSoundFieldPathEqual, splitCamelCase } from '@src/utils/utils';
 import { memo, useCallback, useState } from 'react';
+import KeyboardSoundStructure from '../KeyboardSoundStructure';
 import FieldModifier from './FieldModifer';
-import { useModiferContext } from './ModifierContext';
 import { SoundFieldPath } from './RandomizationControl';
 import SoundFieldPicker from './SoundFieldPicker';
 
@@ -31,13 +29,12 @@ const InnerModifierControl = memo(function ModifierControl({
   soundName,
   modifier,
   onChange,
-  synths,
   onAdd,
   onFix,
   onRemove,
   keyCode,
   onRemoveKey,
-}: ModifierControlProps & { synths: SynthConfig[] }) {
+}: ModifierControlProps) {
   const [fixingField, setFixingField] = useState<SoundFieldPath>();
   const [selectingField, setSelectingField] = useState<'add' | 'fix' | false>(
     false,
@@ -76,10 +73,7 @@ const InnerModifierControl = memo(function ModifierControl({
       <SectionHeader className='font-bold' label={splitCamelCase(keyCode)}>
         {!selectingField && (
           <>
-            <IconButton
-              icon='remove'
-              onClick={onRemoveKey}
-            />
+            <IconButton icon='remove' onClick={onRemoveKey} />
             <IconButton
               icon='add'
               onClick={() => {
@@ -115,8 +109,7 @@ const InnerModifierControl = memo(function ModifierControl({
         />
       )}
       {!selectingField && (
-        <SoundStructure
-          synths={synths}
+        <KeyboardSoundStructure
           structure={modifier}
           renderField={renderField}
           shouldRenderField={isModifierOp}
@@ -127,6 +120,5 @@ const InnerModifierControl = memo(function ModifierControl({
 });
 
 export default function ModifierControl(props: ModifierControlProps) {
-  const { synths } = useModiferContext();
-  return <InnerModifierControl {...props} synths={synths} />;
+  return <InnerModifierControl {...props} />;
 }
