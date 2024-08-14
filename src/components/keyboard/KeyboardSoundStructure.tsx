@@ -17,6 +17,8 @@ type KeyboardSounStructureProps<T> = Pick<
   'structure' | 'renderField' | 'shouldRenderField'
 >;
 
+
+// TODO: foldable
 export default function KeyboardSoundStructure<T>({
   structure,
   renderField,
@@ -29,6 +31,11 @@ export default function KeyboardSoundStructure<T>({
       structure,
       keyboard[keyEvent].sound.synths.map(({ id }) => id),
     );
+    
+    if (Object.keys(filteredStructure).length === 0) {
+      return null;
+    }
+    
     return (
       <>
         <SectionHeader label={`${keyEvent}stroke`} />

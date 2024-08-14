@@ -12,6 +12,8 @@ import { getSoundStructureValue } from '@src/utils/utils';
 import { useMemo } from 'react';
 import { useModiferContext } from './ModifierContext';
 import { SoundFieldPath } from './RandomizationControl';
+import { useMainContext } from '@src/components/shared/MainContext';
+import KeyboardSoundStructure from '../KeyboardSoundStructure';
 
 function shouldRenderField(
   field: SoundStructureField<unknown>,
@@ -30,11 +32,12 @@ export default function SoundFieldPicker({
   onSelect,
   excluded,
 }: SoundFieldPickerProps) {
-  const { synths } = useModiferContext();
+  const { keyboard } = useMainContext();
 
   const nodeMap = useMemo(() => {
     const result: Record<string, Record<string, Record<string, unknown>>> = {};
-    return synths.reduce(
+    const { down, up } = keyboard;
+    return [...down.sound.synths, ...up.sound.synths].reduce(
       (acc, synth) => ({
         ...acc,
         [synth.id]: [synth.src, ...synth.fxs].reduce(
@@ -47,7 +50,7 @@ export default function SoundFieldPicker({
       }),
       result,
     );
-  }, [synths]);
+  }, [keyboard]);
 
   const renderField = useMemo(() => {
     const render = (props: RenderFieldProps<unknown>) => {
@@ -73,9 +76,7 @@ export default function SoundFieldPicker({
 
   return (
     <>
-      <SectionHeader label={soundName} />
-      <SoundStructure
-        synths={synths}
+      <KeyboardSoundStructure
         structure={nodeMap}
         renderField={renderField}
         shouldRenderField={shouldRenderField}

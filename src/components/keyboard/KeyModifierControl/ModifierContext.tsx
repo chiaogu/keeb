@@ -25,7 +25,7 @@ import { SoundFieldPath } from './RandomizationControl';
 
 function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
   const {
-    sound: { synths, name },
+    sound: { name },
 
     addModifierLayer: soundAddModifierLayer,
     removeModifierLayer: soundRemoveModifierLayer,

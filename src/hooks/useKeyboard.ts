@@ -37,8 +37,6 @@ export default function useKeyboard() {
     }),
     [down.modifiers, down.sound, modifier.layers, name, up.modifiers, up.sound],
   );
-  
-  console.log(modifier.layers);
 
   useEffect(() => {
     storage.setKeyboardConfig(currentConfig);
