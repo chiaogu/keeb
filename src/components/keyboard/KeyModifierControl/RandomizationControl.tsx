@@ -1,12 +1,9 @@
-import IconButton from '@src/components/shared/IconButton';
-import SectionHeader from '@src/components/shared/SectionHeader';
-import SoundStructure, {
-  RenderFieldProps,
-} from '@src/components/sound/SoundStructure';
+import { RenderFieldProps } from '@src/components/sound/SoundStructure';
 import { isFieldRandomConfig } from '@src/keyboard/keySoundModifier';
 import { FieldRandomConfig, RandomizationConfig } from '@src/types';
 import { isSoundFieldPathEqual } from '@src/utils/utils';
 import { useCallback } from 'react';
+import KeyboardSoundStructure from '../KeyboardSoundStructure';
 import FieldRandomControl from './FieldRandomControl';
 import { useModiferContext } from './ModifierContext';
 
@@ -31,7 +28,7 @@ export default function RandomizationControl({
   selectingField,
   selectedField,
 }: RandomizationControlProps) {
-  const { synths, removeRandomConfig } = useModiferContext();
+  const { removeRandomConfig } = useModiferContext();
 
   const renderField = useCallback(
     (props: RenderFieldProps<FieldRandomConfig>) => {
@@ -62,13 +59,10 @@ export default function RandomizationControl({
   );
 
   return (
-    <div className='w-full'>
-      <SoundStructure
-        synths={synths}
-        structure={radomConfig}
-        renderField={renderField}
-        shouldRenderField={isFieldRandomConfig}
-      />
-    </div>
+    <KeyboardSoundStructure
+      structure={radomConfig}
+      renderField={renderField}
+      shouldRenderField={isFieldRandomConfig}
+    />
   );
 }

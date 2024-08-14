@@ -26,7 +26,6 @@ import { SoundFieldPath } from './RandomizationControl';
 function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
   const {
     sound: { synths, name },
-    modifiers,
 
     addModifierLayer: soundAddModifierLayer,
     removeModifierLayer: soundRemoveModifierLayer,
@@ -42,6 +41,8 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
     () => (keyEvent === 'down' ? keyboard.down : keyboard.up),
     [keyEvent, keyboard],
   );
+  
+  const modifiers = keyboard.modifier.layers;
 
   // TODO: Persist in main context
   const [selectedLayerIndex, setSelectedLayerIndex] = useState(-1);
@@ -192,7 +193,7 @@ function useModifierContextValue(keyboard: Keyboard, keyEvent: KeyEvent) {
 
   return {
     soundName: name,
-    synths,
+    // synths,
     modifiers,
 
     selectedLayerIndex,
