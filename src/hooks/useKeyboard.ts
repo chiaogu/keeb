@@ -72,6 +72,7 @@ export default function useKeyboard() {
     setName(data.name);
     up.sound.loadConfig(data.sound.up.config);
     down.sound.loadConfig(data.sound.down.config);
+    // TODO: Fix ids based on with the newly generated ones
     modifier.loadModifierLayers(data.sound.modifiers);
   });
 

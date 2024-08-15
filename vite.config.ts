@@ -2,8 +2,6 @@ import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { defineConfig } from 'vite';
 
-console.log(path.resolve(__dirname, './404.html'));
-
 export default defineConfig({
   resolve: {
     alias: {

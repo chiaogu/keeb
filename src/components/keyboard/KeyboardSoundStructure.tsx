@@ -14,7 +14,7 @@ export type SoundFieldPath = {
 
 type KeyboardSounStructureProps<T> = Pick<
   SoundStructureProps<T>,
-  'structure' | 'renderField' | 'shouldRenderField'
+  'structure' | 'renderField' | 'shouldRenderField' | 'foldable' | 'renderNodeHeader' | 'focusedNodeId'
 >;
 
 
@@ -24,6 +24,9 @@ export default function KeyboardSoundStructure<T>({
   structure,
   renderField,
   shouldRenderField,
+  foldable,
+  renderNodeHeader,
+  focusedNodeId,
 }: KeyboardSounStructureProps<T>) {
   const { keyboard } = useMainContext();
 
@@ -46,12 +49,15 @@ export default function KeyboardSoundStructure<T>({
               'absolute bottom-2 top-0 border-l-2 border-dotted border-l-black'
             }
           ></div>
-          <div className='pl-[10px] w-full'>
+          <div className='w-full pl-[10px]'>
             <SoundStructure
+              foldable={foldable}
               synths={keyboard[keyEvent].sound.synths}
               structure={filteredStructure}
               renderField={renderField}
               shouldRenderField={shouldRenderField}
+              renderNodeHeader={renderNodeHeader}
+              focusedNodeId={focusedNodeId}
             />
           </div>
         </div>

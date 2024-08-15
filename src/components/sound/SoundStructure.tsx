@@ -33,9 +33,12 @@ export type SoundStructureProps<T> = {
   renderNodeHeader?: (props: {
     synth?: SynthConfig;
     node?: SynthNodeState;
+    nodeId: string;
   }) => React.ReactNode;
   renderField: (props: RenderFieldProps<T>) => React.ReactNode;
   shouldRenderField: (field: SoundStructureField<T>) => field is T;
+  foldable?: boolean;
+  focusedNodeId?: string;
 };
 
 const SynthHeader = ({ synth }: { synth?: SynthConfig }) => (
@@ -63,6 +66,8 @@ const SoundStructure = typedMemo(
     renderNodeHeader = NodeHeader,
     renderField,
     shouldRenderField,
+    foldable,
+    focusedNodeId,
   }: SoundStructureProps<T>) => {
     const synthMap = useMemo(() => {
       const result: Record<string, SynthConfig> = {};
@@ -180,15 +185,19 @@ const SoundStructure = typedMemo(
                     className={`border-l-2 border-dotted border-l-black ${nodeIndex === nodeEntries.length - 1 ? 'mb-2' : ''}`}
                   ></div>
                   <div className='size-full'>
-                    {renderNodeHeader({ synth, node })}
-                    {nodeChildrenNodes}
+                    {renderNodeHeader({ synth, node, nodeId })}
+                    {(!foldable || focusedNodeId === nodeId) &&
+                      nodeChildrenNodes}
                   </div>
                 </div>
               );
             })
             .filter(Boolean);
           return synthChildrenNodes.length === 0 ? null : (
-            <div key={synthId} className={`w-full ${synthIndex > 0 ? '-mt-2' : ''}`}>
+            <div
+              key={synthId}
+              className={`w-full ${synthIndex > 0 ? '-mt-2' : ''}`}
+            >
               {renderSynthHeader({ synth })}
               {synthChildrenNodes}
             </div>
