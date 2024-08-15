@@ -1,8 +1,8 @@
 import { SynthConfig } from '@src/synth';
 import { KeyboardConfig, KeySoundConfig, SoundConfig } from '@src/types';
+import { Immutable } from 'immer';
 import { v4 as uuid } from 'uuid';
 import { KeySoundModifier } from './keySoundModifier';
-import { Immutable } from 'immer';
 
 export function getDefaultSynth(): SynthConfig {
   return {
@@ -49,12 +49,7 @@ export function getDefaultModifierLayer(synth: Immutable<SynthConfig>) {
 function getDefaultKeySound(): KeySoundConfig {
   const config = getDefaultSound();
 
-  return {
-    config,
-    modifiers: [
-      getDefaultModifierLayer(config.synths[0]),
-    ],
-  };
+  return { config };
 }
 
 export function getDefaultKeyboard(): KeyboardConfig {

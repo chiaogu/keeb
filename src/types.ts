@@ -37,7 +37,6 @@ export type ModifierLayerType = ModifierLayer['type'];
 
 export type KeySoundConfig = {
   config: SoundConfig;
-  modifiers: ModifierLayer[];
 };
 
 export type KeyboardConfig = {

@@ -16,7 +16,6 @@ export default function CustomModifierControl() {
     removeFieldModifier,
     fixInvalidFields,
     removeModifier,
-    soundName,
   } = useModiferContext();
   const highlightedKeys = useMemo(() => {
     if (!selectedLayer) return {};

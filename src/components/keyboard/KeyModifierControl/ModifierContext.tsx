@@ -1,5 +1,6 @@
 import { useDebounceCallback } from '@react-hook/debounce';
-import { Keyboard, KeyEvent } from '@src/hooks/useKeyboard';
+import { useMainContext } from '@src/components/shared/MainContext';
+import { Keyboard } from '@src/hooks/useKeyboard';
 import useUplodaFile from '@src/hooks/useUplodaFile';
 import {
   getDefaultModifier,
@@ -8,7 +9,11 @@ import {
   SoundModifier,
 } from '@src/keyboard/keySoundModifier';
 import { SynthNodeState } from '@src/synth';
-import { FieldRandomConfig, ModifierLayer, RandomizationConfig } from '@src/types';
+import {
+  FieldRandomConfig,
+  ModifierLayer,
+  RandomizationConfig,
+} from '@src/types';
 import {
   getSoundStructureFieldPath,
   removeSoundStructureField,
@@ -22,25 +27,15 @@ import {
   useState,
 } from 'react';
 import { SoundFieldPath } from './RandomizationControl';
-import { useMainContext } from '@src/components/shared/MainContext';
 
 function useModifierContextValue(keyboard: Keyboard) {
   const {
-    sound: { name },
-
-    addModifierLayer: soundAddModifierLayer,
-    removeModifierLayer: soundRemoveModifierLayer,
-    updateModiferLayer: soundUpdateModiferLayer,
-
-    updateModifier: soundUpdateModifier,
-    removeModifier: soundRemoveModifier,
-    batchSetModifier: soundBatchSetModifier,
-    updateRandomConfig: soundUpdateRandomConfig,
-    loadModifierLayers: soundLoadModifierLayers,
-    fixInvalidFields: soundFixInvalidFields,
-  } = keyboard.down;
-  
-  const modifiers = keyboard.modifier.layers;
+    layers: modifiers,
+    updateModiferLayer,
+    fixInvalidFields,
+    removeModifier,
+    batchSetModifier,
+  } = keyboard.modifier;
 
   // TODO: Persist in main context
   const [selectedLayerIndex, setSelectedLayerIndex] = useState(-1);
@@ -51,7 +46,6 @@ function useModifierContextValue(keyboard: Keyboard) {
 
   // TODO: useThrottle
   const randomizeAfterConfigChange = useDebounceCallback(() => {
-    soundBatchSetModifier(selectedLayerIndex, Object.keys(selectedLayer.keys));
     keyboard.modifier.batchSetModifier(
       selectedLayerIndex,
       Object.keys(selectedLayer.keys),
@@ -59,17 +53,15 @@ function useModifierContextValue(keyboard: Keyboard) {
   }, 50);
 
   const addModifierLayer = useCallback(
-    (...args: Parameters<typeof soundAddModifierLayer>) => {
-      soundAddModifierLayer(...args);
+    (...args: Parameters<typeof keyboard.modifier.addModifierLayer>) => {
       keyboard.modifier.addModifierLayer(...args);
       setSelectedLayerIndex(modifiers.length);
     },
-    [soundAddModifierLayer, keyboard.modifier, modifiers.length],
+    [keyboard, modifiers.length],
   );
 
   const removeModifierLayer = useCallback(
     (index: number) => {
-      soundRemoveModifierLayer(index);
       keyboard.modifier.removeModifierLayer(index);
       if (index < selectedLayerIndex) {
         setSelectedLayerIndex(selectedLayerIndex - 1);
@@ -77,12 +69,7 @@ function useModifierContextValue(keyboard: Keyboard) {
         setSelectedLayerIndex(modifiers.length - 2);
       }
     },
-    [
-      keyboard.modifier,
-      modifiers.length,
-      selectedLayerIndex,
-      soundRemoveModifierLayer,
-    ],
+    [keyboard.modifier, modifiers.length, selectedLayerIndex],
   );
 
   const updateRandomConfig = useCallback(
@@ -91,16 +78,10 @@ function useModifierContextValue(keyboard: Keyboard) {
         set(draft, getSoundStructureFieldPath(field), config);
         return draft;
       };
-      soundUpdateRandomConfig(selectedLayerIndex, updater);
       keyboard.modifier.updateRandomConfig(selectedLayerIndex, updater);
       randomizeAfterConfigChange();
     },
-    [
-      keyboard.modifier,
-      randomizeAfterConfigChange,
-      selectedLayerIndex,
-      soundUpdateRandomConfig,
-    ],
+    [keyboard.modifier, randomizeAfterConfigChange, selectedLayerIndex],
   );
 
   const addRandomConfig = useCallback(
@@ -113,16 +94,10 @@ function useModifierContextValue(keyboard: Keyboard) {
         );
         return draft;
       };
-      soundUpdateRandomConfig(selectedLayerIndex, updater);
       keyboard.modifier.updateRandomConfig(selectedLayerIndex, updater);
       randomizeAfterConfigChange();
     },
-    [
-      keyboard.modifier,
-      randomizeAfterConfigChange,
-      selectedLayerIndex,
-      soundUpdateRandomConfig,
-    ],
+    [keyboard.modifier, randomizeAfterConfigChange, selectedLayerIndex],
   );
 
   const removeRandomConfig = useCallback(
@@ -131,16 +106,10 @@ function useModifierContextValue(keyboard: Keyboard) {
         removeSoundStructureField(draft, field);
         return draft;
       };
-      soundUpdateRandomConfig(selectedLayerIndex, updater);
       keyboard.modifier.updateRandomConfig(selectedLayerIndex, updater);
       randomizeAfterConfigChange();
     },
-    [
-      keyboard.modifier,
-      randomizeAfterConfigChange,
-      selectedLayerIndex,
-      soundUpdateRandomConfig,
-    ],
+    [keyboard.modifier, randomizeAfterConfigChange, selectedLayerIndex],
   );
 
   const updateFieldModifier = useCallback(
@@ -149,10 +118,9 @@ function useModifierContextValue(keyboard: Keyboard) {
         set(draft, getSoundStructureFieldPath(field), modifier);
         return draft;
       };
-      soundUpdateModifier(selectedLayerIndex, keys, updater);
       keyboard.modifier.updateModifier(selectedLayerIndex, keys, updater);
     },
-    [keyboard.modifier, selectedLayerIndex, soundUpdateModifier],
+    [keyboard.modifier, selectedLayerIndex],
   );
 
   const addFieldModifier = useCallback(
@@ -165,10 +133,9 @@ function useModifierContextValue(keyboard: Keyboard) {
         );
         return draft;
       };
-      soundUpdateModifier(selectedLayerIndex, keys, updater);
       keyboard.modifier.updateModifier(selectedLayerIndex, keys, updater);
     },
-    [keyboard.modifier, selectedLayerIndex, soundUpdateModifier],
+    [keyboard.modifier, selectedLayerIndex],
   );
 
   const removeFieldModifier = useCallback(
@@ -177,21 +144,17 @@ function useModifierContextValue(keyboard: Keyboard) {
         removeSoundStructureField(draft, field);
         return draft;
       };
-      soundUpdateModifier(selectedLayerIndex, keys, updater);
       keyboard.modifier.updateModifier(selectedLayerIndex, keys, updater);
     },
-    [keyboard.modifier, selectedLayerIndex, soundUpdateModifier],
+    [keyboard.modifier, selectedLayerIndex],
   );
 
   // TODO: Validation
   const { load: loadModifierLayers } = useUplodaFile((layers) => {
-    soundLoadModifierLayers(layers as ModifierLayer[]);
     keyboard.modifier.loadModifierLayers(layers as ModifierLayer[]);
   });
 
   return {
-    soundName: name,
-    // synths,
     modifiers,
 
     selectedLayerIndex,
@@ -200,24 +163,12 @@ function useModifierContextValue(keyboard: Keyboard) {
 
     addModifierLayer,
     removeModifierLayer,
-    updateModiferLayer(...args: Parameters<typeof soundUpdateModiferLayer>) {
-      soundUpdateModiferLayer(...args);
-      keyboard.modifier.updateModiferLayer(...args);
-    },
+    updateModiferLayer,
     loadModifierLayers,
 
-    fixInvalidFields(...args: Parameters<typeof soundFixInvalidFields>) {
-      soundFixInvalidFields(...args);
-      keyboard.modifier.fixInvalidFields(...args);
-    },
-    removeModifier(...args: Parameters<typeof soundRemoveModifier>) {
-      soundRemoveModifier(...args);
-      keyboard.modifier.removeModifier(...args);
-    },
-    batchSetModifier(...args: Parameters<typeof soundBatchSetModifier>) {
-      soundBatchSetModifier(...args);
-      keyboard.modifier.batchSetModifier(...args);
-    },
+    fixInvalidFields,
+    removeModifier,
+    batchSetModifier,
     updateRandomConfig,
     addRandomConfig,
     removeRandomConfig,

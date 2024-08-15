@@ -26,16 +26,14 @@ export default function useKeyboard() {
       sound: {
         down: {
           config: down.sound,
-          modifiers: down.modifiers,
         },
         up: {
           config: up.sound,
-          modifiers: up.modifiers,
         },
         modifiers: modifier.layers,
       },
     }),
-    [down.modifiers, down.sound, modifier.layers, name, up.modifiers, up.sound],
+    [down.sound, modifier.layers, name, up.sound],
   );
 
   useEffect(() => {
@@ -73,18 +71,16 @@ export default function useKeyboard() {
   const { load: upload } = useUplodaFile((data: KeyboardConfig) => {
     setName(data.name);
     up.sound.loadConfig(data.sound.up.config);
-    up.loadModifierLayers(data.sound.up.modifiers);
     down.sound.loadConfig(data.sound.down.config);
-    down.loadModifierLayers(data.sound.down.modifiers);
+    modifier.loadModifierLayers(data.sound.modifiers);
   });
 
   const reset = useCallback(() => {
     setName('untitled');
     up.sound.loadConfig(getDefaultSound());
-    up.loadModifierLayers([]);
     down.sound.loadConfig(getDefaultSound());
-    down.loadModifierLayers([]);
-  }, [down, up]);
+    modifier.loadModifierLayers([]);
+  }, [down.sound, modifier, up.sound]);
 
   return useMemo(
     () => ({ down, up, name, setName, download, upload, reset, modifier }),
