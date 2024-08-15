@@ -43,9 +43,8 @@ export default function Controls<T extends z.ZodTypeAny>({
       className={`flex w-full flex-col items-center ${className} ${indent > 0 ? 'mb-2 border-l-2 border-dotted border-l-black' : ''}`}
     >
       {fields.map(([key, fieldSchema], index) => (
-        <div className={`w-full ${index === fields.length - 1 ? '' : 'mb-2'}`}>
+        <div key={key} className={`w-full ${index === fields.length - 1 ? '' : 'mb-2'}`}>
           <Control
-            key={key}
             name={key}
             value={value[key]}
             onChange={(v) =>

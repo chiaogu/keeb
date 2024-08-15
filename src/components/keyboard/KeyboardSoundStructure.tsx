@@ -46,7 +46,7 @@ export default function KeyboardSoundStructure<T>({
               'absolute bottom-2 top-0 border-l-2 border-dotted border-l-black'
             }
           ></div>
-          <div className='ml-[10px] w-full'>
+          <div className='pl-[10px] w-full'>
             <SoundStructure
               synths={keyboard[keyEvent].sound.synths}
               structure={filteredStructure}

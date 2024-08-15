@@ -15,7 +15,6 @@ import { SoundFieldPath } from './RandomizationControl';
 import SoundFieldPicker from './SoundFieldPicker';
 
 type ModifierControlProps = {
-  soundName: string;
   modifier: SoundModifier;
   onChange?: (field: SoundFieldPath, modifier: ModifierOp) => void;
   onAdd?: (field: SoundFieldPath, node: SynthNodeState) => void;
@@ -26,7 +25,6 @@ type ModifierControlProps = {
 };
 
 const InnerModifierControl = memo(function ModifierControl({
-  soundName,
   modifier,
   onChange,
   onAdd,
@@ -94,8 +92,8 @@ const InnerModifierControl = memo(function ModifierControl({
       {selectingField && (
         <SoundFieldPicker
           excluded={modifier}
-          soundName={soundName}
           onSelect={(newField, node) => {
+            console.log(newField);
             // TODO: Fix fixing functionaility
             if (selectingField === 'fix' && fixingField) {
               onFix?.(fixingField, newField);

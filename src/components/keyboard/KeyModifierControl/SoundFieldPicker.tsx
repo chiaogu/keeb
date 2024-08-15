@@ -1,6 +1,5 @@
-import IconButton from '@src/components/shared/IconButton';
-import SectionHeader from '@src/components/shared/SectionHeader';
-import SoundStructure, {
+import { useMainContext } from '@src/components/shared/MainContext';
+import {
   RenderFieldProps,
   SoundStructureField,
   SoundStructure as SoundStructureType,
@@ -10,10 +9,8 @@ import { SynthNodeState } from '@src/synth';
 import { CONTROL_SHADOW } from '@src/utils/constants';
 import { getSoundStructureValue } from '@src/utils/utils';
 import { useMemo } from 'react';
-import { useModiferContext } from './ModifierContext';
-import { SoundFieldPath } from './RandomizationControl';
-import { useMainContext } from '@src/components/shared/MainContext';
 import KeyboardSoundStructure from '../KeyboardSoundStructure';
+import { SoundFieldPath } from './RandomizationControl';
 
 function shouldRenderField(
   field: SoundStructureField<unknown>,
@@ -21,17 +18,15 @@ function shouldRenderField(
   return typeof field !== 'object';
 }
 
-type SoundFieldPickerProps = {
-  soundName: string;
+type SoundFieldPickerProps<T> = {
   onSelect: (args: SoundFieldPath, node?: SynthNodeState) => void;
-  excluded?: SoundStructureType<ModifierOp>;
+  excluded?: SoundStructureType<T>;
 };
 
-export default function SoundFieldPicker({
-  soundName,
+export default function SoundFieldPicker<T>({
   onSelect,
   excluded,
-}: SoundFieldPickerProps) {
+}: SoundFieldPickerProps<T>) {
   const { keyboard } = useMainContext();
 
   const nodeMap = useMemo(() => {

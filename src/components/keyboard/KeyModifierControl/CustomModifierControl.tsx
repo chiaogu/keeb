@@ -69,7 +69,6 @@ export default function CustomModifierControl() {
           <ModifierControl
             key={key}
             keyCode={key}
-            soundName={soundName}
             modifier={selectedLayer.keys[key] ?? {}}
             onChange={(field, modifier) => {
               updateFieldModifier([key], field, modifier);

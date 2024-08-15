@@ -31,7 +31,7 @@ export default function ModifierLayerControl() {
 
   return (
     <div className='flex w-full flex-col items-center'>
-      <SectionHeader label={`${keyboard.name} tweaks`} className='mb-2 font-bold'>
+      <SectionHeader label={`${keyboard.name} tweaks`} className='mb-2 w-full font-bold'>
         <IconButton icon='upload' onClick={loadModifierLayers} />
         <IconButton
           icon='download'

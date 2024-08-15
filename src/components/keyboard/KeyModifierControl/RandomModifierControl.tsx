@@ -1,6 +1,6 @@
 import IconButton from '@src/components/shared/IconButton';
 import SectionHeader from '@src/components/shared/SectionHeader';
-import { keys } from '@src/keyboard/keys';
+import { keys, modifiers } from '@src/keyboard/keys';
 import { ModifierLayer } from '@src/types';
 import { Fragment, memo, useCallback, useMemo, useState } from 'react';
 import { useModiferContext } from './ModifierContext';
@@ -25,7 +25,6 @@ const KeysDebug = memo(
             <SectionHeader className='font-bold' label={selectedKey} />
             <ModifierControl
               keyCode={selectedKey}
-              soundName='Debug'
               modifier={modifierKeys[selectedKey] ?? {}}
             />
           </Fragment>
@@ -56,7 +55,6 @@ export default function RandomModifierControl() {
     selectedLayerIndex,
     updateRandomConfig,
     removeModifier,
-    soundName,
     fixInvalidFields,
     addRandomConfig,
   } = useModiferContext();
@@ -156,7 +154,7 @@ export default function RandomModifierControl() {
           )}
           {selectingField && (
             <SoundFieldPicker
-              soundName={soundName}
+              excluded={selectedLayer.config}
               onSelect={(newField, node) => {
                 if (selectingField === 'fix' && fixingField) {
                   fixInvalidFields(fixingField, newField);
@@ -167,10 +165,6 @@ export default function RandomModifierControl() {
                 setSelectingField(false);
                 setFixingField(undefined);
               }}
-              // onClose={() => {
-              //   setSelectingField(false);
-              //   setFixingField(undefined);
-              // }}
             />
           )}
         </div>

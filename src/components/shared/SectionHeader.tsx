@@ -48,7 +48,7 @@ export default function SectionHeader({
           />
         </div>
       ) : (
-        <label className={`shrink-0 ${labelClassName}`} style={labelStyle}>{label}</label>
+        <label className={`truncate whitespace-nowrap ${labelClassName}`} style={labelStyle}>{label}</label>
       )}
       {children && <div className='ml-2 flex items-center space-x-2'>{children}</div>}
     </div>
