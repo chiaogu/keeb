@@ -1,10 +1,9 @@
 import SliderBase from '@src/components/shared/SliderBase';
+import { useViewport } from '@src/hooks/useViewport';
 import { CONTROL_SHADOW } from '@src/utils/constants';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 import Keyboard, { KeyboardProps } from '../Keyboard';
-import { useModiferContext } from './ModifierContext';
-import { useViewport } from '@src/hooks/useViewport';
 
 type ScrollBarProps = {
   clientWidth: number;
@@ -49,6 +48,96 @@ function ScrollBar({
   );
 }
 
+function useMousePosition() {
+  const pos = useRef({ x: -1, y: -1 });
+
+  useEffect(() => {
+    const handleDrag = ({ x, y }: PointerEvent) => {
+      pos.current = { x, y };
+    };
+
+    addEventListener('pointermove', handleDrag);
+    return () => {
+      removeEventListener('pointermove', handleDrag);
+    };
+  }, []);
+
+  return pos;
+}
+
+const DRAG_SCROLL_ZONE = 50;
+
+function useDragScrolling(
+  scroll: (setX: (x: number) => number) => void,
+  onPress?: (keyCode: string) => void,
+) {
+  const [scrollV, setScrollV] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const viewport = useViewport();
+  const mouse = useMousePosition();
+
+  useEffect(() => {
+    if (!dragging) {
+      return;
+    }
+
+    const handleDrag = (e: PointerEvent) => {
+      if (e.x < DRAG_SCROLL_ZONE) {
+        setScrollV(-1);
+      } else if (e.x > viewport.width - DRAG_SCROLL_ZONE) {
+        setScrollV(1);
+      } else {
+        setScrollV(0);
+      }
+    };
+
+    console.log('###');
+    const cancel = () => {
+      console.log('cancel');
+      setScrollV(0);
+      setDragging(false);
+    };
+
+    addEventListener('pointermove', handleDrag);
+    addEventListener('pointerup', cancel);
+    addEventListener('pointercancel', cancel);
+    return () => {
+      removeEventListener('pointermove', handleDrag);
+      removeEventListener('pointerup', cancel);
+      removeEventListener('pointercancel', cancel);
+      cancel();
+    };
+  }, [dragging, viewport.width]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const loop = () => {
+      const element = document.elementFromPoint(
+        mouse.current.x,
+        mouse.current.y,
+      ) as HTMLDivElement;
+      const keycode = element?.dataset.keycode;
+      if (keycode) {
+        onPress?.(keycode);
+      }
+
+      scroll((x) => x + scrollV * 3);
+
+      if (!cancelled) {
+        requestAnimationFrame(loop);
+      }
+    };
+    if (scrollV !== 0) {
+      loop();
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [mouse, onPress, scroll, scrollV]);
+
+  return { dragging, setDragging };
+}
+
 export default function ModifierKeyboard(props: KeyboardProps) {
   const [offsetX, setOffsetX] = useState(0);
   const [firstRender, setFirstRender] = useState(true);
@@ -59,16 +148,24 @@ export default function ModifierKeyboard(props: KeyboardProps) {
   const scrollWidth = contentRef.current?.clientWidth ?? 0;
   const overflow = scrollWidth > viewport.width - 64;
 
+  const scroll = useCallback(
+    (setX: (x: number) => number) => {
+      const maxOffset = scrollWidth - clientWidth;
+      setOffsetX((x) => Math.min(maxOffset, Math.max(0, setX(x))));
+    },
+    [clientWidth, scrollWidth],
+  );
+
+  const { setDragging } = useDragScrolling(scroll, props.onPress);
+
   const handleWheel = useCallback(
     (e: React.WheelEvent<HTMLDivElement>) => {
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX) || !overflow) return;
-
-      const maxOffset = scrollWidth - clientWidth;
-      setOffsetX((x) => Math.min(maxOffset, Math.max(0, x - e.deltaX)));
+      scroll((x) => x - e.deltaX);
     },
-    [overflow, scrollWidth, clientWidth],
+    [overflow, scroll],
   );
-  
+
   useEffect(() => {
     setOffsetX(overflow ? 0 : (scrollWidth - clientWidth) / 2);
     setFirstRender(false);
@@ -80,6 +177,12 @@ export default function ModifierKeyboard(props: KeyboardProps) {
         className='flex w-full overflow-visible'
         style={{ opacity: firstRender ? 0 : 1 }}
         onWheel={handleWheel}
+        onPointerDown={(e) => {
+          setDragging(true);
+          ref.current?.releasePointerCapture(e.pointerId);
+        }}
+        onPointerUp={() => setDragging(false)}
+        onPointerCancel={() => setDragging(false)}
         ref={ref}
       >
         <div
@@ -90,11 +193,9 @@ export default function ModifierKeyboard(props: KeyboardProps) {
           <Keyboard
             {...props}
             onRelease={(key) => {
-              // triggerUp(key);
               props.onRelease?.(key);
             }}
             onPress={(key) => {
-              // triggerDown(key);
               props.onPress?.(key);
             }}
           />

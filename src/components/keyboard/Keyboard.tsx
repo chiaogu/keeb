@@ -6,7 +6,7 @@ import getKeyWidth from '@src/keyboard/getKeyWidth';
 import { keys } from '@src/keyboard/keys';
 import { CONTROL_SHADOW } from '@src/utils/constants';
 import { getValueBg, normalValueToBrightness } from '@src/utils/utils';
-import { useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 const keySize = 50;
 
@@ -84,6 +84,7 @@ function Key({
             e.buttons > 0 && handlePress();
           }}
           onPointerLeave={(e) => e.buttons > 0 && handleRelease()}
+          data-keycode={keyCode}
         >
           {getKeyCodeLabel(keyCode).toLowerCase()}
         </div>
@@ -95,7 +96,7 @@ function Key({
 export default function Keyboard({ className, ...props }: KeyboardProps) {
   const ref = usePreventDefaultTouchStart();
   const { pressedKeys } = usePressedKeys();
-
+  
   return (
     <div
       className={`relative flex flex-col items-start ${className}`}
