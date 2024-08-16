@@ -176,13 +176,6 @@ function useModifierContextValue(keyboard: Keyboard) {
     addFieldModifier,
     updateFieldModifier,
     removeFieldModifier,
-
-    triggerUp(key: string) {
-      keyboard.up.sound.trigger(key);
-    },
-    triggerDown(key: string) {
-      keyboard.down.sound.trigger(key);
-    },
   };
 }
 

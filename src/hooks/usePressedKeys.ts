@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useKeyEvents } from './useKeyEvents';
 
 export default function usePressedKeys() {
@@ -21,6 +21,12 @@ export default function usePressedKeys() {
   );
 
   useKeyEvents(eventHandlers);
+  
+  useEffect(() => {
+    const handleBlur = () => setPressedKeys([]);
+    addEventListener('blur',handleBlur);
+    return () => removeEventListener('blur', handleBlur);
+  }, []);
 
   return { pressedKeys, press, release };
 }

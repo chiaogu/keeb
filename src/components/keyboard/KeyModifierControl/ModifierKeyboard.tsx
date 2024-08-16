@@ -50,8 +50,8 @@ function ScrollBar({
 }
 
 export default function ModifierKeyboard(props: KeyboardProps) {
-  const { triggerUp, triggerDown } = useModiferContext();
   const [offsetX, setOffsetX] = useState(0);
+  const [firstRender, setFirstRender] = useState(true);
   const { width: clientWidth = 0, ref } = useResizeDetector<HTMLDivElement>();
   const viewport = useViewport();
 
@@ -71,12 +71,14 @@ export default function ModifierKeyboard(props: KeyboardProps) {
   
   useEffect(() => {
     setOffsetX(overflow ? 0 : (scrollWidth - clientWidth) / 2);
+    setFirstRender(false);
   }, [clientWidth, overflow, scrollWidth]);
 
   return (
     <>
       <div
         className='flex w-full overflow-visible'
+        style={{ opacity: firstRender ? 0 : 1 }}
         onWheel={handleWheel}
         ref={ref}
       >
@@ -88,11 +90,11 @@ export default function ModifierKeyboard(props: KeyboardProps) {
           <Keyboard
             {...props}
             onRelease={(key) => {
-              triggerUp(key);
+              // triggerUp(key);
               props.onRelease?.(key);
             }}
             onPress={(key) => {
-              triggerDown(key);
+              // triggerDown(key);
               props.onPress?.(key);
             }}
           />

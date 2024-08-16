@@ -4,6 +4,7 @@ import usePreventDefaultTouchStart from '@src/hooks/usePreventDefaultTouchStart'
 import getKeyCodeLabel from '@src/keyboard/getKeyLabel';
 import getKeyWidth from '@src/keyboard/getKeyWidth';
 import { keys } from '@src/keyboard/keys';
+import { CONTROL_SHADOW } from '@src/utils/constants';
 import { getValueBg, normalValueToBrightness } from '@src/utils/utils';
 
 const keySize = 50;
@@ -25,15 +26,16 @@ function Key({
   onClick,
   selectedKeys = [],
   highlightedKeys = {},
-}: KeyboardProps & { keyCode: string; keyIndex: number }) {
-  const { pressedKeys, press, release } = usePressedKeys();
-
+  pressedKeys,
+}: KeyboardProps & {
+  keyCode: string;
+  keyIndex: number;
+  pressedKeys: string[];
+}) {
   const handlePress = useDebounceCallback(() => {
-    press(keyCode);
     onPress?.(keyCode);
   }, 50);
   const handleRelease = () => {
-    release(keyCode);
     onRelease?.(keyCode);
   };
   const pressed = pressedKeys.includes(keyCode);
@@ -52,13 +54,13 @@ function Key({
     >
       <div
         style={{
-          // filter: pressed ? 'invert(1)' : undefined,
-          // background: pressed ? (bgValue > 0.5 ? 'white' : 'black') : bg,
-          background: bg,
+          filter: pressed ? 'invert(1)' : undefined,
+          background: pressed ? (bgValue > 0.5 ? 'white' : 'black') : bg,
+          // background: bg,
           color: color,
-          boxShadow: `0 ${pressed ? 2 : 5}px 10px 0px rgba(0,0,0,${pressed ? 0.1 : 0.05})`,
-          transform: `scale(${pressed ? 0.8 : 1})`,
-          // transform: `translateY(${pressed ? 4 : 0}px)`,
+          boxShadow: CONTROL_SHADOW,
+          // transform: `scale(${pressed ? 0.95 : 1})`,
+          // transform: `translateY(${pressed ? 8 : 0}px)`,
         }}
         className='flex size-full select-none items-center justify-center'
         onPointerDown={handlePress}
@@ -84,6 +86,7 @@ function Key({
 
 export default function Keyboard({ className, ...props }: KeyboardProps) {
   const ref = usePreventDefaultTouchStart();
+  const { pressedKeys } = usePressedKeys();
 
   return (
     <div
@@ -94,7 +97,13 @@ export default function Keyboard({ className, ...props }: KeyboardProps) {
       {keys.map((row, rowIndex) => (
         <div key={`row-${rowIndex}`} className='flex'>
           {row.map((key, keyIndex) => (
-            <Key key={key} keyCode={key} keyIndex={keyIndex} {...props} />
+            <Key
+              key={key}
+              keyCode={key}
+              keyIndex={keyIndex}
+              pressedKeys={pressedKeys}
+              {...props}
+            />
           ))}
         </div>
       ))}
