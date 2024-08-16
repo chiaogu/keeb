@@ -6,6 +6,7 @@ import getKeyWidth from '@src/keyboard/getKeyWidth';
 import { keys } from '@src/keyboard/keys';
 import { CONTROL_SHADOW } from '@src/utils/constants';
 import { getValueBg, normalValueToBrightness } from '@src/utils/utils';
+import { useRef } from 'react';
 
 const keySize = 50;
 
@@ -32,6 +33,7 @@ function Key({
   keyIndex: number;
   pressedKeys: string[];
 }) {
+  const ref = useRef<HTMLDivElement>(null);
   const handlePress = useDebounceCallback(() => {
     onPress?.(keyCode);
   }, 50);
@@ -63,18 +65,24 @@ function Key({
           // transform: `translateY(${pressed ? 8 : 0}px)`,
         }}
         className='flex size-full select-none items-center justify-center'
-        onPointerDown={handlePress}
-        onPointerUp={handleRelease}
         onClick={() => {
           onClick?.(keyCode);
         }}
       >
         <div
+          ref={ref}
           style={{
             border: selected ? `2px solid ${color}` : undefined,
           }}
-          className='flex size-11/12 items-center justify-center'
-          onPointerEnter={(e) => e.buttons > 0 && handlePress()}
+          className='flex size-11/12 touch-none items-center justify-center'
+          onPointerDown={(e) => {
+            handlePress();
+            ref.current?.releasePointerCapture(e.pointerId);
+          }}
+          onPointerUp={handleRelease}
+          onPointerEnter={(e) => {
+            e.buttons > 0 && handlePress();
+          }}
           onPointerLeave={(e) => e.buttons > 0 && handleRelease()}
         >
           {getKeyCodeLabel(keyCode).toLowerCase()}

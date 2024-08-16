@@ -1,3 +1,4 @@
+import { shouldShowKeyEventVisual } from '@src/utils/utils';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useKeyEvents } from './useKeyEvents';
 
@@ -14,17 +15,19 @@ export default function usePressedKeys() {
 
   const eventHandlers = useMemo(
     () => ({
-      onKeydown: (e: KeyboardEvent) => !e.repeat && press(e.code),
-      onKeyUp: (e: KeyboardEvent) => release(e.code),
+      onKeydown: (e: KeyboardEvent) =>
+        shouldShowKeyEventVisual(e) && press(e.code),
+      onKeyUp: (e: KeyboardEvent) =>
+        shouldShowKeyEventVisual(e) && release(e.code),
     }),
     [press, release],
   );
 
   useKeyEvents(eventHandlers);
-  
+
   useEffect(() => {
     const handleBlur = () => setPressedKeys([]);
-    addEventListener('blur',handleBlur);
+    addEventListener('blur', handleBlur);
     return () => removeEventListener('blur', handleBlur);
   }, []);
 

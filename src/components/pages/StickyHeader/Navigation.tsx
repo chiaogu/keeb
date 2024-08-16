@@ -24,7 +24,7 @@ export default function Navigation() {
     setLocalTab(tab);
   }, [tab]);
 
-  const resetAfterKeyEvents = useDebounceCallback(resetScreen, 2000);
+  const resetAfterKeyEvents = useDebounceCallback(resetScreen, 1000);
 
   const handleKeyEvents = useCallback(
     (e: KeyboardEvent) => {
@@ -71,7 +71,7 @@ export default function Navigation() {
       style={{ opacity: screen.type === 'nav' ? 1 : 0 }}
       className='h-14 w-full px-4'
     >
-      <SliderSelect
+      {<SliderSelect
         label={value}
         options={TABS}
         value={localTab}
@@ -93,7 +93,7 @@ export default function Navigation() {
           height: '32px',
           top: '12px',
         }}
-      />
+      />}
     </div>
   );
 }
