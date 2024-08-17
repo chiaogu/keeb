@@ -14,6 +14,17 @@ function Main() {
       {tab === 'sound' && <SoundControl />}
       {tab === 'tweaks' && <KeySoundModifier />}
       {tab === 'presets' && <Presets />}
+      {/* 
+        TODO: Settings
+          - about
+          - dark mode
+          - input mode
+            - single key
+            - keyboard
+            - wheel
+            - gravity
+            - player/recorder
+      */}
       </div>
       <TestButton />
     </div>
