@@ -48,6 +48,11 @@ function ScrollBar({
   );
 }
 
+function getHoveringKeyCode({ x, y }: { x: number; y: number }) {
+  const element = document.elementFromPoint(x, y) as HTMLDivElement;
+  return element?.dataset.keycode;
+}
+
 function useMousePosition() {
   const pos = useRef({ x: -1, y: -1 });
 
@@ -65,7 +70,7 @@ function useMousePosition() {
   return pos;
 }
 
-const DRAG_SCROLL_ZONE = 50;
+const DRAG_SCROLL_ZONE = 48;
 
 function useDragScrolling(
   scroll: (setX: (x: number) => number) => void,
@@ -73,6 +78,7 @@ function useDragScrolling(
 ) {
   const [scrollV, setScrollV] = useState(0);
   const [dragging, setDragging] = useState(false);
+  const pressedKeys = useRef<Set<string>>();
   const viewport = useViewport();
   const mouse = useMousePosition();
 
@@ -80,6 +86,9 @@ function useDragScrolling(
     if (!dragging) {
       return;
     }
+
+    const keycode = getHoveringKeyCode(mouse.current);
+    pressedKeys.current = new Set(keycode);
 
     const handleDrag = (e: PointerEvent) => {
       if (e.x < DRAG_SCROLL_ZONE) {
@@ -91,9 +100,7 @@ function useDragScrolling(
       }
     };
 
-    console.log('###');
     const cancel = () => {
-      console.log('cancel');
       setScrollV(0);
       setDragging(false);
     };
@@ -112,13 +119,10 @@ function useDragScrolling(
   useEffect(() => {
     let cancelled = false;
     const loop = () => {
-      const element = document.elementFromPoint(
-        mouse.current.x,
-        mouse.current.y,
-      ) as HTMLDivElement;
-      const keycode = element?.dataset.keycode;
-      if (keycode) {
+      const keycode = getHoveringKeyCode(mouse.current);
+      if (keycode && !pressedKeys.current?.has(keycode)) {
         onPress?.(keycode);
+        pressedKeys.current?.add(keycode);
       }
 
       scroll((x) => x + scrollV * 3);
@@ -135,7 +139,15 @@ function useDragScrolling(
     };
   }, [mouse, onPress, scroll, scrollV]);
 
-  return { dragging, setDragging };
+  return {
+    dragScrolling: scrollV !== 0,
+    startDragging() {
+      setDragging(true);
+    },
+    stopDragging() {
+      setDragging(false);
+    },
+  };
 }
 
 export default function ModifierKeyboard(props: KeyboardProps) {
@@ -156,7 +168,10 @@ export default function ModifierKeyboard(props: KeyboardProps) {
     [clientWidth, scrollWidth],
   );
 
-  const { setDragging } = useDragScrolling(scroll, props.onPress);
+  const { dragScrolling, startDragging, stopDragging } = useDragScrolling(
+    scroll,
+    props.onPress,
+  );
 
   const handleWheel = useCallback(
     (e: React.WheelEvent<HTMLDivElement>) => {
@@ -178,11 +193,11 @@ export default function ModifierKeyboard(props: KeyboardProps) {
         style={{ opacity: firstRender ? 0 : 1 }}
         onWheel={handleWheel}
         onPointerDown={(e) => {
-          setDragging(true);
+          startDragging();
           ref.current?.releasePointerCapture(e.pointerId);
         }}
-        onPointerUp={() => setDragging(false)}
-        onPointerCancel={() => setDragging(false)}
+        onPointerUp={stopDragging}
+        onPointerCancel={stopDragging}
         ref={ref}
       >
         <div
@@ -196,7 +211,9 @@ export default function ModifierKeyboard(props: KeyboardProps) {
               props.onRelease?.(key);
             }}
             onPress={(key) => {
-              props.onPress?.(key);
+              if (!dragScrolling) {
+                props.onPress?.(key);
+              }
             }}
           />
         </div>
