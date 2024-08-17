@@ -114,7 +114,7 @@ function useDragScrolling(
       removeEventListener('pointercancel', cancel);
       cancel();
     };
-  }, [dragging, viewport.width]);
+  }, [dragging, mouse, viewport.width]);
 
   useEffect(() => {
     let cancelled = false;

@@ -6,6 +6,7 @@ import IconButton from '../shared/IconButton';
 import SectionHeader from '../shared/SectionHeader';
 import { useModiferContext } from './KeyModifierControl/ModifierContext';
 import { useMainContext } from '../shared/MainContext';
+import ModifierLayerPreview from './ModifierLayerPreview';
 
 const layerTypes: ModifierLayerType[] = ['custom', 'random'];
 
@@ -50,15 +51,15 @@ export default function ModifierLayerControl() {
       </SectionHeader>
       {modifiers.map((layer, index) => (
         <div className='mb-2 flex w-full' key={layer.id}>
-          <button
+          <div
             style={{ boxShadow: CONTROL_SHADOW }}
-            className='mr-2 flex h-8 flex-1 items-center justify-between truncate whitespace-nowrap bg-white px-2 text-end outline-none'
+            className='relative mr-2 flex h-8 flex-1 cursor-pointer items-center justify-between overflow-hidden bg-white pr-2'
             key={layer.id}
             onClick={() => toggleLayer(index)}
           >
-            <div>{Object.keys(layer.keys).length} keys</div>
-            <div>{layer.name}</div>
-          </button>
+            <ModifierLayerPreview modifier={layer} />
+            <div className='truncate whitespace-nowrap pl-2'>{layer.name}</div>
+          </div>
           <IconButton
             className={`shrink-0 ${layer.id === selectedLayer?.id ? 'bg-white invert' : ''}`}
             icon='visibility'

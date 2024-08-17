@@ -27,8 +27,8 @@ export default function TimelineBlock({
 }: TimelineBlockProps) {
   return (
     <div className='mb-2 flex h-8 w-full items-center'>
-      <div className='relative size-full cursor-pointer' onClick={onClickWatch}>
-        <div className='absolute top-0 z-10 flex size-full shrink-0 items-center justify-end truncate whitespace-nowrap px-2 text-white mix-blend-difference'>
+      <div className='relative flex size-full cursor-pointer justify-end overflow-hidden' onClick={onClickWatch}>
+        <div style={{ transform: 'translateY(-50%)' }} className='absolute top-1/2 z-10 max-w-full shrink-0 truncate whitespace-nowrap px-2 text-white mix-blend-difference'>
           {synth.name}
         </div>
         <TimelineBlockEnvelope
