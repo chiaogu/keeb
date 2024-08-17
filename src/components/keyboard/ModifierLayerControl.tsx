@@ -52,7 +52,7 @@ export default function ModifierLayerControl() {
         <div className='mb-2 flex w-full' key={layer.id}>
           <button
             style={{ boxShadow: CONTROL_SHADOW }}
-            className='mr-2 flex h-8 flex-1 items-center justify-between bg-white px-2 text-end outline-none'
+            className='mr-2 flex h-8 flex-1 items-center justify-between truncate whitespace-nowrap bg-white px-2 text-end outline-none'
             key={layer.id}
             onClick={() => toggleLayer(index)}
           >

@@ -38,8 +38,8 @@ export const TABS = [
     label: <span className='material-symbols-outlined -mx-2'>folder_open</span>,
   },
   {
-    value: 'about',
-    label: <span className='material-symbols-outlined -mx-2'>emoticon</span>,
+    value: 'settings',
+    label: <span className='material-symbols-outlined -mx-2'>settings</span>,
   },
 ] as const;
 

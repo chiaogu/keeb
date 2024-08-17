@@ -35,6 +35,7 @@ function useTab() {
 
   const setTab = useCallback((tab: string) => {
     setTabState(tab);
+    document.scrollingElement?.scrollTo(0, 0);
     history.pushState({}, '', tab);
   }, []);
 
@@ -61,7 +62,7 @@ function useMainContextValue() {
       screenMeterChannel,
       setScreenMeterChannel,
     }),
-    [screen, resetScreen, tab, keyboard, screenMeterChannel],
+    [screen, resetScreen, tab, setTab, keyboard, screenMeterChannel],
   );
 }
 
