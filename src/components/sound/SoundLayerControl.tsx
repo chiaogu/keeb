@@ -2,7 +2,7 @@ import { useDebounceCallback } from '@react-hook/debounce';
 import { KeyEvent } from '@src/hooks/useKeyboard';
 import { useKeyEvents } from '@src/hooks/useKeyEvents';
 import { Sound } from '@src/hooks/useSound';
-import useUplodaFile from '@src/hooks/useUplodaFile';
+import useUploadSound from '@src/hooks/useUploadSound';
 import { getDefaultSynth } from '@src/keyboard/defaults';
 import { zBaseSynthSrc } from '@src/synth/config/shared';
 import { SoundConfig } from '@src/types';
@@ -35,7 +35,7 @@ export function SoundLayerControl({
   onRemoveLayer,
 }: SoundLayerControlProps) {
   // TODO: Validation
-  const { load } = useUplodaFile(onLoadSound);
+  const load = useUploadSound(onLoadSound);
 
   const maxDelayAndDuration = useMemo(
     () =>

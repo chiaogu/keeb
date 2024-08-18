@@ -14,7 +14,6 @@ function useStartTone() {
   }, []);
 }
 
-// TODO: Error boundary
 function App() {
   const [started, setStarted] = useState(false);
   const [message, setMessage] = useState<string | null>(null);

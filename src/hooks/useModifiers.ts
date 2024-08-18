@@ -150,7 +150,6 @@ export default function useModifiers(keyboard: KeyboardConfig) {
               } else if (options != null) {
                 modifier = [
                   'set',
-                  // TODO: Sort by schema
                   options[Math.round(seed * (options.length - 1))],
                 ];
               }
