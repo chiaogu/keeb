@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useKeyEvents } from './useKeyEvents';
 import useKeyboardSound from './useKeyboardSound';
 import useModifiers from './useModifiers';
-import useUplodaFile from './useUplodaFile';
+import useUploadKeyboard from './useUploadKeyboard';
 
 function getKeyboardConfig() {
   return storage.getKeyboardConfig() ?? getDefaultKeyboard();
@@ -68,11 +68,10 @@ export default function useKeyboard() {
   }, [currentConfig]);
 
   // TODO: Validation
-  const { load: upload } = useUplodaFile((data: KeyboardConfig) => {
+  const upload = useUploadKeyboard((data: KeyboardConfig) => {
     setName(data.name);
     up.sound.loadConfig(data.sound.up.config);
     down.sound.loadConfig(data.sound.down.config);
-    // TODO: Fix ids based on with the newly generated ones
     modifier.loadModifierLayers(data.sound.modifiers);
   });
 

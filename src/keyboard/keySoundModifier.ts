@@ -146,3 +146,17 @@ export function getDefaultModifier(
     return ['set', schema.options[0]];
   }
 }
+
+export function replaceAllId<T>(
+  structure: SoundStructure<T>,
+  idMap: Record<string, string>,
+) {
+  Object.entries(structure).forEach(([synthId, synthModifier]) => {
+    Object.entries(synthModifier).forEach(([nodeId, mod]) => {
+      synthModifier[idMap[nodeId]] = mod;
+      delete synthModifier[nodeId];
+    });
+    structure[idMap[synthId]] = synthModifier;
+    delete structure[synthId];
+  });
+}
