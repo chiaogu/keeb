@@ -162,10 +162,13 @@ export default function ModifierKeyboard(props: KeyboardProps) {
 
   const scroll = useCallback(
     (setX: (x: number) => number) => {
+      if (!overflow) {
+        return;
+      }
       const maxOffset = scrollWidth - clientWidth;
       setOffsetX((x) => Math.min(maxOffset, Math.max(0, setX(x))));
     },
-    [clientWidth, scrollWidth],
+    [clientWidth, overflow, scrollWidth],
   );
 
   const { dragScrolling, startDragging, stopDragging } = useDragScrolling(
