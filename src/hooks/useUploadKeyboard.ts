@@ -35,8 +35,14 @@ function loadModifiers(
 
 export default function useUploadKeyboard(
   onLoad: (data: KeyboardConfig) => void,
+  regenIds: boolean = true,
 ) {
   const { load } = useUplodaFile((data: KeyboardConfig) => {
+    if (regenIds === false) {
+      onLoad(data);
+      return;
+    }
+    
     const up = loadSound(data.sound.up.config);
     const down = loadSound(data.sound.down.config);
 

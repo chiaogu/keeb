@@ -9,7 +9,7 @@ import useModifiers from './useModifiers';
 import useUploadKeyboard from './useUploadKeyboard';
 
 function getKeyboardConfig() {
-  return storage.getKeyboardConfig() ?? getDefaultKeyboard();
+  return storage.getCurrentKeyboard() ?? getDefaultKeyboard();
 }
 
 export type KeyEvent = 'down' | 'up';
@@ -40,7 +40,7 @@ export default function useKeyboard() {
   );
 
   useEffect(() => {
-    storage.setKeyboardConfig(currentConfig);
+    storage.setCurrentKeyboard(currentConfig);
   }, [currentConfig]);
 
   const onKeydown = useCallback(
@@ -71,12 +71,18 @@ export default function useKeyboard() {
   }, [currentConfig]);
 
   // TODO: Validation
-  const upload = useUploadKeyboard((data: KeyboardConfig) => {
-    setName(data.name);
-    up.sound.loadConfig(data.sound.up.config);
-    down.sound.loadConfig(data.sound.down.config);
-    modifier.loadModifierLayers(data.sound.modifiers);
-  });
+  const setKeyboard = useCallback(
+    (data: KeyboardConfig) => {
+      setName(data.name);
+      up.sound.loadConfig(data.sound.up.config);
+      down.sound.loadConfig(data.sound.down.config);
+      modifier.loadModifierLayers(data.sound.modifiers);
+    },
+    [down.sound, modifier, up.sound],
+  );
+
+  const upload = useUploadKeyboard(setKeyboard);
+  const loadPreset = useUploadKeyboard(setKeyboard, false);
 
   const reset = useCallback(() => {
     const defaultKeyboard = getDefaultKeyboard();
@@ -88,8 +94,18 @@ export default function useKeyboard() {
   }, [down.sound, modifier, up.sound]);
 
   return useMemo(
-    () => ({ down, up, name, setName, download, upload, reset, modifier }),
-    [down, up, name, download, upload, reset, modifier],
+    () => ({
+      down,
+      up,
+      name,
+      setName,
+      download,
+      upload,
+      reset,
+      modifier,
+      loadPreset,
+    }),
+    [down, up, name, download, upload, reset, modifier, loadPreset],
   );
 }
 
