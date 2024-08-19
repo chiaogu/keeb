@@ -53,8 +53,10 @@ function getDefaultKeySound(): KeySoundConfig {
 }
 
 export function getDefaultKeyboard(): KeyboardConfig {
+  const id = uuid();
   return {
-    name: `keyboard ${uuid().slice(0, 5)}`,
+    id,
+    name: `keyboard ${id.slice(0, 5)}`,
     sound: {
       up: getDefaultKeySound(),
       down: getDefaultKeySound(),

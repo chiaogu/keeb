@@ -1,4 +1,4 @@
-import { getDefaultKeyboard, getDefaultSound } from '@src/keyboard/defaults';
+import { getDefaultKeyboard } from '@src/keyboard/defaults';
 import { KeyboardConfig } from '@src/types';
 import { downloadKeyboard } from '@src/utils/file';
 import * as storage from '@src/utils/localstorage';
@@ -20,8 +20,11 @@ export default function useKeyboard() {
   const down = useKeyboardSound(initConfig.sound.down, 'down', modifier.layers);
   const up = useKeyboardSound(initConfig.sound.up, 'up', modifier.layers);
   const [name, setName] = useState(initConfig.name);
+  const [id, setId] = useState(initConfig.id);
+
   const currentConfig = useMemo(
     () => ({
+      id,
       name,
       sound: {
         down: {
@@ -33,7 +36,7 @@ export default function useKeyboard() {
         modifiers: modifier.layers,
       },
     }),
-    [down.sound, modifier.layers, name, up.sound],
+    [down.sound, id, modifier.layers, name, up.sound],
   );
 
   useEffect(() => {
@@ -76,10 +79,12 @@ export default function useKeyboard() {
   });
 
   const reset = useCallback(() => {
-    setName('untitled');
-    up.sound.loadConfig(getDefaultSound());
-    down.sound.loadConfig(getDefaultSound());
-    modifier.loadModifierLayers([]);
+    const defaultKeyboard = getDefaultKeyboard();
+    setId(defaultKeyboard.id);
+    setName(defaultKeyboard.name);
+    up.sound.loadConfig(defaultKeyboard.sound.up.config);
+    down.sound.loadConfig(defaultKeyboard.sound.down.config);
+    modifier.loadModifierLayers(defaultKeyboard.sound.modifiers);
   }, [down.sound, modifier, up.sound]);
 
   return useMemo(
