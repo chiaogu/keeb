@@ -18,6 +18,10 @@ export const BASE_URL = 'keeb';
 
 export const TABS = [
   {
+    value: 'presets',
+    label: <span className='material-symbols-outlined -mx-2'>folder_open</span>,
+  },
+  {
     value: 'sound',
     label: <span className='material-symbols-outlined -mx-2'>vital_signs</span>,
   },
@@ -32,10 +36,6 @@ export const TABS = [
     label: (
       <span className='material-symbols-outlined -mx-2'>deployed_code</span>
     ),
-  },
-  {
-    value: 'presets',
-    label: <span className='material-symbols-outlined -mx-2'>folder_open</span>,
   },
   {
     value: 'settings',

@@ -9,6 +9,7 @@ import useModifiers from './useModifiers';
 import useUploadKeyboard from './useUploadKeyboard';
 
 function getKeyboardConfig() {
+  // Load default via usePresets
   return storage.getCurrentKeyboard() ?? getDefaultKeyboard();
 }
 
