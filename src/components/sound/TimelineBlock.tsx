@@ -1,10 +1,7 @@
 import { SynthConfig } from '@src/synth';
-import { zBaseSynthSrc } from '@src/synth/config/shared';
-import { findEnvelope } from '@src/utils/utils';
-import { useMemo } from 'react';
+import { CONTROL_SHADOW } from '@src/utils/constants';
 import IconButton from '../shared/IconButton';
 import TimelineBlockEnvelope from './TimelineBlockEnvelope';
-import { CONTROL_SHADOW } from '@src/utils/constants';
 
 type TimelineBlockProps = {
   synth: SynthConfig;
@@ -27,8 +24,8 @@ export default function TimelineBlock({
 }: TimelineBlockProps) {
   return (
     <div className='mb-2 flex h-8 w-full items-center'>
-      <div className='relative flex size-full cursor-pointer justify-end overflow-hidden' onClick={onClickWatch}>
-        <div style={{ transform: 'translateY(-50%)' }} className='absolute top-1/2 z-10 max-w-full shrink-0 truncate whitespace-nowrap px-2 text-white mix-blend-difference'>
+      <div className='relative size-full cursor-pointer' onClick={onClickWatch}>
+        <div className='absolute top-0 z-10 flex size-full shrink-0 items-center justify-end truncate whitespace-nowrap px-2 text-white mix-blend-difference'>
           {synth.name}
         </div>
         <TimelineBlockEnvelope
