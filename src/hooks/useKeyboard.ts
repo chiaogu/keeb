@@ -73,6 +73,7 @@ export default function useKeyboard() {
   // TODO: Validation
   const setKeyboard = useCallback(
     (data: KeyboardConfig) => {
+      setId(data.id);
       setName(data.name);
       up.sound.loadConfig(data.sound.up.config);
       down.sound.loadConfig(data.sound.down.config);
@@ -82,7 +83,10 @@ export default function useKeyboard() {
   );
 
   const upload = useUploadKeyboard(setKeyboard);
-  const loadPreset = useUploadKeyboard(setKeyboard, false);
+  const loadPreset = useCallback((id: string) => {
+    const preset = storage.getKeyboardConfig(id);
+    preset && setKeyboard(preset);
+  }, [setKeyboard]);
 
   const reset = useCallback(() => {
     const defaultKeyboard = getDefaultKeyboard();
@@ -104,8 +108,9 @@ export default function useKeyboard() {
       reset,
       modifier,
       loadPreset,
+      id,
     }),
-    [down, up, name, download, upload, reset, modifier, loadPreset],
+    [down, up, name, download, upload, reset, modifier, loadPreset, id],
   );
 }
 

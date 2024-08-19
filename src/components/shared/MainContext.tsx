@@ -1,4 +1,5 @@
 import useKeyboard, { KeyEvent } from '@src/hooks/useKeyboard';
+import useKeyboardPresets from '@src/hooks/useKeyboardPresets';
 import { Envelope } from '@src/synth/config/envelope';
 import { TABS } from '@src/utils/constants';
 import {
@@ -47,6 +48,7 @@ function useMainContextValue() {
   const [screen, setScreen] = useState<ScreenState>({ type: 'nav' });
   const resetScreen = useCallback(() => setScreen({ type: 'nav' }), []);
   const keyboard = useKeyboard();
+  const { presets, createNew, refresh } = useKeyboardPresets();
   const [screenMeterChannel, setScreenMeterChannel] = useState<KeyEvent | null>(
     null,
   );
@@ -61,8 +63,28 @@ function useMainContextValue() {
       keyboard,
       screenMeterChannel,
       setScreenMeterChannel,
+      presets,
+      createNew,
+      setKeyboardName(name: string) {
+        keyboard.setName(name);
+        requestAnimationFrame(refresh);
+      },
+      loadPreset(id: string) {
+        keyboard.loadPreset(id);
+        requestAnimationFrame(refresh);
+      },
     }),
-    [screen, resetScreen, tab, setTab, keyboard, screenMeterChannel],
+    [
+      screen,
+      resetScreen,
+      tab,
+      setTab,
+      keyboard,
+      screenMeterChannel,
+      presets,
+      createNew,
+      refresh,
+    ],
   );
 }
 
