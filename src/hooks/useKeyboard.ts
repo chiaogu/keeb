@@ -7,25 +7,22 @@ import { useKeyEvents } from './useKeyEvents';
 import useKeyboardSound from './useKeyboardSound';
 import useModifiers from './useModifiers';
 import useUploadKeyboard from './useUploadKeyboard';
-
-function getKeyboardConfig() {
-  // Load default via usePresets
-  return storage.getCurrentKeyboard() ?? getDefaultKeyboard();
-}
+import { pick } from 'lodash-es';
 
 export type KeyEvent = 'down' | 'up';
 
-export default function useKeyboard() {
-  const initConfig = useMemo(() => getKeyboardConfig(), []);
+const metaFields = ['id', 'created'] as const;
+
+export default function useKeyboard(initConfig: KeyboardConfig) {
   const modifier = useModifiers(initConfig);
   const down = useKeyboardSound(initConfig.sound.down, 'down', modifier.layers);
   const up = useKeyboardSound(initConfig.sound.up, 'up', modifier.layers);
   const [name, setName] = useState(initConfig.name);
-  const [id, setId] = useState(initConfig.id);
+  const [meta, setMeata] = useState(pick(initConfig, metaFields));
 
   const currentConfig = useMemo(
     () => ({
-      id,
+      ...meta,
       name,
       sound: {
         down: {
@@ -37,7 +34,7 @@ export default function useKeyboard() {
         modifiers: modifier.layers,
       },
     }),
-    [down.sound, id, modifier.layers, name, up.sound],
+    [down.sound, meta, modifier.layers, name, up.sound],
   );
 
   useEffect(() => {
@@ -74,7 +71,7 @@ export default function useKeyboard() {
   // TODO: Validation
   const setKeyboard = useCallback(
     (data: KeyboardConfig) => {
-      setId(data.id);
+      setMeata(pick(data, metaFields));
       setName(data.name);
       up.sound.loadConfig(data.sound.up.config);
       down.sound.loadConfig(data.sound.down.config);
@@ -91,7 +88,7 @@ export default function useKeyboard() {
 
   const reset = useCallback(() => {
     const defaultKeyboard = getDefaultKeyboard();
-    setId(defaultKeyboard.id);
+    setMeata(pick(defaultKeyboard, metaFields));
     setName(defaultKeyboard.name);
     up.sound.loadConfig(defaultKeyboard.sound.up.config);
     down.sound.loadConfig(defaultKeyboard.sound.down.config);
@@ -109,9 +106,9 @@ export default function useKeyboard() {
       reset,
       modifier,
       loadPreset,
-      id,
+      ...meta,
     }),
-    [down, up, name, download, upload, reset, modifier, loadPreset, id],
+    [down, up, name, download, upload, reset, modifier, loadPreset, meta],
   );
 }
 

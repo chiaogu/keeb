@@ -4,22 +4,22 @@ import {
   getKeyboardPresets,
   setCurrentKeyboard,
 } from '@src/utils/localstorage';
+import { pick, orderBy } from 'lodash-es';
 import { useCallback, useMemo, useState } from 'react';
+
+const presetFields = ['id', 'name', 'created'] as const;
 
 export default function useKeyboardPresets() {
   const [presetIds, setPresets] = useState(getKeyboardPresets());
 
   const presets = useMemo(
     () =>
-      presetIds.map((id) => {
+      orderBy(presetIds.map((id) => {
         const config = getKeyboardConfig(id);
         return config
-          ? {
-              id,
-              name: config.name,
-            }
+          ? pick(config, presetFields)
           : null;
-      }).filter(x => x != null),
+      }).filter(x => x != null), 'created', 'desc'),
     [presetIds],
   );
   
@@ -28,8 +28,10 @@ export default function useKeyboardPresets() {
   }, []);
 
   const createNew = useCallback(() => {
-    setCurrentKeyboard(getDefaultKeyboard());
+    const newConfig = getDefaultKeyboard();
+    setCurrentKeyboard(newConfig);
     refresh();
+    return newConfig;
   }, [refresh]);
 
   return {

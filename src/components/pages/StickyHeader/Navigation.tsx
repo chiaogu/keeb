@@ -3,7 +3,7 @@ import { useMainContext } from '@src/components/shared/MainContext';
 import SliderSelect from '@src/components/shared/SliderSelect';
 import { useKeyEvents } from '@src/hooks/useKeyEvents';
 import { keys } from '@src/keyboard/keys';
-import { TABS } from '@src/utils/constants';
+import { Tab, TABS } from '@src/utils/constants';
 import { dispatchKeyEvent, shouldShowKeyEventVisual } from '@src/utils/utils';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -49,14 +49,14 @@ export default function Navigation() {
 
   const handleRelease = useCallback(
     (newTab: string) => {
-      setTab(newTab);
-      setLocalTab(newTab);
+      setTab(newTab as Tab);
+      setLocalTab(newTab as Tab);
     },
     [setTab],
   );
 
   const handleChange = useCallback((value: string) => {
-    setLocalTab(value);
+    setLocalTab(value as Tab);
 
     const index = TABS.findIndex((tab) => tab.value === value);
     dispatchKeyEvent({

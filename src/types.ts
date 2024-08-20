@@ -42,6 +42,7 @@ export type KeySoundConfig = {
 export type KeyboardConfig = {
   id: string;
   name: string;
+  created: number;
   sound: {
     up: KeySoundConfig;
     down: KeySoundConfig;

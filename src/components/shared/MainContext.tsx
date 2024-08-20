@@ -1,7 +1,9 @@
 import useKeyboard, { KeyEvent } from '@src/hooks/useKeyboard';
 import useKeyboardPresets from '@src/hooks/useKeyboardPresets';
+import { getDefaultKeyboard } from '@src/keyboard/defaults';
 import { Envelope } from '@src/synth/config/envelope';
 import { TABS } from '@src/utils/constants';
+import * as storage from '@src/utils/localstorage';
 import {
   createContext,
   useCallback,
@@ -15,9 +17,11 @@ type ScreenState =
   | { type: 'nav' }
   | { type: 'meter' }
   | { type: 'adsr'; envelope: Envelope };
+  
+type Tab = typeof TABS[number]['value'];
 
 function useTab() {
-  const [tab, setTabState] = useState('sound');
+  const [tab, setTabState] = useState<Tab>('sound');
 
   useEffect(() => {
     const handlePopState = () => {
@@ -34,7 +38,7 @@ function useTab() {
     return () => removeEventListener('popstate', handlePopState);
   }, []);
 
-  const setTab = useCallback((tab: string) => {
+  const setTab = useCallback((tab: Tab) => {
     setTabState(tab);
     document.scrollingElement?.scrollTo(0, 0);
     history.pushState({}, '', tab);
@@ -47,11 +51,23 @@ function useMainContextValue() {
   const { tab, setTab } = useTab();
   const [screen, setScreen] = useState<ScreenState>({ type: 'nav' });
   const resetScreen = useCallback(() => setScreen({ type: 'nav' }), []);
-  const keyboard = useKeyboard();
-  const { presets, createNew, refresh } = useKeyboardPresets();
   const [screenMeterChannel, setScreenMeterChannel] = useState<KeyEvent | null>(
     null,
   );
+  
+  const initConfig = useMemo(() => {
+    const currrent = storage.getCurrentKeyboard();
+    
+    if (!currrent) {
+      const defaultConfig = getDefaultKeyboard();
+      storage.setCurrentKeyboard(defaultConfig);
+      return defaultConfig;
+    }
+    
+    return currrent;
+  }, []);
+  const keyboard = useKeyboard(initConfig);
+  const { presets, createNew, refresh } = useKeyboardPresets();
 
   return useMemo(
     () => ({
@@ -64,7 +80,10 @@ function useMainContextValue() {
       screenMeterChannel,
       setScreenMeterChannel,
       presets,
-      createNew,
+      createNew() {
+        const newConfig = createNew();
+        keyboard.loadPreset(newConfig.id);
+      },
       setKeyboardName(name: string) {
         keyboard.setName(name);
         requestAnimationFrame(refresh);

@@ -57,6 +57,7 @@ export function getDefaultKeyboard(): KeyboardConfig {
   return {
     id,
     name: `keyboard ${id.slice(0, 5)}`,
+    created: Date.now(),
     sound: {
       up: getDefaultKeySound(),
       down: getDefaultKeySound(),
