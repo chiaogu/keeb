@@ -1,6 +1,6 @@
 import { KeyboardConfig, ModifierLayer, SoundConfig } from '@src/types';
 
-function download(fileName: string, data: unknown) {
+export function download(fileName: string, data: unknown) {
   const jsonData = JSON.stringify(data, null, 2);
   const blob = new Blob([jsonData], { type: 'application/json' });
 

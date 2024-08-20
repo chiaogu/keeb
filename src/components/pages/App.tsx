@@ -3,6 +3,8 @@ import Title from '@src/components/pages/Title';
 import * as Tone from '@src/tone';
 import { useEffect, useState } from 'react';
 import ErrorBoundary from '../shared/ErrorBoundary';
+import IconButton from '../shared/IconButton';
+import { backupAndClear } from '@src/utils/localstorage';
 
 function useStartTone() {
   useEffect(() => {
@@ -33,7 +35,23 @@ function App() {
         <Title
           onStart={() => setStarted(true)}
           message={
-            message && <div className='bg-white p-4 invert'>{message}</div>
+            message && (
+              <div
+                className='z-10 flex w-full max-w-[500px] flex-col items-start bg-white p-8 invert'
+              >
+                <div className='font-bold'>Something went wrong</div>
+                <div>{message}</div>
+                <div className='mt-4 flex w-full items-center justify-between space-x-2'>
+                  <div>Backup and clear cache?</div>
+                  <div className='flex space-x-2'>
+                    <IconButton icon='delete' onClick={() => {
+                      backupAndClear();
+                      location.reload();
+                    }}/>
+                  </div>
+                </div>
+              </div>
+            )
           }
         />
       )}

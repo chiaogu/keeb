@@ -19,17 +19,18 @@ export default function Title({ onStart, message }: TitleProps) {
   }, [pressed]);
 
   return (
-    <div
-      className='flex h-screen w-full cursor-pointer items-center justify-center'
-      onPointerDown={handlePress}
-      onPointerUp={async () => {
-        handleRelease();
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        onStart();
-      }}
-      onPointerCancel={handleRelease}
-      onPointerLeave={handleRelease}
-    >
+    <div className='relative flex h-screen w-full items-center justify-center'>
+      <div
+        className='absolute size-full cursor-pointer '
+        onPointerDown={handlePress}
+        onPointerUp={async () => {
+          handleRelease();
+          await new Promise((resolve) => setTimeout(resolve, 100));
+          onStart();
+        }}
+        onPointerCancel={handleRelease}
+        onPointerLeave={handleRelease}
+      ></div>
       {message}
       <KeyButton className='fixed bottom-4 left-6' pressed={pressed} />
     </div>

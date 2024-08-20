@@ -1,4 +1,6 @@
 import { KeyboardConfig } from '@src/types';
+import dayjs from 'dayjs';
+import { download } from './file';
 import { validateKeyboard } from './validator';
 
 const KEY_CURRENT_KEYBOARD_ID = 'current-keyboard-id';
@@ -40,6 +42,24 @@ export function getKeyboardPresets() {
   }
   return keyboardIds;
 }
+
 export function removeKeyboard(id: string) {
   localStorage.removeItem(getKeyboardConfigKey(id));
+}
+
+export function backupAndClear() {
+  const cache: Record<string, unknown> = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key) {
+      const data = localStorage.getItem(key) ?? 'null';
+      try {
+        cache[key] = JSON.parse(data);
+      } catch (e) {
+        cache[key] = data;
+      }
+    }
+  }
+  download(`backup-${dayjs().format('YYYYMMDDHHmmss')}`, cache);
+  localStorage.clear();
 }
