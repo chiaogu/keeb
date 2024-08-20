@@ -17,8 +17,8 @@ type ScreenState =
   | { type: 'nav' }
   | { type: 'meter' }
   | { type: 'adsr'; envelope: Envelope };
-  
-type Tab = typeof TABS[number]['value'];
+
+type Tab = (typeof TABS)[number]['value'];
 
 function useTab() {
   const [tab, setTabState] = useState<Tab>('sound');
@@ -54,20 +54,25 @@ function useMainContextValue() {
   const [screenMeterChannel, setScreenMeterChannel] = useState<KeyEvent | null>(
     null,
   );
-  
+
   const initConfig = useMemo(() => {
     const currrent = storage.getCurrentKeyboard();
-    
+
     if (!currrent) {
       const defaultConfig = getDefaultKeyboard();
       storage.setCurrentKeyboard(defaultConfig);
       return defaultConfig;
     }
-    
+
     return currrent;
   }, []);
   const keyboard = useKeyboard(initConfig);
-  const { presets, createNew, refresh } = useKeyboardPresets();
+  const { presets, createNew, refresh, remove } = useKeyboardPresets();
+
+  const createNewKeyboard = useCallback(() => {
+    const newConfig = createNew();
+    keyboard.loadPreset(newConfig.id);
+  }, [createNew, keyboard]);
 
   return useMemo(
     () => ({
@@ -80,10 +85,7 @@ function useMainContextValue() {
       screenMeterChannel,
       setScreenMeterChannel,
       presets,
-      createNew() {
-        const newConfig = createNew();
-        keyboard.loadPreset(newConfig.id);
-      },
+      createNew: createNewKeyboard,
       setKeyboardName(name: string) {
         keyboard.setName(name);
         requestAnimationFrame(refresh);
@@ -91,6 +93,21 @@ function useMainContextValue() {
       loadPreset(id: string) {
         keyboard.loadPreset(id);
         requestAnimationFrame(refresh);
+      },
+      removePreset(id: string) {
+        remove(id);
+        if (id === keyboard.id) {
+          if (presets.length > 1) {
+            const selectedIndex = presets.findIndex(
+              (preset) => preset.id === keyboard.id,
+            );
+            const index = presets.findIndex((preset) => preset.id === id);
+            const newIndex = index === 0 ? 1 : selectedIndex - 1;
+            keyboard.loadPreset(presets[newIndex].id);
+          } else {
+            createNewKeyboard();
+          }
+        }
       },
     }),
     [
@@ -101,8 +118,9 @@ function useMainContextValue() {
       keyboard,
       screenMeterChannel,
       presets,
-      createNew,
+      createNewKeyboard,
       refresh,
+      remove,
     ],
   );
 }

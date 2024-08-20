@@ -40,3 +40,6 @@ export function getKeyboardPresets() {
   }
   return keyboardIds;
 }
+export function removeKeyboard(id: string) {
+  localStorage.removeItem(getKeyboardConfigKey(id));
+}

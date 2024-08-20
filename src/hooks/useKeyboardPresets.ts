@@ -2,6 +2,7 @@ import { getDefaultKeyboard } from '@src/keyboard/defaults';
 import {
   getKeyboardConfig,
   getKeyboardPresets,
+  removeKeyboard,
   setCurrentKeyboard,
 } from '@src/utils/localstorage';
 import { pick, orderBy } from 'lodash-es';
@@ -33,10 +34,16 @@ export default function useKeyboardPresets() {
     refresh();
     return newConfig;
   }, [refresh]);
+  
+  const remove = useCallback((id: string) => {
+    removeKeyboard(id);
+    refresh();
+  }, [refresh]);
 
   return {
     presets,
     createNew,
     refresh,
+    remove,
   };
 }
